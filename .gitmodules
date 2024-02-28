@@ -1,0 +1,6 @@
+[submodule "Dependencies/SyriusCore"]
+	path = Dependencies/SyriusCore
+	url = https://github.com/SyriusEngine/SyriusCore
+[submodule "Dependencies/SRSLCompiler"]
+	path = Dependencies/SRSLCompiler
+	url = https://github.com/SyriusEngine/SRSLCompiler
