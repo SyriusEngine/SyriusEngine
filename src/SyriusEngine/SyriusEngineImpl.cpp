@@ -16,10 +16,17 @@ namespace Syrius{
     }
 
     SyriusEngineImpl::~SyriusEngineImpl() {
+        m_Config["Window"]["Width"] = m_Window->getWidth();
+        m_Config["Window"]["Height"] = m_Window->getHeight();
+        m_Config["Window"]["XPos"] = m_Window->getPosX();
+        m_Config["Window"]["YPos"] = m_Window->getPosY();
+        m_Config.save();
 
     }
 
     void SyriusEngineImpl::run() {
+        SR_PRECONDITION(m_Window.get() != nullptr, "Window is null (%p)", m_Window.get());
+
         while (m_Window->isOpen()){
 
             m_Window->pollEvents();

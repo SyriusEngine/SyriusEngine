@@ -17,6 +17,8 @@
 namespace Syrius{
 
     typedef uint64 UID;
+    typedef uint64 Index;
+
 
     template<typename T>
     using SharedResource = std::shared_ptr<T>;
