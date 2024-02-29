@@ -11,6 +11,7 @@
 #include <memory>
 #include <unordered_map>
 #include <fstream>
+#include <chrono>
 
 #include "PlatformDetection.hpp"
 
@@ -26,6 +27,12 @@ namespace Syrius{
     template<typename T, typename... Args>
     inline SharedResource<T> createSharedResource(Args&&... args){
         return std::make_shared<T>(args...);
+    }
+
+    inline time_t getTimeMilli(){
+        return std::chrono::duration_cast<std::chrono::milliseconds>(
+                std::chrono::system_clock::now().time_since_epoch())
+                .count();
     }
 
 }

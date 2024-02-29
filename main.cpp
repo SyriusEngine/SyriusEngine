@@ -1,5 +1,6 @@
 #include <iostream>
 #include "include/SyriusEngine/SyriusEngine.hpp"
+#include "SyriusEngineDev/Applayer.hpp"
 
 int main(int argc, char** argv) {
     try{
@@ -7,7 +8,17 @@ int main(int argc, char** argv) {
             std::cerr << "Usage: " << argv[0] << " <config file>" << std::endl;
             return 1;
         }
+        // First create the engine object using a configuration file
         auto engine =  Syrius::createEngine(argv[1]);
+
+        // then create the example layer
+        auto appLayer = Syrius::createResource<SyriusApp::AppLayer>(engine);
+
+        // push our example layer onto the engine.
+        // the engine will take ownership of the layer
+        engine->pushRenderLayer(std::move(appLayer));
+
+        // begin execution
         engine->run();
 
     }catch (std::exception& e){

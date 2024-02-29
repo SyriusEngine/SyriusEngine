@@ -4,7 +4,6 @@
 
 #include <EasyIni/EasyIni.hpp>
 
-#include <chrono>
 #include <random>
 #include <filesystem>
 #include <mutex>
@@ -17,12 +16,6 @@
 #define SR_DEFAULT_WINDOW_HEIGHT 720
 
 namespace Syrius{
-
-    inline time_t getTimeMilli(){
-        return std::chrono::duration_cast<std::chrono::milliseconds>(
-                std::chrono::system_clock::now().time_since_epoch())
-                .count();
-    }
 
     inline uint64 getRandom(uint64 min, uint64 max){
         std::random_device rd;

@@ -23,6 +23,7 @@ namespace Syrius{
         SR_PRECONDITION(m_Window.get() != nullptr, "Window is null (%p)", m_Window.get());
 
         while (m_Window->isOpen()){
+            m_Renderer->render();
             m_Window->pollEvents();
             while (m_Window->hasEvent()){
                 auto event = m_Window->getEvent();
@@ -34,7 +35,7 @@ namespace Syrius{
 
             m_LayerStack.onUpdate();
 
-
+            m_Renderer->swapBuffers();
         }
     }
 

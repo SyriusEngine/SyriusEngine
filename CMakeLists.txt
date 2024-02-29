@@ -56,6 +56,6 @@ target_link_libraries(SyriusEngine -lSyriusCore -lSRSLCompiler)
 
 ################# TEST EXECUTABLE #################
 link_directories(./cmake-build-debug/)
-add_executable(SyriusEngineDev main.cpp)
+add_executable(SyriusEngineDev main.cpp SyriusEngineDev/Applayer.cpp SyriusEngineDev/Applayer.hpp)
 
 target_link_libraries(SyriusEngineDev -lSyriusEngine -lSyriusCore)

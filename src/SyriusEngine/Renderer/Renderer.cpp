@@ -30,7 +30,11 @@ namespace Syrius{
     }
 
     void Renderer::render() {
+        m_RenderThread.addTask([this]{
+            m_Context->clear();
 
+            m_LayerStack.onRender(m_Context);
+        });
     }
 
     void Renderer::swapBuffers() {
