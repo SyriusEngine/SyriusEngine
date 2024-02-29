@@ -36,6 +36,11 @@ set(SR_ENGINE_CORE_SRC
 set(SR_ENGINE_RENDERER_SRC
     src/SyriusEngine/Renderer/Primitives.cpp
     src/SyriusEngine/Renderer/Renderer.cpp
+
+    src/SyriusEngine/Renderer/RenderPass.cpp
+    src/SyriusEngine/Renderer/RenderGraph.cpp
+    src/SyriusEngine/Renderer/Pass.cpp
+    src/SyriusEngine/Renderer/PassMap.cpp
     )
 
 set(SR_ENGINE_UTILS_SRC

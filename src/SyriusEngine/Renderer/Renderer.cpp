@@ -6,6 +6,8 @@ namespace Syrius{
     RenderCommand(),
     m_LayerStack(layerStack),
     m_Window(window){
+        SR_PRECONDITION(std::filesystem::exists(desc.shaderLibraryPath), "ShaderLibraryPath %s does not exist", desc.shaderLibraryPath.c_str());
+
         m_RenderThread.addTaskSync([this, &desc]{
             ContextDesc contextDesc;
             contextDesc.api = desc.graphicsAPI;
