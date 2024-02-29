@@ -65,6 +65,8 @@ namespace Syrius{
         rDesc.clearColor[1] = m_Config["Context"]["ClearG"].getOrDefault<float>(0.0f);
         rDesc.clearColor[2] = m_Config["Context"]["ClearB"].getOrDefault<float>(0.0f);
         rDesc.shaderLibraryPath = m_Config["Context"]["ShaderLibrary"].getOrDefault<std::string>("./Resources/Shaders");
+        rDesc.enableExperimentalSRSLShaderCompiler = m_Config["Context"]["EnableExperimentalSRSLShaderCompiler"].getOrDefault<bool>(true);
+
         m_Renderer = createResource<Renderer>(rDesc, m_LayerStack, m_Window);
         m_RenderCommand = createResourceView<RenderCommand>(m_Renderer.get());
     }

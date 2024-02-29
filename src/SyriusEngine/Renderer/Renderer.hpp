@@ -11,6 +11,7 @@ namespace Syrius{
         std::string shaderLibraryPath;
         bool vSync = true;
         float clearColor[3];
+        bool enableExperimentalSRSLShaderCompiler = false;
     };
 
     class Renderer: public RenderCommand{
