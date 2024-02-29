@@ -29,11 +29,23 @@ include_directories(./Dependencies/glm/)
 
 include_directories(./Dependencies/EasyIni/include/)
 
-set(SR_ENGINE_CORE_SRC src/SyriusEngine/Core/DebugMessageHandler.cpp src/SyriusEngine/Core/InternalInclude.cpp)
+set(SR_ENGINE_CORE_SRC
+    src/SyriusEngine/Core/DebugMessageHandler.cpp
+    src/SyriusEngine/Core/InternalInclude.cpp)
 
 set(SR_ENGINE_SRC
-    ${SR_ENGINE_CORE_SRC})
+    ${SR_ENGINE_CORE_SRC}
+    src/SyriusEngine/SyriusEngine.cpp
+    src/SyriusEngine/LayerStack.cpp
+    src/SyriusEngine/SyriusEngineImpl.cpp)
 
 add_library(SyriusEngine SHARED ${SR_ENGINE_SRC})
 add_dependencies(SyriusEngine CopyDLL)
 target_link_libraries(SyriusEngine -lSyriusCore -lSRSLCompiler)
+
+
+################# TEST EXECUTABLE #################
+link_directories(./cmake-build-debug/)
+add_executable(SyriusEngineDev main.cpp)
+
+target_link_libraries(SyriusEngineDev -lSyriusEngine -lSyriusCore)
