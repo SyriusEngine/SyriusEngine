@@ -2,6 +2,9 @@
 
 #include "Core/SyriusEngineInclude.hpp"
 
+#include "Renderer/Primitives.hpp"
+#include "Renderer/RenderCommand.hpp"
+
 #include "Layer.hpp"
 #include "RenderLayer.hpp"
 
@@ -21,9 +24,13 @@ namespace Syrius{
 
         [[nodiscard]] inline const Resource<SyriusWindow>& getWindow() const { return m_Window; }
 
+        [[nodiscard]] inline const ResourceView<RenderCommand>& getRenderCommand() const { return m_RenderCommand; }
+
     protected:
         Resource<SyriusWindow> m_Window;
         const std::string m_ConfigFile;
+
+        ResourceView<RenderCommand> m_RenderCommand;
 
     private:
         static uint64 m_InstanceCount;

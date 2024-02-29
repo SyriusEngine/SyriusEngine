@@ -6,13 +6,8 @@ namespace Syrius{
     SyriusEngine(configFile),
     m_LayerStack(),
     m_Config(configFile){
-        WindowDesc wDesc;
-        wDesc.width = m_Config["Window"]["Width"].getOrDefault<uint32>(SR_DEFAULT_WIDTH);
-        wDesc.height = m_Config["Window"]["Height"].getOrDefault<uint32>(SR_DEFAULT_HEIGHT);
-        wDesc.xPos = m_Config["Window"]["XPos"].getOrDefault<int32>(200);
-        wDesc.yPos = m_Config["Window"]["YPos"].getOrDefault<int32>(200);
-        wDesc.title = m_Config["Window"]["Title"].getOrDefault<std::string>("SyriusEngine");
-        m_Window = createWindow(wDesc);
+        setupWindow();
+        setupRenderer();
     }
 
     SyriusEngineImpl::~SyriusEngineImpl() {
@@ -28,7 +23,6 @@ namespace Syrius{
         SR_PRECONDITION(m_Window.get() != nullptr, "Window is null (%p)", m_Window.get());
 
         while (m_Window->isOpen()){
-
             m_Window->pollEvents();
             while (m_Window->hasEvent()){
                 auto event = m_Window->getEvent();
@@ -49,6 +43,28 @@ namespace Syrius{
     }
 
     void SyriusEngineImpl::pushRenderLayer(Resource<RenderLayer> layer) {
+        m_Renderer->pushRenderLayer(std::move(layer));
+    }
 
+    void SyriusEngineImpl::setupWindow() {
+        WindowDesc wDesc;
+        wDesc.width = m_Config["Window"]["Width"].getOrDefault<uint32>(SR_DEFAULT_WIDTH);
+        wDesc.height = m_Config["Window"]["Height"].getOrDefault<uint32>(SR_DEFAULT_HEIGHT);
+        wDesc.xPos = m_Config["Window"]["XPos"].getOrDefault<int32>(200);
+        wDesc.yPos = m_Config["Window"]["YPos"].getOrDefault<int32>(200);
+        wDesc.title = m_Config["Window"]["Title"].getOrDefault<std::string>("SyriusEngine");
+        m_Window = createWindow(wDesc);
+    }
+
+    void SyriusEngineImpl::setupRenderer() {
+        RendererDesc rDesc;
+        rDesc.graphicsAPI = static_cast<SR_SUPPORTED_API>(m_Config["Context"]["API"].getOrDefault<int>(SR_API_OPENGL));
+        rDesc.vSync = m_Config["Context"]["VSync"].getOrDefault<bool>(true);
+        rDesc.clearColor[0] = m_Config["Context"]["ClearR"].getOrDefault<float>(0.0f);
+        rDesc.clearColor[1] = m_Config["Context"]["ClearG"].getOrDefault<float>(0.0f);
+        rDesc.clearColor[2] = m_Config["Context"]["ClearB"].getOrDefault<float>(0.0f);
+        rDesc.shaderLibraryPath = m_Config["Context"]["ShaderLibrary"].getOrDefault<std::string>("./Resources/Shaders");
+        m_Renderer = createResource<Renderer>(rDesc, m_LayerStack, m_Window);
+        m_RenderCommand = createResourceView<RenderCommand>(m_Renderer.get());
     }
 }

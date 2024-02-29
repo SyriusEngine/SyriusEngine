@@ -34,7 +34,9 @@ set(SR_ENGINE_CORE_SRC
     src/SyriusEngine/Core/InternalInclude.cpp)
 
 set(SR_ENGINE_RENDERER_SRC
-    src/SyriusEngine/Renderer/Primitives.cpp)
+    src/SyriusEngine/Renderer/Primitives.cpp
+    src/SyriusEngine/Renderer/Renderer.cpp
+    )
 
 set(SR_ENGINE_UTILS_SRC
     src/SyriusEngine/Utils/Worker.cpp)

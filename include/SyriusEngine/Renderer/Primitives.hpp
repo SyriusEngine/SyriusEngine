@@ -20,4 +20,17 @@ namespace Syrius{
         std::vector<uint32> indices;
     };
 
+    struct SR_API Material{
+        Resource<Image> albedo = nullptr;
+        Resource<Image> normal = nullptr;
+        Resource<Image> metallic = nullptr;
+        Resource<Image> roughness = nullptr;
+        Resource<Image> ao = nullptr;
+    };
+
+    struct SR_API Light{
+        glm::vec3 position;
+        glm::vec3 color;
+    };
+
 }

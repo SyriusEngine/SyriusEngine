@@ -3,6 +3,8 @@
 #include "LayerStack.hpp"
 #include "../../include/SyriusEngine/SyriusEngine.hpp"
 
+#include "Renderer/Renderer.hpp"
+
 namespace Syrius{
 
     class SyriusEngineImpl: public SyriusEngine{
@@ -18,8 +20,16 @@ namespace Syrius{
         void pushRenderLayer(Resource<RenderLayer> layer) override;
 
     private:
+
+        void setupWindow();
+
+        void setupRenderer();
+
+    private:
         LayerStack m_LayerStack;
         EasyIni::Configuration m_Config;
+
+        Resource<Renderer> m_Renderer;
     };
 
 }
