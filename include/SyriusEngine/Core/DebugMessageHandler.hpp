@@ -1,0 +1,103 @@
+#pragma once
+
+#include "PlatformDetection.hpp"
+#include <string>
+#include <vector>
+
+#include <SyriusCore/SyriusCore.hpp>
+
+typedef enum SR_MESSAGE_SOURCE{
+    SR_MESSAGE                  = 0x00,
+    SR_MESSAGE_SYRIUS_CORE      = 0x01,
+    SR_MESSAGE_RENDERER         = 0x02,
+
+    SR_MESSAGE_PRECONDITION     = 0x1001,
+    SR_MESSAGE_POSTCONDITION    = 0x1002,
+    SR_MESSAGE_ASSERTION        = 0x1003,
+} SR_MESSAGE_SOURCE;
+
+typedef enum SR_MESSAGE_SEVERITY{
+    SR_MESSAGE_SEVERITY_INFO    = 0x00,
+    SR_MESSAGE_SEVERITY_LOW     = 0x01,      // mostly used for messages that are not important
+    SR_MESSAGE_SEVERITY_MEDIUM  = 0x02,      // used for messages that are important, but not critical
+    SR_MESSAGE_SEVERITY_HIGH    = 0x03,      // used for messages that are critical and (usually) results in program termination
+} SR_MESSAGE_SEVERITY;
+
+namespace Syrius{
+
+    struct EngineMessage{
+        SR_MESSAGE_SOURCE messageType;
+        SR_MESSAGE_SEVERITY severity;
+        std::string message;
+        std::string function;
+        std::string file;
+        uint32_t line;
+    };
+
+    typedef void(*HandleDebugMessageFunc)(const EngineMessage&);
+
+    class DebugMessageHandler{
+    public:
+        template<typename... Args>
+        static void log(
+                SR_MESSAGE_SOURCE messageType,
+                SR_MESSAGE_SEVERITY severity,
+                const char* function,
+                const char* file,
+                uint32_t line,
+                const char* message,
+                Args... args
+        ){
+            uint64_t formatSize = std::snprintf(nullptr, 0, message, args...);
+            std::vector<uint8_t> formatBuffer(formatSize + 1);
+            std::snprintf(reinterpret_cast<char*>(formatBuffer.data()), formatSize + 1, message, args...);
+
+            EngineMessage msg;
+            msg.messageType = messageType;
+            msg.severity = severity;
+            msg.function = function;
+            msg.file = file;
+            msg.line = line;
+            msg.message = std::string(reinterpret_cast<char*>(formatBuffer.data()));
+
+            if (m_MessageHandler != nullptr){
+                m_MessageHandler(msg);
+            }
+            else{
+                defaultMessageHandler(msg);
+            }
+        }
+
+        static void receiveSyriusCoreMessage(const Syrius::Message& msg);
+
+    private:
+
+        static void defaultMessageHandler(const EngineMessage& msg);
+
+    private:
+        static HandleDebugMessageFunc m_MessageHandler;
+
+    };
+
+}
+
+#if defined(SR_DEBUG)
+#define SR_LOG_INFO(message, ...) Syrius::DebugMessageHandler::log(SR_MESSAGE, SR_MESSAGE_SEVERITY_INFO, __FUNCTION__, __FILE__, __LINE__, message, ##__VA_ARGS__)
+#define SR_LOG_WARNING(message, ...) Syrius::DebugMessageHandler::log(SR_MESSAGE, SR_MESSAGE_SEVERITY_MEDIUM, __FUNCTION__, __FILE__, __LINE__, message, ##__VA_ARGS__)
+#define SR_LOG_ERROR(message, ...) Syrius::DebugMessageHandler::log(SR_MESSAGE, SR_MESSAGE_SEVERITY_HIGH, __FUNCTION__, __FILE__, __LINE__, message, ##__VA_ARGS__)
+
+#define SR_PRECONDITION(condition, message, ...) if(!(condition)){ Syrius::DebugMessageHandler::log(SR_MESSAGE_PRECONDITION, SR_MESSAGE_SEVERITY_HIGH, __FUNCTION__, __FILE__, __LINE__, message, ##__VA_ARGS__); }
+#define SR_POSTCONDITION(condition, message, ...) if(!(condition)){ Syrius::DebugMessageHandler::log(SR_MESSAGE_POSTCONDITION, SR_MESSAGE_SEVERITY_HIGH, __FUNCTION__, __FILE__, __LINE__, message, ##__VA_ARGS__); }
+#define SR_ASSERT(condition, message, ...) if(!(condition)){ Syrius::DebugMessageHandler::log(SR_MESSAGE_ASSERTION, SR_MESSAGE_SEVERITY_HIGH, __FUNCTION__, __FILE__, __LINE__, message, ##__VA_ARGS__); }
+
+#else
+
+#define SR_LOG_INFO(message, ...)
+#define SR_LOG_WARNING(message, ...)
+#define SR_LOG_ERROR(message, ...)
+
+#define SR_PRECONDITION(condition, message, ...)
+#define SR_POSTCONDITION(condition, message, ...)
+#define SR_ASSERT(condition, message, ...)
+
+#endif

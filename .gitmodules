@@ -4,3 +4,6 @@
 [submodule "Dependencies/SRSLCompiler"]
 	path = Dependencies/SRSLCompiler
 	url = https://github.com/SyriusEngine/SRSLCompiler
+[submodule "Dependencies/EasyIni"]
+	path = Dependencies/EasyIni
+	url = https://github.com/artick788/EasyIni
