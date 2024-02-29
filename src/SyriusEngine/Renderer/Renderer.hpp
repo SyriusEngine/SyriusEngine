@@ -3,6 +3,7 @@
 #include "../../../include/SyriusEngine/Renderer/RenderCommand.hpp"
 #include "../LayerStack.hpp"
 #include "../Utils/Worker.hpp"
+#include "ShaderLibrary.hpp"
 
 namespace Syrius{
 
@@ -37,6 +38,8 @@ namespace Syrius{
 
         const Resource<SyriusWindow>& m_Window;
         ResourceView<Context> m_Context;
+
+        Resource<ShaderLibrary> m_ShaderLibrary;
 
         Worker m_RenderThread;
 

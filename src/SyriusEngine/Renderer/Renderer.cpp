@@ -19,6 +19,8 @@ namespace Syrius{
                                      desc.clearColor[1],
                                      desc.clearColor[2],
                                      1.0f);
+
+            m_ShaderLibrary = createResource<ShaderLibrary>(m_Context, desc.shaderLibraryPath, desc.enableExperimentalSRSLShaderCompiler);
         });
 
     }

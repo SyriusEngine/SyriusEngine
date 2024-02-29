@@ -41,7 +41,7 @@ set(SR_ENGINE_RENDERER_SRC
     src/SyriusEngine/Renderer/RenderGraph.cpp
     src/SyriusEngine/Renderer/Pass.cpp
     src/SyriusEngine/Renderer/PassMap.cpp
-    )
+    src/SyriusEngine/Renderer/ShaderLibrary.cpp src/SyriusEngine/Renderer/ShaderLibrary.hpp)
 
 set(SR_ENGINE_UTILS_SRC
     src/SyriusEngine/Utils/Worker.cpp)
