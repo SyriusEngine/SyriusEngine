@@ -42,6 +42,8 @@ namespace SyriusApp{
     }
 
     void AppLayer::onRender(ResourceView<Context> &context) {
+        context->beginRenderPass();
+
         m_Engine->getWindow()->onImGuiBegin();
 
         ImGui::Begin("Debug");
@@ -50,6 +52,8 @@ namespace SyriusApp{
 
         ImGui::End();
         m_Engine->getWindow()->onImGuiEnd();
+
+        context->endRenderPass();
     }
 
     void AppLayer::imGuiDrawFrameTimes() {
