@@ -6,6 +6,7 @@ namespace Syrius{
     m_Context(context),
     m_LibraryPath(libraryPath),
     m_Library(){
+        SR_LOG_INFO("Shader Library (%p) uses experimental SRSL shaders: %s", this, enableExperimentalSRSLShaders ? "true" : "false");
 
     }
 

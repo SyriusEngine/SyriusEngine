@@ -7,6 +7,7 @@ namespace Syrius{
     typedef UID MeshID;
     typedef UID MaterialID;
     typedef UID LightID;
+    typedef UID CameraID;
 
     struct SR_API Vertex{
         glm::vec3 position;

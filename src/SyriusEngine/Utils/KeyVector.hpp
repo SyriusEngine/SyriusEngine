@@ -1,8 +1,8 @@
 #pragma once
 
-#include "../../../include/Visu3D/Core/Visu3DInclude.hpp"
+#include "../Core/InternalInclude.hpp"
 
-namespace Visu3D{
+namespace Syrius{
 
     template<typename K, typename D>
     class KeyVector{
@@ -17,7 +17,7 @@ namespace Visu3D{
             ~KeyVector() = default;
 
             void insert(const K& key, const D& data){
-                VS_PRECONDITION(m_KeyIndexMap.find(key) == m_KeyIndexMap.end(), "[KeyVector]: Key already exists")
+                SR_PRECONDITION(m_KeyIndexMap.find(key) == m_KeyIndexMap.end(), "[KeyVector]: Key (%ull) already exists", key)
 
                 m_Data.push_back(data);
                 m_KeyIndexMap.insert({key, m_Data.size() - 1});
@@ -25,38 +25,38 @@ namespace Visu3D{
 
             template<typename... Args>
             void emplace(const K& key, Args&&... args){
-                VS_PRECONDITION(m_KeyIndexMap.find(key) == m_KeyIndexMap.end(), "[KeyVector]: Key already exists")
+                SR_PRECONDITION(m_KeyIndexMap.find(key) == m_KeyIndexMap.end(), "[KeyVector]: Key (%ull) already exists", key)
 
                 m_Data.emplace_back(std::forward<Args>(args)...);
                 m_KeyIndexMap.insert({key, m_Data.size() - 1});
             }
 
             const D& get(const K& key) const {
-                VS_PRECONDITION(m_KeyIndexMap.find(key) != m_KeyIndexMap.end(), "[KeyVector]: cannot retrieve element, key does not exists");
+                SR_PRECONDITION(m_KeyIndexMap.find(key) != m_KeyIndexMap.end(), "[KeyVector]: cannot retrieve element, key (%ull) does not exists", key);
 
                 return m_Data[m_KeyIndexMap[key]];
             }
 
             D& get(const K& key){
-                VS_PRECONDITION(m_KeyIndexMap.find(key) != m_KeyIndexMap.end(), "[KeyVector]: cannot retrieve element, key does not exists");
+                SR_PRECONDITION(m_KeyIndexMap.find(key) != m_KeyIndexMap.end(), "[KeyVector]: cannot retrieve element, key (%ull) does not exists", key);
 
                 return m_Data[m_KeyIndexMap[key]];
             }
 
             const D& operator[](const K& key) const{
-                VS_PRECONDITION(m_KeyIndexMap.find(key) != m_KeyIndexMap.end(), "[KeyVector]: cannot retrieve element, key does not exists");
+                SR_PRECONDITION(m_KeyIndexMap.find(key) != m_KeyIndexMap.end(), "[KeyVector]: cannot retrieve element, key (%ull) does not exists", key);
 
                 return m_Data[m_KeyIndexMap[key]];
             }
 
             D& operator[](const K& key){
-                VS_PRECONDITION(m_KeyIndexMap.find(key) != m_KeyIndexMap.end(), "[KeyVector]: cannot retrieve element, key does not exists");
+                SR_PRECONDITION(m_KeyIndexMap.find(key) != m_KeyIndexMap.end(), "[KeyVector]: cannot retrieve element, key (%ull) does not exists", key);
 
                 return m_Data[m_KeyIndexMap[key]];
             }
 
             void remove(const K& key){
-                VS_PRECONDITION(m_KeyIndexMap.find(key) != m_KeyIndexMap.end(), "[KeyVector]: cannot remove element, key does not exists");
+                SR_PRECONDITION(m_KeyIndexMap.find(key) != m_KeyIndexMap.end(), "[KeyVector]: cannot remove element, key (%ull) does not exists", key);
 
                 auto lastDataIndex = m_Data.size() - 1;
                 auto currentDataIndex = m_KeyIndexMap[key];

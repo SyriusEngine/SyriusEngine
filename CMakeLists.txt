@@ -46,6 +46,7 @@ set(SR_ENGINE_RENDERER_SRC
 
     src/SyriusEngine/Renderer/PBR/PBRRenderLayer.cpp
     src/SyriusEngine/Renderer/PBR/ProjectionPass.cpp
+    src/SyriusEngine/Renderer/PBR/CameraDataPass.cpp
 )
 
 set(SR_ENGINE_UTILS_SRC
