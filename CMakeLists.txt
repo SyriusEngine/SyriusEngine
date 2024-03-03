@@ -18,6 +18,7 @@ add_custom_target(CopyDLL ALL
     COMMAND ${CMAKE_COMMAND} -E copy_if_different ${SR_DEPENDENCIES_DLL} ${CMAKE_CURRENT_BINARY_DIR}
     DEPENDS ${VISU3D_DEPENDECIES_DLL}
     COMMENT "Copying DLLs to build tree")
+add_dependencies(CopyDLL SyriusCore SRSLCompiler)
 
 include_directories(./Dependencies/SyriusCore/include/)
 link_directories(${CMAKE_CURRENT_BINARY_DIR}/Dependencies/SyriusCore/)
@@ -41,7 +42,11 @@ set(SR_ENGINE_RENDERER_SRC
     src/SyriusEngine/Renderer/RenderGraph.cpp
     src/SyriusEngine/Renderer/Pass.cpp
     src/SyriusEngine/Renderer/PassMap.cpp
-    src/SyriusEngine/Renderer/ShaderLibrary.cpp src/SyriusEngine/Renderer/ShaderLibrary.hpp)
+    src/SyriusEngine/Renderer/ShaderLibrary.cpp
+
+    src/SyriusEngine/Renderer/PBR/PBRRenderLayer.cpp
+    src/SyriusEngine/Renderer/PBR/ProjectionPass.cpp
+)
 
 set(SR_ENGINE_UTILS_SRC
     src/SyriusEngine/Utils/Worker.cpp)

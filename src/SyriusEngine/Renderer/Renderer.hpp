@@ -5,6 +5,8 @@
 #include "../Utils/Worker.hpp"
 #include "ShaderLibrary.hpp"
 
+#include "PBR/PBRRenderLayer.hpp"
+
 namespace Syrius{
 
     struct RendererDesc{
@@ -27,6 +29,12 @@ namespace Syrius{
 
         void pushRenderLayer(Resource<RenderLayer> layer);
 
+        void onResize(uint32_t width, uint32_t height) override;
+
+        void setProjectionFOV(float fov) override;
+
+        void setPlane(float near, float far) override;
+
         MeshID createMesh(const MeshDesc& meshDesc) override;
 
         void transformMesh(MeshID mesh, const glm::mat4& transform) override;
@@ -43,6 +51,7 @@ namespace Syrius{
 
         Worker m_RenderThread;
 
+        ResourceView<PBRRenderLayer> m_PBRLayer;
     };
 
 }

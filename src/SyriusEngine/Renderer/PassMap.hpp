@@ -17,7 +17,7 @@ namespace Syrius{
             SR_PRECONDITION(m_PassMap.find(PassIDGenerator<T>::getID()) == m_PassMap.end(), "Pass (%zul) already exists", PassIDGenerator<T>::getID());
 
             m_PassMap.insert({PassIDGenerator<T>::getID(), createResource<T>(std::forward<Args>(args)...)});
-            auto pass =  static_cast<T*>(m_PassMap[PassIDGenerator<T>::getID()].get());
+            auto pass = static_cast<T*>(m_PassMap[PassIDGenerator<T>::getID()].get());
 
             SR_POSTCONDITION(pass != nullptr, "Pass (%zul) could not be created", PassIDGenerator<T>::getID());
             return pass;

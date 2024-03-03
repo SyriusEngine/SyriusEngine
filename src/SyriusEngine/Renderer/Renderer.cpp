@@ -23,6 +23,10 @@ namespace Syrius{
             m_ShaderLibrary = createResource<ShaderLibrary>(m_Context, desc.shaderLibraryPath, desc.enableExperimentalSRSLShaderCompiler);
         });
 
+        auto pbrRenderLayer = createResource<PBRRenderLayer>(m_ShaderLibrary);
+        m_PBRLayer = createResourceView(pbrRenderLayer);
+        pushRenderLayer(std::move(pbrRenderLayer));
+
     }
 
     Renderer::~Renderer() {
@@ -58,15 +62,59 @@ namespace Syrius{
         });
     }
 
+    void Renderer::onResize(uint32_t width, uint32_t height) {
+        SR_PRECONDITION(m_PBRLayer.get() != nullptr, "PBRRenderLayer is null (%p)", m_PBRLayer.get());
+
+        m_RenderThread.addTask([this, width, height]{
+            m_Context->onResize(width, height);
+
+            m_PBRLayer->onResize(width, height);
+        });
+    }
+
+    void Renderer::setProjectionFOV(float fov) {
+        SR_PRECONDITION(m_PBRLayer.get() != nullptr, "PBRRenderLayer is null (%p)", m_PBRLayer.get());
+
+        m_RenderThread.addTask([this, fov]{
+            m_PBRLayer->setProjectionFOV(fov);
+        });
+    }
+
+    void Renderer::setPlane(float near, float far) {
+        SR_PRECONDITION(m_PBRLayer.get() != nullptr, "PBRRenderLayer is null (%p)", m_PBRLayer.get());
+
+        m_RenderThread.addTask([this, near, far]{
+            m_PBRLayer->setPlane(near, far);
+        });
+    }
+
     MeshID Renderer::createMesh(const MeshDesc &meshDesc) {
-        return 0;
+        SR_PRECONDITION(m_PBRLayer.get() != nullptr, "PBRRenderLayer is null (%p)", m_PBRLayer.get());
+
+        MeshID meshID = 0;
+        // wait for the render thread to create the mesh, otherwise invalid meshIDs may be used
+        m_RenderThread.addTaskSync([this, &meshDesc, &meshID]{
+            meshID = m_PBRLayer->createMesh(meshDesc);
+        });
+        return meshID;
     }
 
     void Renderer::transformMesh(MeshID mesh, const glm::mat4 &transform) {
+        SR_PRECONDITION(m_PBRLayer.get() != nullptr, "PBRRenderLayer is null (%p)", m_PBRLayer.get());
+        SR_PRECONDITION(mesh != 0, "MeshID is 0 (%d)", mesh);
 
+        m_RenderThread.addTask([this, mesh, transform]{
+            m_PBRLayer->transformMesh(mesh, transform);
+        });
     }
 
     void Renderer::removeMesh(MeshID mesh) {
+        SR_PRECONDITION(m_PBRLayer.get() != nullptr, "PBRRenderLayer is null (%p)", m_PBRLayer.get());
+        SR_PRECONDITION(mesh != 0, "MeshID is 0 (%d)", mesh);
 
+        m_RenderThread.addTask([this, mesh]{
+            m_PBRLayer->removeMesh(mesh);
+        });
     }
+
 }

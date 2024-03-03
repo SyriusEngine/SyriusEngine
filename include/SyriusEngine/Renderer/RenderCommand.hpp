@@ -10,6 +10,12 @@ namespace Syrius{
 
         virtual ~RenderCommand() = default;
 
+        virtual void onResize(uint32_t width, uint32_t height) = 0;
+
+        virtual void setProjectionFOV(float fov) = 0;
+
+        virtual void setPlane(float near, float far) = 0;
+
         virtual MeshID createMesh(const MeshDesc& meshDesc) = 0;
 
         virtual void transformMesh(MeshID mesh, const glm::mat4& transform) = 0;
