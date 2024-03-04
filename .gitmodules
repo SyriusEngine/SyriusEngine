@@ -10,3 +10,6 @@
 [submodule "Dependencies/SRSTL"]
 	path = Dependencies/SRSTL
 	url = https://github.com/SyriusEngine/SRSTL
+[submodule "Dependencies/googletest"]
+	path = Dependencies/googletest
+	url = https://github.com/google/googletest

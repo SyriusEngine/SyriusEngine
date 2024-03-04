@@ -8,6 +8,7 @@ add_compile_definitions(SR_DEBUG)
 
 add_subdirectory(./Dependencies/SRSLCompiler/)
 add_subdirectory(./Dependencies/SyriusCore/)
+add_subdirectory(./Dependencies/googletest/)
 
 set(SR_DEPENDENCIES_DLL
     ${CMAKE_CURRENT_BINARY_DIR}/Dependencies/SyriusCore/libSyriusCore.dll
@@ -70,8 +71,24 @@ add_dependencies(SyriusEngine CopyDLL)
 target_link_libraries(SyriusEngine -lSyriusCore -lSRSLCompiler)
 
 
-################# TEST EXECUTABLE #################
+################# APP EXECUTABLE #################
 link_directories(./cmake-build-debug/)
-add_executable(SyriusEngineDev main.cpp SyriusEngineDev/Applayer.cpp SyriusEngineDev/Camera.cpp SyriusEngineDev/BuiltIns.cpp SyriusEngineDev/BuiltIns.hpp)
 
-target_link_libraries(SyriusEngineDev -lSyriusEngine -lSyriusCore)
+set(APP_SRC
+    SyriusEngineApp/Applayer.cpp
+    SyriusEngineApp/Camera.cpp
+    SyriusEngineApp/BuiltIns.cpp
+    )
+
+add_executable(SyriusEngineApp ${APP_SRC} main.cpp)
+
+target_link_libraries(SyriusEngineApp -lSyriusEngine -lSyriusCore)
+
+#################### TESTING ###############################
+include_directories(./Dependencies/googletest/googletest/include/)
+link_directories(./cmake-build-debug/lib/)
+
+set(TEST_SRC Tests/EngineInitializationTest.cpp Tests/EngineInitializationTest.hpp)
+
+add_executable(SyriusEngineTest TestMain.cpp ${TEST_SRC})
+target_link_libraries(SyriusEngineTest -lSyriusEngine -lSyriusCore -lgtest)
