@@ -70,4 +70,8 @@ namespace Syrius{
         m_Renderer = createResource<Renderer>(rDesc, m_LayerStack, m_Window);
         m_RenderCommand = createResourceView<RenderCommand>(m_Renderer.get());
     }
+
+    void SyriusEngineImpl::shutdown() {
+        m_Window->close();
+    }
 }

@@ -19,6 +19,8 @@ namespace Syrius{
 
         void pushRenderLayer(Resource<RenderLayer> layer) override;
 
+        void shutdown() override;
+
     private:
 
         void setupWindow();

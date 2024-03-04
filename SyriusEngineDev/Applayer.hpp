@@ -30,11 +30,13 @@ namespace Syrius{
 
         void imGuiDrawFrameTimes();
 
-        void imGuiDrawMemoryConsumption();
+        static void imGuiDrawMemoryConsumption();
 
     private:
         Resource<SyriusEngine>& m_Engine;
         Resource<Camera> m_Camera;
+
+        bool m_UseCamera;
 
         time_t m_DeltaTime;
         time_t m_LastFrameTime;

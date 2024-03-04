@@ -22,9 +22,13 @@ namespace Syrius{
 
         virtual void pushRenderLayer(Resource<RenderLayer> layer) = 0;
 
+        virtual void shutdown() = 0;
+
         [[nodiscard]] inline const Resource<SyriusWindow>& getWindow() const { return m_Window; }
 
         [[nodiscard]] inline const ResourceView<RenderCommand>& getRenderCommand() const { return m_RenderCommand; }
+
+
 
     protected:
         Resource<SyriusWindow> m_Window;

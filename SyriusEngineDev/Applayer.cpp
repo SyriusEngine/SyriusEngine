@@ -6,7 +6,8 @@ namespace Syrius{
     AppLayer::AppLayer(Resource<SyriusEngine> &engine):
     RenderLayer(),
     m_Engine(engine),
-    m_Camera(nullptr){
+    m_Camera(nullptr),
+    m_UseCamera(false){
 
     }
 
@@ -37,7 +38,29 @@ namespace Syrius{
     }
 
     bool AppLayer::onEvent(const Event &event) {
-        m_Camera->update(event, m_DeltaTime);
+        if (event.type == SR_EVENT_KEYBOARD_KEY_PRESSED){
+            if (event.keyCode == SR_KEY_ESCAPE){
+                m_Engine->getWindow()->close();
+            }
+            if (event.keyCode == SR_KEY_F){
+                m_UseCamera = !m_UseCamera;
+                if (m_UseCamera){
+                    m_Engine->getWindow()->hideMouse();
+                    m_Engine->getWindow()->grabMouse();
+                    //m_Engine->getWindow()->enableFullscreen();
+                }
+                else{
+                    m_Engine->getWindow()->showMouse();
+                    m_Engine->getWindow()->releaseMouse();
+                    //m_Engine->getWindow()->disableFullscreen();
+                }
+            }
+        }
+
+        if (m_UseCamera) {
+            m_Camera->update(event, m_DeltaTime);
+            return false;
+        }
         return true;
     }
 
@@ -53,6 +76,12 @@ namespace Syrius{
         m_Engine->getWindow()->onImGuiBegin();
 
         ImGui::Begin("Debug");
+        if (m_UseCamera){
+            ImGui::TextColored(ImVec4(0.0f, 1.0f, 0.0f, 1.0f), "Camera: ON");
+        } else {
+            ImGui::TextColored(ImVec4(1.0f, 0.0f, 0.0f, 1.0f), "Camera: OFF");
+        }
+        ImGui::Text("Press F to take/release camera control");
         imGuiDrawFrameTimes();
         imGuiDrawMemoryConsumption();
 
