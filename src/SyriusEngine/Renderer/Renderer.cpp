@@ -125,4 +125,52 @@ namespace Syrius{
         });
     }
 
+    MaterialID Renderer::createMaterial(const Material &material) {
+        SR_PRECONDITION(m_PBRLayer.get() != nullptr, "PBRRenderLayer is null (%p)", m_PBRLayer.get());
+
+        MaterialID materialID = 0;
+        m_RenderThread.addTaskSync([this, &material, &materialID]{
+            materialID = m_PBRLayer->createMaterial(material);
+        });
+
+        SR_POSTCONDITION(materialID != 0, "Material ID is %i", materialID);
+        return materialID;
+    }
+
+    void Renderer::removeMaterial(MaterialID materialID) {
+        SR_PRECONDITION(m_PBRLayer.get() != nullptr, "PBRRenderLayer is null (%p)", m_PBRLayer.get());
+        SR_PRECONDITION(materialID != 0, "Material ID is %i", materialID);
+
+        m_RenderThread.addTask([this, materialID]{
+            m_PBRLayer->removeMaterial(materialID);
+        });
+
+    }
+
+    LightID Renderer::createLight(const Light &light) {
+        SR_PRECONDITION(m_PBRLayer.get() != nullptr, "PBRRenderLayer is null (%p)", m_PBRLayer.get());
+
+        return 0;
+    }
+
+    void Renderer::updateLight(LightID lightID, const Light &light) {
+        SR_PRECONDITION(m_PBRLayer.get() != nullptr, "PBRRenderLayer is null (%p)", m_PBRLayer.get());
+
+    }
+
+    void Renderer::removeLight(LightID lightID) {
+        SR_PRECONDITION(m_PBRLayer.get() != nullptr, "PBRRenderLayer is null (%p)", m_PBRLayer.get());
+
+    }
+
+    void Renderer::setCameraData(const glm::mat4 &viewMat, const glm::vec3 &camPos) {
+        SR_PRECONDITION(m_PBRLayer.get() != nullptr, "PBRRenderLayer is null (%p)", m_PBRLayer.get());
+
+    }
+
+    void Renderer::meshSetMaterial(MeshID meshID, MaterialID materialID) {
+        SR_PRECONDITION(m_PBRLayer.get() != nullptr, "PBRRenderLayer is null (%p)", m_PBRLayer.get());
+
+    }
+
 }

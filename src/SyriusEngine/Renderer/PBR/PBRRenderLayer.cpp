@@ -108,4 +108,32 @@ namespace Syrius{
 
         m_CameraDataPass->setCameraData(viewMat, camPos);
     }
+
+    MaterialID PBRRenderLayer::createMaterial(const Material &material) {
+        return 0;
+    }
+
+    void PBRRenderLayer::removeMaterial(MaterialID materialID) {
+
+    }
+
+    LightID PBRRenderLayer::createLight(const Light &light) {
+        return 0;
+    }
+
+    void PBRRenderLayer::updateLight(LightID lightID, const Light &light) {
+
+    }
+
+    void PBRRenderLayer::removeLight(LightID lightID) {
+
+    }
+
+    void PBRRenderLayer::setCameraData(const glm::mat4 &viewMat, const glm::vec3 &camPos) {
+
+    }
+
+    void PBRRenderLayer::meshSetMaterial(MeshID meshID, MaterialID materialID) {
+
+    }
 }

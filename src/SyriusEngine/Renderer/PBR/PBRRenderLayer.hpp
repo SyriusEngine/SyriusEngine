@@ -47,6 +47,20 @@ namespace Syrius{
 
         void updateCamera(const glm::mat4 &viewMat, const glm::vec3 &camPos) override;
 
+        MaterialID createMaterial(const Material& material) override;
+
+        void removeMaterial(MaterialID materialID) override;
+
+        LightID createLight(const Light& light) override;
+
+        void updateLight(LightID lightID, const Light& light) override;
+
+        void removeLight(LightID lightID) override;
+
+        void setCameraData(const glm::mat4& viewMat, const glm::vec3& camPos) override;
+
+        void meshSetMaterial(MeshID meshID, MaterialID materialID) override;
+
     private:
         Resource<ShaderLibrary>& m_ShaderLibrary;
 

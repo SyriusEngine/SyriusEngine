@@ -1,0 +1,16 @@
+struct PS_IN{
+    float4 position: SV_Position;
+    float4 worldPosition: WorldPosition;
+    float2 texCoords: TexCoords;
+    float3x3 TBN: TBNMatrix;
+};
+
+struct PS_OUT{
+    float4 gPositions: SV_TARGET0;
+};
+
+PS_OUT main(PS_IN psIn){
+    PS_OUT psOut;
+    psOut.gPositions = psIn.worldPosition;
+    return psOut;
+}

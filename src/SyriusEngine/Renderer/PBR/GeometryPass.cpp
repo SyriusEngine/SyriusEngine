@@ -22,6 +22,7 @@ namespace Syrius{
         cbDesc.name = gpDesc.modelDataBufferName;
         cbDesc.size = sizeof(TransformData);
         cbDesc.shaderStage = SR_SHADER_VERTEX;
+        cbDesc.usage = SR_BUFFER_USAGE_DYNAMIC;
         cbDesc.data = &transformData;
         m_ModelData = m_Context->createConstantBuffer(cbDesc);
 
