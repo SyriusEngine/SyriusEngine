@@ -21,6 +21,8 @@ namespace Syrius{
         virtual void transformMesh(MeshID mesh, const glm::mat4& transform) = 0;
 
         virtual void removeMesh(MeshID mesh) = 0;
+
+        virtual void updateCamera(const glm::mat4 &viewMat, const glm::vec3 &camPos) = 0;
     };
 
 }

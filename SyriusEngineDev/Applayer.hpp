@@ -1,8 +1,10 @@
 #pragma once
 
 #include "Include.hpp"
+#include "Camera.hpp"
+#include "BuiltIns.hpp"
 
-namespace SyriusApp{
+namespace Syrius{
 
     class AppLayer: public RenderLayer{
     public:
@@ -32,6 +34,7 @@ namespace SyriusApp{
 
     private:
         Resource<SyriusEngine>& m_Engine;
+        Resource<Camera> m_Camera;
 
         time_t m_DeltaTime;
         time_t m_LastFrameTime;

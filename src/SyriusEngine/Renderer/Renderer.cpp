@@ -117,4 +117,12 @@ namespace Syrius{
         });
     }
 
+    void Renderer::updateCamera(const glm::mat4 &viewMat, const glm::vec3 &camPos) {
+        SR_PRECONDITION(m_PBRLayer.get() != nullptr, "PBRRenderLayer is null (%p)", m_PBRLayer.get());
+
+        m_RenderThread.addTask([this, viewMat, camPos]{
+            m_PBRLayer->updateCamera(viewMat, camPos);
+        });
+    }
+
 }

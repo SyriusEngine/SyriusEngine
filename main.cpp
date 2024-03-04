@@ -12,7 +12,7 @@ int main(int argc, char** argv) {
         auto engine =  Syrius::createEngine(argv[1]);
 
         // then create the example layer
-        auto appLayer = Syrius::createResource<SyriusApp::AppLayer>(engine);
+        auto appLayer = Syrius::createResource<Syrius::AppLayer>(engine);
 
         // push our example layer onto the engine.
         // the engine will take ownership of the layer

@@ -5,7 +5,9 @@ namespace Syrius{
     PBRRenderLayer::PBRRenderLayer(Resource<ShaderLibrary> &shaderLibrary):
     RenderLayer(),
     RenderCommand(),
-    m_ShaderLibrary(shaderLibrary){
+    m_ShaderLibrary(shaderLibrary),
+    m_ProjectionPass(nullptr),
+    m_CameraDataPass(nullptr){
 
     }
 
@@ -37,6 +39,18 @@ namespace Syrius{
         prpDesc.projection.windowWidth = static_cast<float>(context->getWidth());
         prpDesc.projection.windowHeight = static_cast<float>(context->getHeight());
         m_ProjectionPass = m_RenderGraph->addPass<ProjectionPass>(context, prpDesc);
+
+        CameraDataPassDesc cdpDesc;
+        cdpDesc.slot = 0;
+        cdpDesc.bufferName = "CameraData";
+        m_CameraDataPass = m_RenderGraph->addPass<CameraDataPass>(context, cdpDesc);
+
+        GeometryPassDesc gpDesc;
+        gpDesc.modelDataBufferSlot = 2;
+        gpDesc.modelDataBufferName = "ModelData";
+        m_GeometryPass = m_RenderGraph->addPass<GeometryPass>(context, m_ShaderLibrary, gpDesc);
+
+        m_RenderGraph->addPass<LFWRSamplerPass>(context, 0);
 
         m_RenderGraph->validate();
         m_RenderGraph->compile();
@@ -72,14 +86,26 @@ namespace Syrius{
     }
 
     MeshID PBRRenderLayer::createMesh(const MeshDesc &meshDesc) {
-        return 0;
+        SR_PRECONDITION(m_GeometryPass != nullptr, "GeometryPass is null (%p)", m_GeometryPass);
+
+        return m_GeometryPass->createMesh(meshDesc);
     }
 
     void PBRRenderLayer::transformMesh(MeshID mesh, const glm::mat4 &transform) {
+        SR_PRECONDITION(m_GeometryPass != nullptr, "GeometryPass is null (%p)", m_GeometryPass);
 
+        m_GeometryPass->transformMesh(mesh, transform);
     }
 
     void PBRRenderLayer::removeMesh(MeshID mesh) {
+        SR_PRECONDITION(m_GeometryPass != nullptr, "GeometryPass is null (%p)", m_GeometryPass);
 
+        m_GeometryPass->removeMesh(mesh);
+    }
+
+    void PBRRenderLayer::updateCamera(const glm::mat4 &viewMat, const glm::vec3 &camPos) {
+        SR_PRECONDITION(m_CameraDataPass != nullptr, "CameraDataPass is null (%p)", m_CameraDataPass);
+
+        m_CameraDataPass->setCameraData(viewMat, camPos);
     }
 }

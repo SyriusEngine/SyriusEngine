@@ -7,3 +7,6 @@
 [submodule "Dependencies/EasyIni"]
 	path = Dependencies/EasyIni
 	url = https://github.com/artick788/EasyIni
+[submodule "Dependencies/SRSTL"]
+	path = Dependencies/SRSTL
+	url = https://github.com/SyriusEngine/SRSTL

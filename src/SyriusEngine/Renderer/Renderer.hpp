@@ -41,6 +41,8 @@ namespace Syrius{
 
         void removeMesh(MeshID mesh) override;
 
+        void updateCamera(const glm::mat4 &viewMat, const glm::vec3 &camPos) override;
+
     private:
         LayerStack& m_LayerStack;
 

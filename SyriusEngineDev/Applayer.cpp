@@ -1,17 +1,24 @@
 #include "Applayer.hpp"
 
-namespace SyriusApp{
+namespace Syrius{
 
 
     AppLayer::AppLayer(Resource<SyriusEngine> &engine):
     RenderLayer(),
-    m_Engine(engine){
+    m_Engine(engine),
+    m_Camera(nullptr){
 
     }
 
     AppLayer::~AppLayer() = default;
 
     void AppLayer::onAttach() {
+        m_Camera = createResource<Camera>(m_Engine->getRenderCommand(), 0.1f, 0.01f);
+
+        MeshDesc cube;
+        createCube(cube);
+
+        auto cubeID = m_Engine->getRenderCommand()->createMesh(cube);
 
     }
 
@@ -30,6 +37,7 @@ namespace SyriusApp{
     }
 
     bool AppLayer::onEvent(const Event &event) {
+        m_Camera->update(event, m_DeltaTime);
         return true;
     }
 
@@ -42,8 +50,6 @@ namespace SyriusApp{
     }
 
     void AppLayer::onRender(ResourceView<Context> &context) {
-        context->beginRenderPass();
-
         m_Engine->getWindow()->onImGuiBegin();
 
         ImGui::Begin("Debug");
@@ -52,8 +58,6 @@ namespace SyriusApp{
 
         ImGui::End();
         m_Engine->getWindow()->onImGuiEnd();
-
-        context->endRenderPass();
     }
 
     void AppLayer::imGuiDrawFrameTimes() {

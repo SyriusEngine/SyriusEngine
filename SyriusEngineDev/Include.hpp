@@ -2,7 +2,6 @@
 
 #include "../include/SyriusEngine/SyriusEngine.hpp"
 
-namespace SyriusApp{
+namespace Syrius{
 
-    using namespace Syrius;
 }

@@ -30,6 +30,8 @@ include_directories(./Dependencies/glm/)
 
 include_directories(./Dependencies/EasyIni/include/)
 
+include_directories(./Dependencies/SRSTL/include/)
+
 set(SR_ENGINE_CORE_SRC
     src/SyriusEngine/Core/DebugMessageHandler.cpp
     src/SyriusEngine/Core/InternalInclude.cpp)
@@ -47,6 +49,9 @@ set(SR_ENGINE_RENDERER_SRC
     src/SyriusEngine/Renderer/PBR/PBRRenderLayer.cpp
     src/SyriusEngine/Renderer/PBR/ProjectionPass.cpp
     src/SyriusEngine/Renderer/PBR/CameraDataPass.cpp
+    src/SyriusEngine/Renderer/PBR/LFWRSamplerPass.cpp
+    src/SyriusEngine/Renderer/PBR/MeshHandle.cpp
+    src/SyriusEngine/Renderer/PBR/GeometryPass.cpp
 )
 
 set(SR_ENGINE_UTILS_SRC
@@ -67,6 +72,6 @@ target_link_libraries(SyriusEngine -lSyriusCore -lSRSLCompiler)
 
 ################# TEST EXECUTABLE #################
 link_directories(./cmake-build-debug/)
-add_executable(SyriusEngineDev main.cpp SyriusEngineDev/Applayer.cpp SyriusEngineDev/Applayer.hpp)
+add_executable(SyriusEngineDev main.cpp SyriusEngineDev/Applayer.cpp SyriusEngineDev/Camera.cpp SyriusEngineDev/BuiltIns.cpp SyriusEngineDev/BuiltIns.hpp)
 
 target_link_libraries(SyriusEngineDev -lSyriusEngine -lSyriusCore)

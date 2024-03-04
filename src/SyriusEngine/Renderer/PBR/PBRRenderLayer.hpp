@@ -7,6 +7,9 @@
 #include "../RenderGraph.hpp"
 
 #include "ProjectionPass.hpp"
+#include "CameraDataPass.hpp"
+#include "LFWRSamplerPass.hpp"
+#include "GeometryPass.hpp"
 
 namespace Syrius{
 
@@ -42,11 +45,15 @@ namespace Syrius{
 
         void removeMesh(MeshID mesh) override;
 
+        void updateCamera(const glm::mat4 &viewMat, const glm::vec3 &camPos) override;
+
     private:
         Resource<ShaderLibrary>& m_ShaderLibrary;
 
         Resource<RenderGraph> m_RenderGraph;
 
         ProjectionPass* m_ProjectionPass;
+        CameraDataPass* m_CameraDataPass;
+        GeometryPass* m_GeometryPass;
     };
 }
