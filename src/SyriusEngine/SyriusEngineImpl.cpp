@@ -27,9 +27,6 @@ namespace Syrius{
             m_Window->pollEvents();
             while (m_Window->hasEvent()){
                 auto event = m_Window->getEvent();
-                if (event.type == SR_EVENT_WINDOW_CLOSED){
-                    m_Window->close();
-                }
                 m_LayerStack.onEvent(event);
             }
 

@@ -38,23 +38,30 @@ namespace Syrius{
     }
 
     bool AppLayer::onEvent(const Event &event) {
-        if (event.type == SR_EVENT_KEYBOARD_KEY_PRESSED){
-            if (event.keyCode == SR_KEY_ESCAPE){
-                m_Engine->getWindow()->close();
-            }
-            if (event.keyCode == SR_KEY_F){
-                m_UseCamera = !m_UseCamera;
-                if (m_UseCamera){
-                    m_Engine->getWindow()->hideMouse();
-                    m_Engine->getWindow()->grabMouse();
-                    //m_Engine->getWindow()->enableFullscreen();
+        switch (event.type) {
+            case SR_EVENT_WINDOW_CLOSED: m_Engine->shutdown(); break;
+            case SR_EVENT_WINDOW_RESIZED: m_Engine->getRenderCommand()->onResize(event.windowWidth, event.windowHeight); break;
+            case SR_EVENT_RAW_KEYBOARD_KEY_PRESSED: {
+                if (event.keyCode == SR_KEY_ESCAPE){
+                    m_Engine->getWindow()->close();
                 }
-                else{
-                    m_Engine->getWindow()->showMouse();
-                    m_Engine->getWindow()->releaseMouse();
-                    //m_Engine->getWindow()->disableFullscreen();
+                if (event.keyCode == SR_KEY_F){
+                    m_UseCamera = !m_UseCamera;
+                    if (m_UseCamera){
+                        m_Engine->getWindow()->hideMouse();
+                        m_Engine->getWindow()->grabMouse();
+                        //m_Engine->getWindow()->enableFullscreen();
+                    }
+                    else{
+                        m_Engine->getWindow()->showMouse();
+                        m_Engine->getWindow()->releaseMouse();
+                        //m_Engine->getWindow()->disableFullscreen();
+                    }
                 }
+                break;
             }
+            default:
+                break;
         }
 
         if (m_UseCamera) {
