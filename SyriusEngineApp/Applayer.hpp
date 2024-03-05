@@ -2,7 +2,7 @@
 
 #include "Include.hpp"
 #include "Camera.hpp"
-#include "BuiltIns.hpp"
+#include "../include/SyriusEngine/BuiltIns.hpp"
 
 namespace Syrius{
 

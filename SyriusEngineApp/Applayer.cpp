@@ -17,7 +17,7 @@ namespace Syrius{
         m_Camera = createResource<Camera>(m_Engine->getRenderCommand(), 0.1f, 0.01f);
 
         MeshDesc cube;
-        createCube(cube);
+        createTriangle(cube);
 
         auto cubeID = m_Engine->getRenderCommand()->createMesh(cube);
 

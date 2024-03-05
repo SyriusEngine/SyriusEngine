@@ -1,4 +1,4 @@
-#include "BuiltIns.hpp"
+#include "../../include/SyriusEngine/BuiltIns.hpp"
 
 namespace Syrius{
 
@@ -26,6 +26,23 @@ namespace Syrius{
             v1.tangent = tangent;
             v2.tangent = tangent;
         }
+    }
+
+    void createTriangle(MeshDesc& triangle){
+        triangle.vertices = {
+                {glm::vec3(-0.5f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, -1.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec2(0.0f, 0.0f)},
+                {glm::vec3(0.5f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, -1.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec2(1.0f, 0.0f)},
+                {glm::vec3(0.0f, 0.5f, 0.0f), glm::vec3(0.0f, 0.0f, -1.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec2(0.5f, 1.0f)}
+        };
+        triangle.indices = {0, 1, 2};
+    }
+
+    void createRectangle(MeshDesc& rectangle){
+
+    }
+
+    void createCone(MeshDesc& cone){
+
     }
 
     void createCube(MeshDesc& cube){

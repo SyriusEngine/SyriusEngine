@@ -64,6 +64,7 @@ set(SR_ENGINE_SRC
     ${SR_ENGINE_UTILS_SRC}
     src/SyriusEngine/SyriusEngine.cpp
     src/SyriusEngine/LayerStack.cpp
+    src/SyriusEngine/BuiltIns.cpp
     src/SyriusEngine/SyriusEngineImpl.cpp)
 
 add_library(SyriusEngine SHARED ${SR_ENGINE_SRC})
@@ -77,7 +78,6 @@ link_directories(./cmake-build-debug/)
 set(APP_SRC
     SyriusEngineApp/Applayer.cpp
     SyriusEngineApp/Camera.cpp
-    SyriusEngineApp/BuiltIns.cpp
     )
 
 add_executable(SyriusEngineApp ${APP_SRC} main.cpp)
