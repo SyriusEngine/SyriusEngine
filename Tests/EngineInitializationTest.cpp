@@ -27,5 +27,4 @@ TEST_F(EngineInitializationTest, nonExistingConfigFile){
         std::string exc = e.what();
         EXPECT_TRUE(exc == "File: " + configFile + " does not exist");
     }
-
 }

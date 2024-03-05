@@ -76,4 +76,8 @@ namespace Syrius{
 
     }
 
+    void DebugMessageHandler::setDebugMessageHandler(HandleDebugMessageFunc cb) {
+        m_MessageHandler = cb;
+    }
+
 }

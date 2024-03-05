@@ -70,6 +70,8 @@ namespace Syrius{
 
         static void receiveSyriusCoreMessage(const Syrius::Message& msg);
 
+        static void setDebugMessageHandler(HandleDebugMessageFunc cb);
+
     private:
 
         static void defaultMessageHandler(const EngineMessage& msg);

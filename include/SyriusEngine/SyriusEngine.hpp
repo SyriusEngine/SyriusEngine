@@ -42,4 +42,6 @@ namespace Syrius{
 
     SR_API Resource<SyriusEngine> createEngine(const std::string& configFile = "config.ini");
 
+    SR_API void setDebugMessageHandler(HandleDebugMessageFunc cb);
+
 }

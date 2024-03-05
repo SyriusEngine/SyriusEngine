@@ -81,6 +81,7 @@ set(APP_SRC
     )
 
 add_executable(SyriusEngineApp ${APP_SRC} main.cpp)
+add_dependencies(SyriusEngineApp SyriusEngine)
 
 target_link_libraries(SyriusEngineApp -lSyriusEngine -lSyriusCore)
 
@@ -91,4 +92,5 @@ link_directories(./cmake-build-debug/lib/)
 set(TEST_SRC Tests/EngineInitializationTest.cpp Tests/EngineInitializationTest.hpp)
 
 add_executable(SyriusEngineTest TestMain.cpp ${TEST_SRC})
+add_dependencies(SyriusEngineTest SyriusEngine)
 target_link_libraries(SyriusEngineTest -lSyriusEngine -lSyriusCore -lgtest)

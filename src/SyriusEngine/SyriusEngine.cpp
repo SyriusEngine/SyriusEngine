@@ -21,4 +21,8 @@ namespace Syrius{
     Resource<SyriusEngine> createEngine(const std::string& configFile){
         return createResource<SyriusEngineImpl>(configFile);
     }
+
+    void setDebugMessageHandler(HandleDebugMessageFunc cb){
+        DebugMessageHandler::setDebugMessageHandler(cb);
+    }
 }
