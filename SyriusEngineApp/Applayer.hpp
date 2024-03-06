@@ -32,9 +32,13 @@ namespace Syrius{
 
         static void imGuiDrawMemoryConsumption();
 
+        void createRandomMesh();
+
     private:
         Resource<SyriusEngine>& m_Engine;
         Resource<Camera> m_Camera;
+
+        std::vector<MeshID> m_Meshes;
 
         bool m_UseCamera;
 

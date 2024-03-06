@@ -17,15 +17,6 @@
 
 namespace Syrius{
 
-    inline uint64 getRandom(uint64 min, uint64 max){
-        std::random_device rd;
-        Time seeder = getTimeMilli();
-        std::mt19937_64::result_type seed = rd() ^ seeder;
-        std::mt19937_64 gen(seed);
-        std::uniform_int_distribution<uint64> dist(min, max);
-        return dist(gen);
-    }
-
     inline UID generateID(){
         return getRandom(1, UINT64_MAX);;
     }

@@ -12,6 +12,7 @@
 #include <unordered_map>
 #include <fstream>
 #include <chrono>
+#include <random>
 
 #include "PlatformDetection.hpp"
 
@@ -33,6 +34,15 @@ namespace Syrius{
         return std::chrono::duration_cast<std::chrono::milliseconds>(
                 std::chrono::system_clock::now().time_since_epoch())
                 .count();
+    }
+
+    inline uint64 getRandom(uint64 min, uint64 max){
+        std::random_device rd;
+        Time seeder = getTimeMilli();
+        std::mt19937_64::result_type seed = rd() ^ seeder;
+        std::mt19937_64 gen(seed);
+        std::uniform_int_distribution<uint64> dist(min, max);
+        return dist(gen);
     }
 
 }
