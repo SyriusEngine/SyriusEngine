@@ -35,13 +35,41 @@ namespace Syrius{
                 {glm::vec3(0.0f, 0.5f, 0.0f), glm::vec3(0.0f, 0.0f, -1.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec2(0.5f, 1.0f)}
         };
         triangle.indices = {0, 1, 2};
+        calculateTangents(triangle);
     }
 
     void createRectangle(MeshDesc& rectangle){
-
+        rectangle.vertices = {
+                {glm::vec3(-0.5f, -0.5f, 0.0f), glm::vec3(0.0f, 0.0f, -1.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec2(0.0f, 0.0f)},
+                {glm::vec3(0.5f, -0.5f, 0.0f), glm::vec3(0.0f, 0.0f, -1.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec2(1.0f, 0.0f)},
+                {glm::vec3(0.5f, 0.5f, 0.0f), glm::vec3(0.0f, 0.0f, -1.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec2(1.0f, 1.0f)},
+                {glm::vec3(-0.5f, 0.5f, 0.0f), glm::vec3(0.0f, 0.0f, -1.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec2(0.0f, 1.0f)}
+        };
+        rectangle.indices = {
+                0, 1, 2,
+                0, 2, 3,
+        };
+        calculateTangents(rectangle);
     }
 
-    void createCone(MeshDesc& cone){
+    void createPyramid(MeshDesc& pyramid){
+        pyramid.vertices = {
+                { { 0.0f, 0.5f, 0.0f }, { 0.0f, 0.0f, 1.0f }, {0.0f, 1.0f, 0.0f}, {0.0f, 0.0f} },
+                { {  0.5f, -0.5f, 0.5f }, { 0.0f, 0.0f, 1.0f }, {0.0f, 1.0f, 0.0f}, {0.0f, 1.0f} },
+                { {  -0.5f,  -0.5f, 0.5f }, { 0.0f, 0.0f, 1.0f }, {0.0f, 1.0f, 0.0f}, {1.0f, 1.0f} },
+                { {  -0.5f,  -0.5f, -0.5f }, { 0.0f, 0.0f, 1.0f }, {0.0f, 1.0f, 0.0f}, {1.0f, 0.0f} },
+                { {  0.5f, -0.5f, -0.5f }, { 0.0f, 0.0f, 1.0f }, {0.0f, 1.0f, 0.0f}, {1.0f, 0.0f} },
+        };
+
+        pyramid.indices = {
+                0, 1, 2,
+                0, 2, 3,
+                0, 3, 4,
+                0, 4, 1,
+                1, 4, 3,
+                1, 3, 2
+        };
+        calculateTangents(pyramid);
 
     }
 
@@ -98,6 +126,61 @@ namespace Syrius{
                 20, 22, 21
         };
         calculateTangents(cube);
+    }
+
+    void createSphere(MeshDesc& sphere, uint32 rings, uint32 sectors){
+        float const R = 1.0f/(float)(rings-1);
+        float const S = 1.0f/(float)(sectors-1);
+        uint32 r, s;
+
+        for(r = 0; r < rings; r++) for(s = 0; s < sectors; s++) {
+                float const y = sin( -M_PI_2 + M_PI * r * R );
+                float const x = cos(2*M_PI * s * S) * sin( M_PI * r * R );
+                float const z = sin(2*M_PI * s * S) * sin( M_PI * r * R );
+
+                auto position = glm::vec3(x, y, z);
+                auto normal = glm::normalize(position);
+                auto tangent = glm::vec3(0.0f, 1.0f, 0.0f);
+                auto texCoords = glm::vec2(s*S, r*R);
+
+                sphere.vertices.push_back({position, normal, tangent, texCoords});
+            }
+
+        for(r = 0; r < rings-1; r++) for(s = 0; s < sectors-1; s++) {
+                sphere.indices.push_back(r * sectors + s);
+                sphere.indices.push_back(r * sectors + (s+1));
+                sphere.indices.push_back((r+1) * sectors + (s+1));
+
+                sphere.indices.push_back(r * sectors + s);
+                sphere.indices.push_back((r+1) * sectors + (s+1));
+                sphere.indices.push_back((r+1) * sectors + s);
+            }
+
+        calculateTangents(sphere);
+    }
+
+    void createCone(MeshDesc& cone, uint32 sectors){
+        float const S = 1.0f/(float)(sectors-1);
+        uint32 s;
+
+        cone.vertices.push_back({{0.0f, 0.5f, 0.0f}, {0.0f, 0.0f, 1.0f}, {0.0f, 1.0f, 0.0f}, {0.0f, 0.0f}});
+        for(s = 0; s < sectors; s++) {
+            float const x = cos(2*M_PI * s * S);
+            float const z = sin(2*M_PI * s * S);
+
+            cone.vertices.push_back({{x, -0.5f, z}, {x, -0.5f, z}, {0.0f, 1.0f, 0.0f}, {s*S, 1.0f}});
+        }
+
+        for(s = 0; s < sectors-1; s++) {
+            cone.indices.push_back(0);
+            cone.indices.push_back(s+1);
+            cone.indices.push_back(s+2);
+        }
+        cone.indices.push_back(0);
+        cone.indices.push_back(sectors);
+        cone.indices.push_back(1);
+
+        calculateTangents(cone);
     }
 
 }
