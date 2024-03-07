@@ -30,25 +30,33 @@ namespace Syrius{
     }
 
     void Worker::threadFunc() {
-        for (;;){
-            decltype(m_Queue) queue;
-            {
-                std::unique_lock<std::mutex> lk(m_Mutex);
-                m_Condition.wait(lk, [&] {
-                    return !m_Queue.empty() + !m_IsRunning;
-                });
-                if (!m_IsRunning){
-                    for (auto& func: m_Queue){
-                        func();
+        try{
+            for (;;){
+                decltype(m_Queue) queue;
+                {
+                    std::unique_lock<std::mutex> lk(m_Mutex);
+                    m_Condition.wait(lk, [&] {
+                        return !m_Queue.empty() + !m_IsRunning;
+                    });
+                    if (!m_IsRunning){
+                        for (auto& func: m_Queue){
+                            func();
+                        }
+                        m_Queue.clear();
+                        return;
                     }
-                    m_Queue.clear();
-                    return;
+                    std::swap(m_Queue, queue);
                 }
-                std::swap(m_Queue, queue);
+                for (auto& func: queue){
+                    func();
+                }
             }
-            for (auto& func: queue){
-                func();
-            }
+        } catch (std::exception& e){
+            std::cerr << "Worker thread exception: " << e.what() << std::endl;
+            std::abort();
+        } catch (...){
+            std::cerr << "Worker thread exception, unknown error" << std::endl;
+            std::abort();
         }
     }
 }

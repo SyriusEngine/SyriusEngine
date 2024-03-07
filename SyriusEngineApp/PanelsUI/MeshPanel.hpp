@@ -2,6 +2,7 @@
 
 #include "../Include.hpp"
 #include "../Mesh.hpp"
+#include "../MaterialLoader.hpp"
 
 namespace Syrius{
 
@@ -26,6 +27,8 @@ namespace Syrius{
         int32 m_SelectedMesh;
 
         std::vector<Resource<Mesh>> m_Meshes;
+        MaterialLoader m_MaterialLoader;
+        std::vector<std::string> m_MaterialNames;
     };
 
 }

@@ -21,7 +21,7 @@ namespace Syrius{
         std::vector<uint32> indices;
     };
 
-    struct SR_API Material{
+    struct SR_API MaterialDesc{
         Resource<Image> albedo = nullptr;
         Resource<Image> normal = nullptr;
         Resource<Image> metallic = nullptr;

@@ -50,7 +50,13 @@ namespace Syrius{
         gpDesc.modelDataBufferName = "ModelData";
         m_GeometryPass = m_RenderGraph->addPass<GeometryPass>(context, m_ShaderLibrary, gpDesc);
 
+        LightDataPassDesc ldpDesc;
+        ldpDesc.slot = 3;
+        m_LightDataPass = m_RenderGraph->addPass<LightDataPass>(context, ldpDesc);
+
         m_RenderGraph->addPass<LFWRSamplerPass>(context, 0);
+        m_RenderGraph->addPass<GBufferPass>(context);
+        m_RenderGraph->addPass<LightPass>(context, m_ShaderLibrary);
 
         m_RenderGraph->validate();
         m_RenderGraph->compile();
@@ -109,31 +115,39 @@ namespace Syrius{
         m_CameraDataPass->setCameraData(viewMat, camPos);
     }
 
-    MaterialID PBRRenderLayer::createMaterial(const Material &material) {
-        return 0;
-    }
+    MaterialID PBRRenderLayer::createMaterial(const MaterialDesc &material) {
+        SR_PRECONDITION(m_GeometryPass != nullptr, "GeometryPass is null (%p)", m_GeometryPass);
 
-    void PBRRenderLayer::removeMaterial(MaterialID materialID) {
-
-    }
-
-    LightID PBRRenderLayer::createLight(const Light &light) {
-        return 0;
-    }
-
-    void PBRRenderLayer::updateLight(LightID lightID, const Light &light) {
-
-    }
-
-    void PBRRenderLayer::removeLight(LightID lightID) {
-
-    }
-
-    void PBRRenderLayer::setCameraData(const glm::mat4 &viewMat, const glm::vec3 &camPos) {
-
+        return m_GeometryPass->createMaterial(material);
     }
 
     void PBRRenderLayer::meshSetMaterial(MeshID meshID, MaterialID materialID) {
+        SR_PRECONDITION(m_GeometryPass != nullptr, "GeometryPass is null (%p)", m_GeometryPass);
 
+        m_GeometryPass->setMeshMaterial(meshID, materialID);
+    }
+
+    void PBRRenderLayer::removeMaterial(MaterialID materialID) {
+        SR_PRECONDITION(m_GeometryPass != nullptr, "GeometryPass is null (%p)", m_GeometryPass);
+
+        m_GeometryPass->removeMaterial(materialID);
+    }
+
+    LightID PBRRenderLayer::createLight(const Light &light) {
+        SR_PRECONDITION(m_LightDataPass != nullptr, "LightDataPass is null (%p)", m_LightDataPass);
+
+        return m_LightDataPass->createLight(light);
+    }
+
+    void PBRRenderLayer::updateLight(LightID lightID, const Light &light) {
+        SR_PRECONDITION(m_LightDataPass != nullptr, "LightDataPass is null (%p)", m_LightDataPass);
+
+        m_LightDataPass->updateLight(lightID, light);
+    }
+
+    void PBRRenderLayer::removeLight(LightID lightID) {
+        SR_PRECONDITION(m_LightDataPass != nullptr, "LightDataPass is null (%p)", m_LightDataPass);
+
+        m_LightDataPass->removeLight(lightID);
     }
 }

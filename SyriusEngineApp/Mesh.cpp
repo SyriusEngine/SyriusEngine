@@ -52,4 +52,8 @@ namespace Syrius{
         m_RenderCommand->transformMesh(m_MeshID, transformation);
 
     }
+
+    void Mesh::setMaterial(MaterialID materialID) {
+        m_RenderCommand->meshSetMaterial(m_MeshID, materialID);
+    }
 }

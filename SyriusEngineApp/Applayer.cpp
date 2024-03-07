@@ -19,6 +19,19 @@ namespace Syrius{
         m_Camera = createResource<Camera>(m_Engine->getRenderCommand(), 0.1f, 0.01f);
         m_MeshPanel = createResource<MeshPanel>(m_Engine->getRenderCommand(), m_Dispatcher);
 
+        MaterialLoader materialLoader(m_Engine->getRenderCommand());
+        auto material = materialLoader.getMaterial("dirty-red-bricks");
+
+        MeshDesc sphere;
+        createSphere(sphere);
+        auto sphereID = m_Engine->getRenderCommand()->createMesh(sphere);
+        m_Engine->getRenderCommand()->meshSetMaterial(sphereID, material);
+
+        Light light;
+        light.position = glm::vec3(0.0f, 5.0f, 0.0f);
+        light.color = glm::vec3(100.0f, 100.0f, 100.0f);
+        auto lightID = m_Engine->getRenderCommand()->createLight(light);
+
     }
 
     void AppLayer::onDetach() {

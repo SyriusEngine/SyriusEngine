@@ -24,7 +24,9 @@ namespace Syrius{
 
         virtual void updateCamera(const glm::mat4 &viewMat, const glm::vec3 &camPos) = 0;
 
-        virtual MaterialID createMaterial(const Material& material) = 0;
+        virtual MaterialID createMaterial(const MaterialDesc& material) = 0;
+
+        virtual void meshSetMaterial(MeshID meshID, MaterialID materialID) = 0;
 
         virtual void removeMaterial(MaterialID materialID) = 0;
 
@@ -33,10 +35,6 @@ namespace Syrius{
         virtual void updateLight(LightID lightID, const Light& light) = 0;
 
         virtual void removeLight(LightID lightID) = 0;
-
-        virtual void setCameraData(const glm::mat4& viewMat, const glm::vec3& camPos) = 0;
-
-        virtual void meshSetMaterial(MeshID meshID, MaterialID materialID) = 0;
     };
 
 }

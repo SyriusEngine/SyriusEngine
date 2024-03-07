@@ -53,6 +53,10 @@ set(SR_ENGINE_RENDERER_SRC
     src/SyriusEngine/Renderer/PBR/LFWRSamplerPass.cpp
     src/SyriusEngine/Renderer/PBR/MeshHandle.cpp
     src/SyriusEngine/Renderer/PBR/GeometryPass.cpp
+    src/SyriusEngine/Renderer/PBR/MaterialHandle.cpp
+    src/SyriusEngine/Renderer/PBR/GBufferPass.cpp
+    src/SyriusEngine/Renderer/PBR/LightDataPass.cpp
+    src/SyriusEngine/Renderer/PBR/LightPass.cpp
 )
 
 set(SR_ENGINE_UTILS_SRC
@@ -81,6 +85,7 @@ set(APP_SRC
     SyriusEngineApp/Camera.cpp
     SyriusEngineApp/Mesh.cpp
     SyriusEngineApp/PanelsUI/MeshPanel.cpp
+    SyriusEngineApp/MaterialLoader.cpp
 )
 
 add_executable(SyriusEngineApp ${APP_SRC} main.cpp)
@@ -92,7 +97,8 @@ target_link_libraries(SyriusEngineApp -lSyriusEngine -lSyriusCore)
 include_directories(./Dependencies/googletest/googletest/include/)
 link_directories(./cmake-build-debug/lib/)
 
-set(TEST_SRC Tests/EngineInitializationTest.cpp Tests/EngineInitializationTest.hpp)
+set(TEST_SRC
+    Tests/EngineInitializationTest.cpp)
 
 add_executable(SyriusEngineTest TestMain.cpp ${TEST_SRC})
 add_dependencies(SyriusEngineTest SyriusEngine)

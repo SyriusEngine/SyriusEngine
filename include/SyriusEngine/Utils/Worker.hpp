@@ -4,6 +4,7 @@
 #include <functional>
 #include <condition_variable>
 #include <list>
+#include <atomic>
 
 namespace Syrius{
 

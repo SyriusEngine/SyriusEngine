@@ -10,6 +10,9 @@
 #include "CameraDataPass.hpp"
 #include "LFWRSamplerPass.hpp"
 #include "GeometryPass.hpp"
+#include "LightDataPass.hpp"
+#include "GBufferPass.hpp"
+#include "LightPass.hpp"
 
 namespace Syrius{
 
@@ -47,7 +50,9 @@ namespace Syrius{
 
         void updateCamera(const glm::mat4 &viewMat, const glm::vec3 &camPos) override;
 
-        MaterialID createMaterial(const Material& material) override;
+        MaterialID createMaterial(const MaterialDesc& material) override;
+
+        void meshSetMaterial(MeshID meshID, MaterialID materialID) override;
 
         void removeMaterial(MaterialID materialID) override;
 
@@ -57,10 +62,6 @@ namespace Syrius{
 
         void removeLight(LightID lightID) override;
 
-        void setCameraData(const glm::mat4& viewMat, const glm::vec3& camPos) override;
-
-        void meshSetMaterial(MeshID meshID, MaterialID materialID) override;
-
     private:
         Resource<ShaderLibrary>& m_ShaderLibrary;
 
@@ -69,5 +70,6 @@ namespace Syrius{
         ProjectionPass* m_ProjectionPass;
         CameraDataPass* m_CameraDataPass;
         GeometryPass* m_GeometryPass;
+        LightDataPass* m_LightDataPass;
     };
 }

@@ -22,6 +22,8 @@ namespace Syrius{
 
         [[nodiscard]] const glm::vec3& getScale() const;
 
+        void setMaterial(MaterialID materialID);
+
     private:
 
         void calculateTransformation();

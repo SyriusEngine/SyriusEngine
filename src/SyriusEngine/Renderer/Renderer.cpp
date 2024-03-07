@@ -125,7 +125,7 @@ namespace Syrius{
         });
     }
 
-    MaterialID Renderer::createMaterial(const Material &material) {
+    MaterialID Renderer::createMaterial(const MaterialDesc &material) {
         SR_PRECONDITION(m_PBRLayer.get() != nullptr, "PBRRenderLayer is null (%p)", m_PBRLayer.get());
 
         MaterialID materialID = 0;
@@ -135,6 +135,14 @@ namespace Syrius{
 
         SR_POSTCONDITION(materialID != 0, "Material ID is %i", materialID);
         return materialID;
+    }
+
+    void Renderer::meshSetMaterial(MeshID meshID, MaterialID materialID) {
+        SR_PRECONDITION(m_PBRLayer.get() != nullptr, "PBRRenderLayer is null (%p)", m_PBRLayer.get());
+
+        m_RenderThread.addTask([this, meshID, materialID]{
+            m_PBRLayer->meshSetMaterial(meshID, materialID);
+        });
     }
 
     void Renderer::removeMaterial(MaterialID materialID) {
@@ -150,27 +158,29 @@ namespace Syrius{
     LightID Renderer::createLight(const Light &light) {
         SR_PRECONDITION(m_PBRLayer.get() != nullptr, "PBRRenderLayer is null (%p)", m_PBRLayer.get());
 
-        return 0;
+        LightID lightID = 0;
+        m_RenderThread.addTaskSync([this, &light, &lightID]{
+            lightID = m_PBRLayer->createLight(light);
+        });
+
+        SR_POSTCONDITION(lightID != 0, "Light ID is %i", lightID);
+        return lightID;
     }
 
     void Renderer::updateLight(LightID lightID, const Light &light) {
         SR_PRECONDITION(m_PBRLayer.get() != nullptr, "PBRRenderLayer is null (%p)", m_PBRLayer.get());
 
+        m_RenderThread.addTask([this, lightID, light]{
+            m_PBRLayer->updateLight(lightID, light);
+        });
     }
 
     void Renderer::removeLight(LightID lightID) {
         SR_PRECONDITION(m_PBRLayer.get() != nullptr, "PBRRenderLayer is null (%p)", m_PBRLayer.get());
 
-    }
-
-    void Renderer::setCameraData(const glm::mat4 &viewMat, const glm::vec3 &camPos) {
-        SR_PRECONDITION(m_PBRLayer.get() != nullptr, "PBRRenderLayer is null (%p)", m_PBRLayer.get());
-
-    }
-
-    void Renderer::meshSetMaterial(MeshID meshID, MaterialID materialID) {
-        SR_PRECONDITION(m_PBRLayer.get() != nullptr, "PBRRenderLayer is null (%p)", m_PBRLayer.get());
-
+        m_RenderThread.addTask([this, lightID]{
+            m_PBRLayer->removeLight(lightID);
+        });
     }
 
 }
