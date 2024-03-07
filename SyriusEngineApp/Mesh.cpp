@@ -12,6 +12,7 @@ namespace Syrius{
     }
 
     Mesh::~Mesh() {
+        m_RenderCommand->removeMesh(m_MeshID);
 
     }
 

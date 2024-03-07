@@ -56,4 +56,12 @@ namespace Syrius{
         }
     }
 
+    void LayerStack::clearLayers() {
+        for (auto& layer : m_Layers){
+            layer->onDetach();
+        }
+        m_Layers.clear();
+        m_RenderLayers.clear();
+    }
+
 }

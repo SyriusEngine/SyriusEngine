@@ -10,7 +10,7 @@ namespace Syrius{
     }
 
     MeshPanel::~MeshPanel() {
-
+        m_Meshes.clear();
     }
 
     void MeshPanel::draw() {
@@ -69,6 +69,11 @@ namespace Syrius{
         if (ImGui::DragFloat3("Scale", scale, 0.1f)){
             m_Meshes[m_SelectedMesh]->setScale({scale[0], scale[1], scale[2]});
         }
+        if (ImGui::Button("Delete Mesh")){
+            m_Meshes.erase(m_Meshes.begin() + m_SelectedMesh);
+            m_SelectedMesh = -1;
+        }
+
         ImGui::EndChild();
     }
 }

@@ -29,6 +29,8 @@ namespace Syrius{
 
         void detachRenderLayers(ResourceView<Context>& context);
 
+        void clearLayers();
+
 
     private:
         std::vector<Resource<Layer>> m_Layers;
