@@ -40,6 +40,19 @@ namespace Syrius{
 
     }
 
+    MeshHandle &MeshHandle::operator=(MeshHandle &&other) noexcept {
+        if (this == &other){
+            return *this;
+        }
+        m_Context = other.m_Context;
+        m_VertexBuffer = other.m_VertexBuffer;
+        m_IndexBuffer = other.m_IndexBuffer;
+        m_VertexArray = other.m_VertexArray;
+        materialID = other.materialID;
+        transformData = other.transformData;
+        return *this;
+    }
+
     MeshHandle::~MeshHandle() {
 
     }

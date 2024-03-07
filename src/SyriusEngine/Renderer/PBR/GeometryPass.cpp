@@ -66,5 +66,7 @@ namespace Syrius{
     void GeometryPass::removeMesh(MeshID meshID) {
         SR_PRECONDITION(m_Meshes.has(meshID), "MeshID: %d does not exist", meshID)
 
+        m_Meshes.remove(meshID);
+
     }
 }

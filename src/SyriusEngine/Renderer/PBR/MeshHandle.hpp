@@ -20,6 +20,10 @@ namespace Syrius{
 
         MeshHandle(MeshHandle&& other) noexcept;
 
+        MeshHandle& operator=(const MeshHandle& other) = delete;
+
+        MeshHandle& operator=(MeshHandle&& other) noexcept;
+
         ~MeshHandle();
 
         void setTransformation(const glm::mat4& transform);
