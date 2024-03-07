@@ -2,6 +2,8 @@
 #include "GBufferPass.hpp"
 #include "GeometryPass.hpp"
 #include "LightDataPass.hpp"
+#include "LFWRSamplerPass.hpp"
+#include "CameraDataPass.hpp"
 
 namespace Syrius{
 
@@ -9,6 +11,8 @@ namespace Syrius{
     RenderPass(context, shaderLibrary, "LightPass", PassIDGenerator<LightPass>::getID()){
         addDependency<GeometryPass>();
         addDependency<GBufferPass>();
+        addDependency<LFWRSamplerPass>();
+        addDependency<CameraDataPass>();
         addDependency<LightDataPass>();
 
         setupScreenQuad();
