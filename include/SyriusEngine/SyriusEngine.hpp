@@ -5,8 +5,11 @@
 #include "Renderer/Primitives.hpp"
 #include "Renderer/RenderCommand.hpp"
 
+#include "Utils/Worker.hpp"
+
 #include "Layer.hpp"
 #include "RenderLayer.hpp"
+#include "BuiltIns.hpp"
 
 namespace Syrius{
 

@@ -7,7 +7,8 @@ namespace Syrius{
     RenderLayer(),
     m_Engine(engine),
     m_Camera(nullptr),
-    m_UseCamera(false){
+    m_UseCamera(false),
+    m_Dispatcher(){
 
     }
 
@@ -24,7 +25,7 @@ namespace Syrius{
     }
 
     void AppLayer::onDetach() {
-
+        m_Dispatcher.stop();
     }
 
     void AppLayer::onUpdate() {
@@ -92,7 +93,9 @@ namespace Syrius{
         imGuiDrawFrameTimes();
 
         if (ImGui::Button("Create Random Mesh")) {
-            createRandomMesh();
+            m_Dispatcher.addTask([this]{
+                createRandomMesh();
+            });
         }
 
         imGuiDrawMemoryConsumption();

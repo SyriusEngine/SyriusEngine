@@ -1,13 +1,13 @@
 #pragma once
 
-#include "../Core/InternalInclude.hpp"
+#include "../../../src/SyriusEngine/Core/InternalInclude.hpp"
 #include <functional>
 #include <condition_variable>
 #include <list>
 
 namespace Syrius{
 
-    class Worker{
+    class SR_API Worker{
     public:
         Worker();
 

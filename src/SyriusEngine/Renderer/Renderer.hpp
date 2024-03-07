@@ -2,7 +2,7 @@
 
 #include "../../../include/SyriusEngine/Renderer/RenderCommand.hpp"
 #include "../LayerStack.hpp"
-#include "../Utils/Worker.hpp"
+#include "../../../include/SyriusEngine/Utils/Worker.hpp"
 #include "ShaderLibrary.hpp"
 
 #include "PBR/PBRRenderLayer.hpp"

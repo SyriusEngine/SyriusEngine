@@ -1,4 +1,4 @@
-#include "Worker.hpp"
+#include "../../../include/SyriusEngine/Utils/Worker.hpp"
 
 namespace Syrius{
 

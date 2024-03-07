@@ -36,7 +36,7 @@ namespace Syrius{
 
     typedef void(*HandleDebugMessageFunc)(const EngineMessage&);
 
-    class DebugMessageHandler{
+    class SR_API DebugMessageHandler{
     public:
         template<typename... Args>
         static void log(

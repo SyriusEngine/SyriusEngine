@@ -46,6 +46,8 @@ namespace Syrius{
         time_t m_LastFrameTime;
         std::deque<time_t> m_FrameTimes;
 
+        Worker m_Dispatcher;
+
 
     };
 
