@@ -8,7 +8,8 @@ namespace Syrius{
     m_Engine(engine),
     m_Camera(nullptr),
     m_UseCamera(false),
-    m_Dispatcher(){
+    m_Dispatcher(),
+    m_MeshPanel(nullptr){
 
     }
 
@@ -16,12 +17,8 @@ namespace Syrius{
 
     void AppLayer::onAttach() {
         m_Camera = createResource<Camera>(m_Engine->getRenderCommand(), 0.1f, 0.01f);
+        m_MeshPanel = createResource<MeshPanel>(m_Engine->getRenderCommand(), m_Dispatcher);
 
-        MeshDesc mesh;
-        createSphere(mesh);
-
-        auto meshID = m_Engine->getRenderCommand()->createMesh(mesh);
-        m_Meshes.push_back(meshID);
     }
 
     void AppLayer::onDetach() {
@@ -92,15 +89,11 @@ namespace Syrius{
         ImGui::Text("Press F to take/release camera control");
         imGuiDrawFrameTimes();
 
-        if (ImGui::Button("Create Random Mesh")) {
-            m_Dispatcher.addTask([this]{
-                createRandomMesh();
-            });
-        }
-
         imGuiDrawMemoryConsumption();
 
         ImGui::End();
+
+        m_MeshPanel->draw();
         m_Engine->getWindow()->onImGuiEnd();
     }
 
@@ -129,19 +122,5 @@ namespace Syrius{
         ImGui::Text("%d bytes", getMemoryUsage()); ImGui::NextColumn();
         ImGui::Separator();
         ImGui::Columns(1);
-    }
-
-    void AppLayer::createRandomMesh() {
-        auto random = getRandom(0, 4);
-        MeshDesc mesh;
-        switch (random) {
-            case 0: createCube(mesh); break;
-            case 1: createSphere(mesh); break;
-            case 2: createCone(mesh); break;
-            case 3: createPyramid(mesh); break;
-            default: createCube(mesh); break;
-        }
-        auto meshID = m_Engine->getRenderCommand()->createMesh(mesh);
-        m_Meshes.push_back(meshID);
     }
 }

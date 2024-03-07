@@ -2,7 +2,7 @@
 
 #include "Include.hpp"
 #include "Camera.hpp"
-#include "../include/SyriusEngine/BuiltIns.hpp"
+#include "PanelsUI/MeshPanel.hpp"
 
 namespace Syrius{
 
@@ -32,11 +32,11 @@ namespace Syrius{
 
         static void imGuiDrawMemoryConsumption();
 
-        void createRandomMesh();
-
     private:
         Resource<SyriusEngine>& m_Engine;
         Resource<Camera> m_Camera;
+
+        Resource<MeshPanel> m_MeshPanel;
 
         std::vector<MeshID> m_Meshes;
 
