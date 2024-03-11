@@ -2,11 +2,15 @@
 
 namespace Syrius{
 
-    Worker::Worker():
+    Worker::Worker(const std::string& name):
     m_IsRunning(true),
+    m_Name(name),
     m_Thread([this]{
         threadFunc();
     }){
+        if (m_Name.empty()){
+            m_Name = "Worker" + std::to_string(reinterpret_cast<size_t>(this));
+        }
 
     }
 
@@ -52,10 +56,10 @@ namespace Syrius{
                 }
             }
         } catch (std::exception& e){
-            std::cerr << "Worker thread exception: " << e.what() << std::endl;
+            std::cerr << "Worker: " + m_Name + " received exception: " << e.what() << std::endl;
             std::abort();
         } catch (...){
-            std::cerr << "Worker thread exception, unknown error" << std::endl;
+            std::cerr << "Worker: " + m_Name + " received unknown exception" << std::endl;
             std::abort();
         }
     }

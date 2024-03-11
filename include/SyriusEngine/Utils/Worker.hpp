@@ -10,7 +10,7 @@ namespace Syrius{
 
     class SR_API Worker{
     public:
-        Worker();
+        explicit Worker(const std::string& name = "");
 
         ~Worker();
 
@@ -61,6 +61,8 @@ namespace Syrius{
         std::condition_variable m_Condition;
 
         bool m_IsRunning;
+
+        std::string m_Name;
     };
 
 }

@@ -8,7 +8,7 @@ namespace Syrius{
     m_Engine(engine),
     m_Camera(nullptr),
     m_UseCamera(false),
-    m_Dispatcher(),
+    m_Dispatcher("AppLayer-Dispatcher"),
     m_MeshPanel(nullptr){
 
     }

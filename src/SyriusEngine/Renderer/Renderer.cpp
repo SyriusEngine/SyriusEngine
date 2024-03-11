@@ -4,6 +4,7 @@ namespace Syrius{
 
     Renderer::Renderer(const RendererDesc &desc, LayerStack &layerStack, const Resource<SyriusWindow> &window):
     RenderCommand(),
+    m_RenderThread("RenderThread"),
     m_LayerStack(layerStack),
     m_Window(window){
         SR_PRECONDITION(std::filesystem::exists(desc.shaderLibraryPath), "ShaderLibraryPath %s does not exist", desc.shaderLibraryPath.c_str());
