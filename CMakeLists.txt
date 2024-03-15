@@ -83,9 +83,13 @@ link_directories(./cmake-build-debug/)
 set(APP_SRC
     SyriusEngineApp/Applayer.cpp
     SyriusEngineApp/Camera.cpp
-    SyriusEngineApp/Mesh.cpp
+    SyriusEngineApp/SceneObjects/Mesh.cpp
     SyriusEngineApp/PanelsUI/MeshPanel.cpp
     SyriusEngineApp/MaterialLoader.cpp
+    SyriusEngineApp/PanelsUI/LightPanel.cpp
+    SyriusEngineApp/PanelsUI/LightPanel.hpp
+    SyriusEngineApp/SceneObjects/LightObject.cpp
+    SyriusEngineApp/SceneObjects/LightObject.hpp
 )
 
 add_executable(SyriusEngineApp ${APP_SRC} main.cpp)

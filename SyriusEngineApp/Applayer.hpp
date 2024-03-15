@@ -3,6 +3,7 @@
 #include "Include.hpp"
 #include "Camera.hpp"
 #include "PanelsUI/MeshPanel.hpp"
+#include "PanelsUI/LightPanel.hpp"
 
 namespace Syrius{
 
@@ -37,6 +38,7 @@ namespace Syrius{
         Resource<Camera> m_Camera;
 
         Resource<MeshPanel> m_MeshPanel;
+        Resource<LightPanel> m_LightPanel;
 
         std::vector<MeshID> m_Meshes;
 

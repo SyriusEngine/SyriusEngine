@@ -1,7 +1,7 @@
 #pragma once
 
 #include "../Include.hpp"
-#include "../Mesh.hpp"
+#include "../SceneObjects/Mesh.hpp"
 #include "../MaterialLoader.hpp"
 
 namespace Syrius{

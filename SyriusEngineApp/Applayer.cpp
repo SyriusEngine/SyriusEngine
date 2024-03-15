@@ -18,10 +18,12 @@ namespace Syrius{
     void AppLayer::onAttach() {
         m_Camera = createResource<Camera>(m_Engine->getRenderCommand(), 0.1f, 0.01f);
         m_MeshPanel = createResource<MeshPanel>(m_Engine->getRenderCommand(), m_Dispatcher);
+        m_LightPanel = createResource<LightPanel>(m_Engine->getRenderCommand(), m_Dispatcher);
 
         MaterialLoader materialLoader(m_Engine->getRenderCommand());
         auto material = materialLoader.getMaterial("dirty-red-bricks");
 
+        // Default mesh and light
         MeshDesc sphere;
         createSphere(sphere);
         auto sphereID = m_Engine->getRenderCommand()->createMesh(sphere);
@@ -108,6 +110,7 @@ namespace Syrius{
         ImGui::End();
 
         m_MeshPanel->draw();
+        m_LightPanel->draw();
         m_Engine->getWindow()->onImGuiEnd();
     }
 
