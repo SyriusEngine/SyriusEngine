@@ -18,7 +18,7 @@ namespace Syrius{
 
         template<typename... Args>
         void addTask(Args&&... args){
-            SR_PRECONDITION(m_IsRunning, "Worker: %zu is not running", this);
+            SR_PRECONDITION(m_IsRunning, "Worker: %s (%zu) is not running", m_Name.c_str(), this);
 
             {
                 std::lock_guard<std::mutex> lk(m_Mutex);
@@ -30,7 +30,7 @@ namespace Syrius{
 
         template<typename... Args>
         void addTaskSync(Args&&... args){
-            SR_PRECONDITION(m_IsRunning, "Worker: %zu is not running", this);
+            SR_PRECONDITION(m_IsRunning, "Worker: %s (%zu) is not running", m_Name.c_str(), this);
             SR_PRECONDITION(m_Thread.get_id() != std::this_thread::get_id(), "Cannot push synchronized task from worker thread to itself (Thread: %zu)", m_Thread.get_id());
 
             bool finished = false;

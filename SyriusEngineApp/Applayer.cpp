@@ -38,6 +38,7 @@ namespace Syrius{
 
     void AppLayer::onDetach() {
         m_MeshPanel.reset(); // some objects depend on the render command, so we need to reset them before the render command is destroyed
+        m_LightPanel.reset();
         m_Dispatcher.stop();
     }
 

@@ -11,7 +11,7 @@ namespace Syrius{
     }
 
     SyriusEngineImpl::~SyriusEngineImpl() {
-        m_LayerStack.clearLayers(); // This will detach and delete all the layers
+        m_LayerStack.clearLayers(); // destroy all layers before the renderer is destroyed
 
         m_Config["Window"]["Width"] = m_Window->getWidth();
         m_Config["Window"]["Height"] = m_Window->getHeight();
