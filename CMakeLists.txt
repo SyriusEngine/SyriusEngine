@@ -70,6 +70,7 @@ set(SR_ENGINE_SRC
     src/SyriusEngine/LayerStack.cpp
     src/SyriusEngine/BuiltIns.cpp
     src/SyriusEngine/SyriusEngineImpl.cpp
+    src/SyriusEngine/EngineConfiguration.cpp
 )
 
 add_library(SyriusEngine SHARED ${SR_ENGINE_SRC})
