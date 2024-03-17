@@ -55,7 +55,7 @@ namespace Syrius{
         float color[3] = {m_Lights[m_SelectedLight]->getColor().x,
                             m_Lights[m_SelectedLight]->getColor().y,
                             m_Lights[m_SelectedLight]->getColor().z};
-        if (ImGui::DragFloat3("Color", color)){
+        if (ImGui::ColorEdit3("Color", color)){
             m_Lights[m_SelectedLight]->setColor(glm::vec3(color[0], color[1], color[2]));
         }
 
