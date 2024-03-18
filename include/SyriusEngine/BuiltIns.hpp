@@ -16,4 +16,8 @@ namespace Syrius{
 
     SR_API void createCone(MeshDesc& cone, uint32 sectors = 32);
 
+    SR_API void createTorus(MeshDesc& torus, uint32 rings = 32, uint32 sectors = 32);
+
+    SR_API void createCylinder(MeshDesc& cylinder, uint32 sectors = 32);
+
 }

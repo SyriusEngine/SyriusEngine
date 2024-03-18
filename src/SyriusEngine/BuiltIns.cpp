@@ -183,4 +183,84 @@ namespace Syrius{
         calculateTangents(cone);
     }
 
+    void createTorus(MeshDesc& torus, uint32 rings, uint32 sectors){
+        float const R = 1.0f/(float)(rings-1);
+        float const S = 1.0f/(float)(sectors-1);
+        uint32 r, s;
+
+        for(r = 0; r < rings; r++) for(s = 0; s < sectors; s++) {
+                float const y = (1 + 0.5f * cos(2*M_PI * r * R)) * sin(-M_PI_2 + M_PI * s * S);
+                float const x = (1 + 0.5f * cos(2*M_PI * r * R)) * cos(2*M_PI * s * S);
+                float const z = 0.5f * sin(2*M_PI * r * R);
+
+                torus.vertices.push_back({{x, y, z}, {x, y, z}, {0.0f, 1.0f, 0.0f}, {s*S, r*R}});
+            }
+
+        for(r = 0; r < rings-1; r++) for(s = 0; s < sectors-1; s++) {
+                torus.indices.push_back(r * sectors + s);
+                torus.indices.push_back(r * sectors + (s+1));
+                torus.indices.push_back((r+1) * sectors + (s+1));
+
+                torus.indices.push_back(r * sectors + s);
+                torus.indices.push_back((r+1) * sectors + (s+1));
+                torus.indices.push_back((r+1) * sectors + s);
+            }
+        calculateTangents(torus);
+    }
+
+    void createCylinder(MeshDesc& cylinder, uint32 sectors) {
+        float const S = 1.0f / (float) (sectors - 1);
+        uint32 s;
+
+        cylinder.vertices.push_back({{0.0f, 0.5f, 0.0f},
+                                     {0.0f, 1.0f, 0.0f},
+                                     {0.0f, 0.0f, 0.0f},
+                                     {0.0f, 0.0f}});
+        for (s = 0; s < sectors; s++) {
+            float const x = cos(2 * M_PI * s * S);
+            float const z = sin(2 * M_PI * s * S);
+
+            cylinder.vertices.push_back({{x,     0.5f, z},
+                                         {0.0f,  1.0f, 0.0f},
+                                         {0.0f,  0.0f, 0.0f},
+                                         {s * S, 1.0f}});
+            cylinder.vertices.push_back({{x,     -0.5f, z},
+                                         {0.0f,  1.0f,  0.0f},
+                                         {0.0f,  0.0f,  0.0f},
+                                         {s * S, 0.0f}});
+        }
+
+        for (s = 0; s < sectors - 1; s++) {
+            cylinder.indices.push_back(0);
+            cylinder.indices.push_back(s * 2 + 2);
+            cylinder.indices.push_back(s * 2 + 4);
+        }
+        cylinder.indices.push_back(0);
+        cylinder.indices.push_back(sectors * 2);
+        cylinder.indices.push_back(2);
+
+        for (s = 0; s < sectors - 1; s++) {
+            cylinder.indices.push_back(1);
+            cylinder.indices.push_back(s * 2 + 3);
+            cylinder.indices.push_back(s * 2 + 5);
+        }
+        cylinder.indices.push_back(1);
+        cylinder.indices.push_back(3);
+        cylinder.indices.push_back(sectors * 2 + 1);
+
+        for (s = 0; s < sectors - 1; s++) {
+            cylinder.indices.push_back(s * 2 + 2);
+            cylinder.indices.push_back(s * 2 + 3);
+            cylinder.indices.push_back(s * 2 + 4);
+
+            cylinder.indices.push_back(s * 2 + 4);
+            cylinder.indices.push_back(s * 2 + 3);
+            cylinder.indices.push_back(s * 2 + 5);
+
+        }
+        cylinder.indices.push_back(sectors * 2 - 2);
+        cylinder.indices.push_back(sectors * 2 - 1);
+        cylinder.indices.push_back(2);
+    }
+
 }

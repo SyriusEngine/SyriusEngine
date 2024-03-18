@@ -19,6 +19,14 @@ namespace Syrius{
         m_Camera = createResource<Camera>(m_Engine->getRenderCommand(), 0.1f, 0.01f);
         m_MeshPanel = createResource<MeshPanel>(m_Engine->getRenderCommand(), m_Dispatcher);
         m_LightPanel = createResource<LightPanel>(m_Engine->getRenderCommand(), m_Dispatcher);
+
+        MeshDesc fig;
+        createCylinder(fig);
+
+        auto meshID = m_Engine->getRenderCommand()->createMesh(fig);
+        MaterialLoader ml(m_Engine->getRenderCommand());
+        auto mat = ml.getMaterial("space-cruiser-panels2");
+        m_Engine->getRenderCommand()->meshSetMaterial(meshID, mat);
     }
 
     void AppLayer::onDetach() {
@@ -113,16 +121,25 @@ namespace Syrius{
 
     void AppLayer::imGuiDrawMemoryConsumption() {
         ImGui::Text("Memory");
-        ImGui::Columns(2, "Memory Allocation Tracker");
+        ImGui::Columns(4, "Memory Allocation Tracker");
         ImGui::Separator();
         ImGui::Text("Total Allocated"); ImGui::NextColumn();
-        ImGui::Text("%d bytes", getAllocatedMemory()); ImGui::NextColumn();
+        auto allocated = getAllocatedMemory();
+        ImGui::Text("%d bytes", allocated); ImGui::NextColumn();
+        ImGui::Text("%d KB", allocated / 1024); ImGui::NextColumn();
+        ImGui::Text("%d MB", allocated / 1024 / 1024); ImGui::NextColumn();
         ImGui::Separator();
         ImGui::Text("Total Freed"); ImGui::NextColumn();
-        ImGui::Text("%d bytes", getFreedMemory()); ImGui::NextColumn();
+        auto freed = getFreedMemory();
+        ImGui::Text("%d bytes", freed); ImGui::NextColumn();
+        ImGui::Text("%d KB", freed / 1024); ImGui::NextColumn();
+        ImGui::Text("%d MB", freed / 1024 / 1024); ImGui::NextColumn();
         ImGui::Separator();
         ImGui::Text("Usage"); ImGui::NextColumn();
-        ImGui::Text("%d bytes", getMemoryUsage()); ImGui::NextColumn();
+        auto usage = getMemoryUsage();
+        ImGui::Text("%d bytes", usage); ImGui::NextColumn();
+        ImGui::Text("%d KB", usage / 1024); ImGui::NextColumn();
+        ImGui::Text("%d MB", usage / 1024 / 1024); ImGui::NextColumn();
         ImGui::Separator();
         ImGui::Columns(1);
     }
