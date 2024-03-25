@@ -8,8 +8,8 @@ namespace Syrius{
     m_Engine(engine),
     m_Camera(nullptr),
     m_UseCamera(false),
-    m_Dispatcher("AppLayer-Dispatcher"),
-    m_MeshPanel(nullptr){
+    m_MeshPanel(nullptr),
+    m_Serializer(engine->getRenderCommand()){
 
     }
 
@@ -17,22 +17,12 @@ namespace Syrius{
 
     void AppLayer::onAttach() {
         m_Camera = createResource<Camera>(m_Engine->getRenderCommand(), 0.1f, 0.01f);
-        m_MeshPanel = createResource<MeshPanel>(m_Engine->getRenderCommand(), m_Dispatcher);
-        m_LightPanel = createResource<LightPanel>(m_Engine->getRenderCommand(), m_Dispatcher);
-
-        MeshDesc fig;
-        createCylinder(fig);
-
-        auto meshID = m_Engine->getRenderCommand()->createMesh(fig);
-        MaterialLoader ml(m_Engine->getRenderCommand());
-        auto mat = ml.getMaterial("space-cruiser-panels2");
-        m_Engine->getRenderCommand()->meshSetMaterial(meshID, mat);
+        m_MeshPanel = createResource<MeshPanel>(m_Serializer);
+        m_LightPanel = createResource<LightPanel>(m_Serializer);
     }
 
     void AppLayer::onDetach() {
-        m_MeshPanel.reset(); // some objects depend on the render command, so we need to reset them before the render command is destroyed
-        m_LightPanel.reset();
-        m_Dispatcher.stop();
+       m_Serializer.clear();
     }
 
     void AppLayer::onUpdate() {
@@ -43,6 +33,14 @@ namespace Syrius{
         }
         m_FrameTimes.push_back(m_DeltaTime);
         m_LastFrameTime = currentTime;
+
+        if (m_OpenFileDialog){
+            m_OpenFileDialog = false;
+            auto path = m_Engine->getWindow()->openFileDialog("");
+            if (!path.empty()){
+                m_Serializer.loadScene(path);
+            }
+        }
     }
 
     bool AppLayer::onEvent(const Event &event) {
@@ -97,6 +95,11 @@ namespace Syrius{
             ImGui::TextColored(ImVec4(1.0f, 0.0f, 0.0f, 1.0f), "Camera: OFF");
         }
         ImGui::Text("Press F to take/release camera control");
+
+        if (ImGui::Button("Load Scene")){
+            m_OpenFileDialog = true;
+        }
+
         imGuiDrawFrameTimes();
 
         imGuiDrawMemoryConsumption();

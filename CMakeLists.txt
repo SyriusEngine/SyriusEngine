@@ -70,8 +70,7 @@ set(SR_ENGINE_SRC
     src/SyriusEngine/LayerStack.cpp
     src/SyriusEngine/BuiltIns.cpp
     src/SyriusEngine/SyriusEngineImpl.cpp
-    src/SyriusEngine/EngineConfiguration.cpp
-)
+    src/SyriusEngine/EngineConfiguration.cpp)
 
 add_library(SyriusEngine SHARED ${SR_ENGINE_SRC})
 add_dependencies(SyriusEngine CopyDLL)
@@ -86,11 +85,11 @@ set(APP_SRC
     SyriusEngineApp/Camera.cpp
     SyriusEngineApp/SceneObjects/Mesh.cpp
     SyriusEngineApp/PanelsUI/MeshPanel.cpp
-    SyriusEngineApp/MaterialLoader.cpp
     SyriusEngineApp/PanelsUI/LightPanel.cpp
     SyriusEngineApp/PanelsUI/LightPanel.hpp
     SyriusEngineApp/SceneObjects/LightObject.cpp
-    SyriusEngineApp/SceneObjects/LightObject.hpp
+    SyriusEngineApp/Serializer/Serializer.cpp
+
 )
 
 add_executable(SyriusEngineApp ${APP_SRC} main.cpp)

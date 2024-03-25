@@ -1,13 +1,12 @@
 #pragma once
 
-#include "../Include.hpp"
-#include "../SceneObjects/LightObject.hpp"
+#include "../Serializer/Serializer.hpp"
 
 namespace Syrius{
 
     class LightPanel{
     public:
-        LightPanel(const ResourceView<RenderCommand>& renderCommand, Worker& dispatcher);
+        explicit LightPanel(Serializer& serializer);
 
         ~LightPanel();
 
@@ -17,12 +16,10 @@ namespace Syrius{
         void drawLightOptions();
 
     private:
-        const ResourceView<RenderCommand>& m_RenderCommand;
-        Worker& m_Dispatcher;
+        Serializer& m_Serializer;
+        std::vector<Resource<LightObject>>& m_Lights;
 
         int32 m_SelectedLight;
-
-        std::vector<Resource<LightObject>> m_Lights;
 
     };
 

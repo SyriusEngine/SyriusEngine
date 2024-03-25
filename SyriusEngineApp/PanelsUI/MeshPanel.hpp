@@ -1,14 +1,12 @@
 #pragma once
 
-#include "../Include.hpp"
-#include "../SceneObjects/Mesh.hpp"
-#include "../MaterialLoader.hpp"
+#include "../Serializer/Serializer.hpp"
 
 namespace Syrius{
 
     class MeshPanel{
     public:
-        MeshPanel(const ResourceView<RenderCommand>& renderCommand, Worker& dispatcher);
+        explicit MeshPanel(Serializer& serializer);
 
         ~MeshPanel();
 
@@ -16,19 +14,13 @@ namespace Syrius{
 
     private:
 
-        void createRandomMesh();
-
         void drawMeshOptions();
 
     private:
-        const ResourceView<RenderCommand>& m_RenderCommand;
-        Worker& m_Dispatcher;
+        Serializer& m_Serializer;
+        std::vector<Resource<Mesh>>& m_Meshes;
 
         int32 m_SelectedMesh;
-
-        std::vector<Resource<Mesh>> m_Meshes;
-        MaterialLoader m_MaterialLoader;
-        std::vector<std::string> m_MaterialNames;
     };
 
 }

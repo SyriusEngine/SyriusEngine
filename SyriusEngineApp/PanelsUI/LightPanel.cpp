@@ -2,27 +2,19 @@
 
 namespace Syrius{
 
-    LightPanel::LightPanel(const ResourceView<RenderCommand> &renderCommand, Worker &dispatcher):
-    m_RenderCommand(renderCommand),
-    m_Dispatcher(dispatcher),
-    m_SelectedLight(-1){
+    LightPanel::LightPanel(Serializer& serializer):
+    m_Serializer(serializer),
+    m_SelectedLight(-1),
+    m_Lights(serializer.getLights()){
 
     }
 
     LightPanel::~LightPanel() {
-        m_Lights.clear();
+
     }
 
     void LightPanel::draw() {
         ImGui::Begin("Light Panel");
-
-        if (ImGui::Button("Create Light")) {
-            m_Dispatcher.addTask([this] {
-                auto newLight = createResource<LightObject>(m_RenderCommand, glm::vec3(0.0f, 4.0f, 0.0f),
-                                                            glm::vec3(1.0f, 1.0f, 1.0f));
-                m_Lights.push_back(std::move(newLight));
-            });
-        }
 
         if (ImGui::BeginListBox("Lights")) {
             for (uint32 i = 0; i < m_Lights.size(); i++) {

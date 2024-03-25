@@ -2,17 +2,10 @@
 
 namespace Syrius{
 
-    MeshPanel::MeshPanel(const ResourceView<RenderCommand> &renderCommand, Worker& dispatcher):
-    m_RenderCommand(renderCommand),
-    m_MaterialLoader(renderCommand),
-    m_Dispatcher(dispatcher),
+    MeshPanel::MeshPanel(Serializer& serializer):
+    m_Serializer(serializer),
+    m_Meshes(serializer.getMeshes()),
     m_SelectedMesh(-1){
-        m_MaterialNames = {
-                "chipped-paint-metal",
-                "dirty-red-bricks",
-                "older-padded-leather",
-                "space-cruiser-panels2"
-        };
 
     }
 
@@ -22,12 +15,6 @@ namespace Syrius{
 
     void MeshPanel::draw() {
         ImGui::Begin("Mesh Panel");
-
-        if (ImGui::Button("Create Random Mesh")){
-            m_Dispatcher.addTask([this]{
-                createRandomMesh();
-            });
-        }
         if (ImGui::BeginListBox("Meshes")){
             for (uint32 i = 0; i < m_Meshes.size(); i++){
                 const bool isSelected = (m_SelectedMesh == i);
@@ -46,24 +33,6 @@ namespace Syrius{
         }
 
         ImGui::End();
-    }
-
-    void MeshPanel::createRandomMesh() {
-        auto random = getRandom(0, 4);
-        MeshDesc mesh;
-        switch (random) {
-            case 0: createCube(mesh); break;
-            case 1: createSphere(mesh); break;
-            case 2: createCone(mesh); break;
-            case 3: createPyramid(mesh); break;
-            default: createCube(mesh); break;
-        }
-        auto newMesh = createResource<Mesh>(mesh, m_RenderCommand);
-        m_Meshes.push_back(std::move(newMesh));
-
-        random = getRandom(0, m_MaterialNames.size());
-        auto material = m_MaterialLoader.getMaterial(m_MaterialNames[random]);
-        m_Meshes.back()->setMaterial(material);
     }
 
     void MeshPanel::drawMeshOptions() {

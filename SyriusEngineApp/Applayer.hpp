@@ -37,18 +37,17 @@ namespace Syrius{
         Resource<SyriusEngine>& m_Engine;
         Resource<Camera> m_Camera;
 
+        Serializer m_Serializer;
+
         Resource<MeshPanel> m_MeshPanel;
         Resource<LightPanel> m_LightPanel;
 
-        std::vector<MeshID> m_Meshes;
-
         bool m_UseCamera;
+        bool m_OpenFileDialog = false;
 
         time_t m_DeltaTime;
         time_t m_LastFrameTime;
         std::deque<time_t> m_FrameTimes;
-
-        Worker m_Dispatcher;
 
 
     };
