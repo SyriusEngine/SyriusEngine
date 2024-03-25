@@ -34,6 +34,8 @@ void main() {
     mat3 truncNormalMatrix = mat3(transform.normalMatrix);
     vec3 N = normalize(truncNormalMatrix * lNormal);
     vec3 T = normalize(truncNormalMatrix * lTangent);
+    // re-orthogonalize T
+    T = normalize(T - dot(T, N) * N);
     vec3 B = cross(N, T);
 
     vs_out.texCoords = lTexCoords;
