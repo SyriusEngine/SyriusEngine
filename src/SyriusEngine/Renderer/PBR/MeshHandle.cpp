@@ -28,6 +28,11 @@ namespace Syrius{
         vaDesc.vertexShader = vertexShader;
         vaDesc.drawMode = SR_DRAW_TRIANGLES;
         m_VertexArray = context->createVertexArray(vaDesc);
+
+        for (uint32 i = 0; i < SR_MAX_INSTANCES; i++){
+            transformData[i].transform = glm::mat4(1.0f);
+            transformData[i].inverseTranspose = glm::mat4(1.0f);
+        }
     }
 
     MeshHandle::MeshHandle(MeshHandle &&other) noexcept:
