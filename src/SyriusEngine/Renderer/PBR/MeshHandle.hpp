@@ -26,14 +26,20 @@ namespace Syrius{
 
         ~MeshHandle();
 
-        void setTransformation(const glm::mat4& transform);
+        MeshID createInstance();
+
+        void setTransformation(MeshID meshID, const glm::mat4& transform);
+
+        void removeInstance(MeshID meshID);
 
         void draw() const;
+
+        [[nodiscard]] inline uint64 getInstanceCount() const { return transformData.size(); }
 
     public:
         MaterialID materialID;
 
-        TransformData transformData;
+        std::vector<TransformData> transformData;
 
     private:
         ResourceView<Context>& m_Context;
@@ -41,6 +47,8 @@ namespace Syrius{
         ResourceView<VertexBuffer> m_VertexBuffer;
         ResourceView<IndexBuffer> m_IndexBuffer;
         ResourceView<VertexArray> m_VertexArray;
+
+        std::unordered_map<MeshID, uint32> m_InstanceToIndex;
 
     };
 

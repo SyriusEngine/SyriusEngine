@@ -3,6 +3,7 @@ struct VS_IN{
     float3 lNormal: Normal;
     float3 lTangent: Tangent;
     float2 lTexCoords: TexCoords;
+    uint instanceID: SV_InstanceID;
 };
 
 struct VS_OUT{
@@ -28,17 +29,17 @@ struct TransformationData{
 };
 
 cbuffer ModelData: register(b2){
-    TransformationData transform;
+    TransformationData transform[300];
 }
 
 VS_OUT main(VS_IN vsIn){
-    matrix<float, 3, 3> truncNormalMatrix = (float3x3) transform.normalMatrix;
+    matrix<float, 3, 3> truncNormalMatrix = (float3x3) transform[vsIn.instanceID].normalMatrix;
     float3 N = normalize(mul(truncNormalMatrix, vsIn.lNormal));
     float3 T = normalize(mul(truncNormalMatrix, vsIn.lTangent));
     float3 B = cross(N, T);
 
     VS_OUT vsOut;
-    vsOut.worldPosition = mul(transform.modelMatrix, float4(vsIn.lPosition, 1.0));
+    vsOut.worldPosition = mul(transform[vsIn.instanceID].modelMatrix, float4(vsIn.lPosition, 1.0));
     vsOut.TBN = float3x3(T, B, N);
     vsOut.texCoords = vsIn.lTexCoords;
 

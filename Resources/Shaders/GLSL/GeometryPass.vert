@@ -27,11 +27,11 @@ struct TransformationData{
 };
 
 layout(std140, binding = 2) uniform ModelData {
-    TransformationData transform;
+    TransformationData transform[300];
 };
 
 void main() {
-    mat3 truncNormalMatrix = mat3(transform.normalMatrix);
+    mat3 truncNormalMatrix = mat3(transform[gl_InstanceID].normalMatrix);
     vec3 N = normalize(truncNormalMatrix * lNormal);
     vec3 T = normalize(truncNormalMatrix * lTangent);
     // re-orthogonalize T
@@ -40,7 +40,7 @@ void main() {
 
     vs_out.texCoords = lTexCoords;
     vs_out.tbn = mat3(T, B, N);
-    vs_out.worldPosition = transform.modelMatrix * vec4(lPosition, 1.0);;
+    vs_out.worldPosition = transform[gl_InstanceID].modelMatrix * vec4(lPosition, 1.0);;
 
     gl_Position = perspective * view * vs_out.worldPosition;
 

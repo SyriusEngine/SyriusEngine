@@ -3,11 +3,11 @@
 namespace Syrius{
 
     MeshHandle::MeshHandle(ResourceView<Context> &context, const MeshDesc &mesh, ResourceView<ShaderModule> &vertexShader,
-                           ResourceView<VertexLayout> &vertexDesc):
-                           m_Context(context),
-                           materialID(0){
-
-
+    ResourceView<VertexLayout> &vertexDesc):
+    m_Context(context),
+    materialID(0),
+    m_InstanceToIndex(),
+    transformData(SR_MAX_INSTANCES){
         VertexBufferDesc vbDesc;
         vbDesc.data = mesh.vertices.data();
         vbDesc.count = mesh.vertices.size();
@@ -36,8 +36,8 @@ namespace Syrius{
     m_IndexBuffer(other.m_IndexBuffer),
     m_VertexArray(other.m_VertexArray),
     materialID(other.materialID),
-    transformData(other.transformData){
-
+    transformData(other.transformData),
+    m_InstanceToIndex(other.m_InstanceToIndex){
     }
 
     MeshHandle &MeshHandle::operator=(MeshHandle &&other) noexcept {
@@ -50,6 +50,7 @@ namespace Syrius{
         m_VertexArray = other.m_VertexArray;
         materialID = other.materialID;
         transformData = other.transformData;
+        m_InstanceToIndex = other.m_InstanceToIndex;
         return *this;
     }
 
@@ -57,9 +58,44 @@ namespace Syrius{
 
     }
 
-    void MeshHandle::setTransformation(const glm::mat4 &transform) {
-        transformData.transform = transform;
-        transformData.inverseTranspose = glm::transpose(glm::inverse(transform));
+    MeshID MeshHandle::createInstance() {
+        SR_PRECONDITION(m_InstanceToIndex.size() < SR_MAX_INSTANCES, "Cannot create more instances than %d", SR_MAX_INSTANCES);
+
+        MeshID iid = generateID();
+        auto index = m_InstanceToIndex.size();
+        m_InstanceToIndex.insert({iid, index});
+        transformData[index].transform = glm::mat4(1.0f);
+        transformData[index].inverseTranspose = glm::mat4(1.0f);
+        return iid;
+    }
+
+    void MeshHandle::setTransformation(MeshID meshID, const glm::mat4 &transform) {
+        SR_PRECONDITION(m_InstanceToIndex.find(meshID) != m_InstanceToIndex.end(), "Instance %d does not exist", meshID);
+
+        auto index = m_InstanceToIndex[meshID];
+        transformData[index].transform = transform;
+        transformData[index].inverseTranspose = glm::transpose(glm::inverse(transform));
+
+    }
+
+    void MeshHandle::removeInstance(MeshID meshID) {
+        SR_PRECONDITION(m_InstanceToIndex.find(meshID) != m_InstanceToIndex.end(), "Instance %d does not exist", meshID);
+
+        auto lastDataIndex = transformData.size() - 1;
+        auto currentDataIndex = m_InstanceToIndex[meshID];
+        MeshID lastElementKey;
+        for (const auto& lastKey : m_InstanceToIndex){
+            if (lastDataIndex == lastKey.second){
+                lastElementKey = lastKey.first;
+                break;
+            }
+        }
+        // switch last and current element from place
+        transformData[currentDataIndex] = std::move(transformData[lastDataIndex]);
+        transformData.pop_back();
+        m_InstanceToIndex.erase(meshID);
+        // update index
+        m_InstanceToIndex[lastElementKey] = currentDataIndex;
     }
 
     void MeshHandle::draw() const {
@@ -73,7 +109,7 @@ namespace Syrius{
         m_VertexBuffer->bind();
         m_IndexBuffer->bind();
 #endif
-        m_Context->draw(m_VertexArray);
+        m_Context->drawInstanced(m_VertexArray, m_InstanceToIndex.size());
     }
 
 }

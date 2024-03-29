@@ -20,7 +20,7 @@ namespace Syrius{
         m_VertexLayout->addAttribute("Tangent", SR_FLOAT32_3);
         m_VertexLayout->addAttribute("TexCoords", SR_FLOAT32_2);
 
-        TransformData transformData;
+        TransformData transformData[SR_MAX_INSTANCES];
         ConstantBufferDesc cbDesc;
         cbDesc.name = gpDesc.modelDataBufferName;
         cbDesc.size = sizeof(TransformData);
@@ -50,7 +50,7 @@ namespace Syrius{
         m_ModelData->bind(m_Slot);
         m_Shader->bind();
         for (const auto& mesh: m_Meshes){
-            m_ModelData->setData(&mesh.transformData);
+            m_ModelData->setData(mesh.transformData.data());
             m_Materials[mesh.materialID].bind();
             mesh.draw();
         }
@@ -61,21 +61,29 @@ namespace Syrius{
         auto mid = generateID();
         m_Meshes.emplace(mid, m_Context, mesh, m_VertexShader, m_VertexLayout);
 
+        auto iid = m_Meshes[mid].createInstance();
+        m_MeshInstances.emplace(iid, mid);
+
         SR_POSTCONDITION(mid != 0, "MeshID 0 is reserved for invalid mesh")
-        return mid;
+        return iid;
     }
 
     void GeometryPass::transformMesh(MeshID meshID, const glm::mat4 &transform) {
-        SR_PRECONDITION(m_Meshes.has(meshID), "MeshID: %d does not exist", meshID)
+        MeshDataID meshDataID = m_MeshInstances[meshID];
 
-        m_Meshes[meshID].setTransformation(transform);
+        m_Meshes[meshDataID].setTransformation(meshID, transform);
     }
 
     void GeometryPass::removeMesh(MeshID meshID) {
-        SR_PRECONDITION(m_Meshes.has(meshID), "MeshID: %d does not exist", meshID)
+        MeshDataID meshDataID = m_MeshInstances[meshID];
+        m_MeshInstances.erase(meshID);
 
-        m_Meshes.remove(meshID);
+        auto& meshHandle = m_Meshes[meshDataID];
+        meshHandle.removeInstance(meshID);
 
+        if (meshHandle.getInstanceCount() == 0){
+            m_Meshes.remove(meshDataID);
+        }
     }
 
     MaterialID GeometryPass::createMaterial(const MaterialDesc &material) {
@@ -88,10 +96,10 @@ namespace Syrius{
     }
 
     void GeometryPass::setMeshMaterial(MeshID meshID, MaterialID materialID) {
-        SR_PRECONDITION(m_Meshes.has(meshID), "MeshID: %d does not exist", meshID)
         SR_PRECONDITION(m_Materials.has(materialID), "MaterialID: %d does not exist", materialID)
 
-        m_Meshes[meshID].materialID = materialID;
+        MeshDataID meshDataID = m_MeshInstances[meshID];
+        m_Meshes[meshDataID].materialID = materialID;
     }
 
     void GeometryPass::removeMaterial(MaterialID materialID) {

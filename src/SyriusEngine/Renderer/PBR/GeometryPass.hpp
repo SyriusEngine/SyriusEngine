@@ -40,8 +40,10 @@ namespace Syrius{
         void createDefaultMaterial();
 
     private:
-        Srstl::KeyVector<MeshID, MeshHandle> m_Meshes;
+        Srstl::KeyVector<MeshDataID, MeshHandle> m_Meshes;
         Srstl::KeyVector<MaterialID, MaterialHandle> m_Materials;
+
+        std::unordered_map<MeshID, MeshDataID> m_MeshInstances;
 
         ResourceView<ConstantBuffer> m_ModelData;
         uint32 m_Slot;
