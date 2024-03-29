@@ -18,7 +18,7 @@ namespace Syrius{
         if (ImGui::BeginListBox("Meshes")){
             for (uint32 i = 0; i < m_Meshes.size(); i++){
                 const bool isSelected = (m_SelectedMesh == i);
-                std::string descriptor = "Mesh " + std::to_string(i);
+                std::string descriptor = m_Meshes[i]->getName();
                 if (ImGui::Selectable(descriptor.c_str(), isSelected)){
                     m_SelectedMesh = i;
                 }

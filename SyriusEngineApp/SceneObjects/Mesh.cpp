@@ -2,8 +2,9 @@
 
 namespace Syrius{
 
-    Mesh::Mesh(const MeshDesc &desc, const ResourceView<RenderCommand> &rdCmd):
+    Mesh::Mesh(const std::string& name, const MeshDesc &desc, const ResourceView<RenderCommand> &rdCmd):
     m_MeshID(0),
+    m_Name(name),
     m_RenderCommand(rdCmd),
     m_Translation(0.0f),
     m_Rotation(0.0f),
@@ -55,5 +56,9 @@ namespace Syrius{
 
     void Mesh::setMaterial(MaterialID materialID) {
         m_RenderCommand->meshSetMaterial(m_MeshID, materialID);
+    }
+
+    const std::string &Mesh::getName() const {
+        return m_Name;
     }
 }

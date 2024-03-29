@@ -6,7 +6,7 @@ namespace Syrius{
 
     class Mesh{
     public:
-        Mesh(const MeshDesc& desc, const ResourceView<RenderCommand>& rdCmd);
+        Mesh(const std::string& name, const MeshDesc& desc, const ResourceView<RenderCommand>& rdCmd);
 
         ~Mesh();
 
@@ -22,6 +22,8 @@ namespace Syrius{
 
         [[nodiscard]] const glm::vec3& getScale() const;
 
+        [[nodiscard]] const std::string& getName() const;
+
         void setMaterial(MaterialID materialID);
 
     private:
@@ -29,6 +31,7 @@ namespace Syrius{
         void calculateTransformation();
 
     private:
+        std::string m_Name;
         const ResourceView<RenderCommand>& m_RenderCommand;
 
         glm::vec3 m_Translation;

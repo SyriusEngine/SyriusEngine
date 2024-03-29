@@ -67,6 +67,7 @@ namespace Syrius{
 
     void Serializer::loadMesh(EasyIni::Section &section) {
         auto prefab = section["Prefab"].get<std::string>();
+        auto name = section["Name"].get<std::string>();
         auto position = section["Position"].getVector<float>();
         SR_ASSERT(position.size() == 3, "Mesh position must have 3 components, has %i", position.size());
         auto rotation = section["Rotation"].getVector<float>();
@@ -104,7 +105,7 @@ namespace Syrius{
         else{
             SR_ASSERT(false, "Unknown prefab %s", prefab.c_str());
         }
-        auto mesh = createResource<Mesh>(meshDesc, m_RenderCommand);
+        auto mesh = createResource<Mesh>(name, meshDesc, m_RenderCommand);
         mesh->setTranslation(glm::vec3(position[0], position[1], position[2]));
         mesh->setRotation(glm::vec3(rotation[0], rotation[1], rotation[2]));
         mesh->setScale(glm::vec3(scale[0], scale[1], scale[2]));

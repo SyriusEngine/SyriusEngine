@@ -1,6 +1,6 @@
 
 def main():
-    file = open("./Resources/Scenes/Slowouse.ini", "w")
+    file = open("./Resources/Scenes/SlowHouse.ini", "w")
 
     i = 1
     for x in range(5):
@@ -8,6 +8,7 @@ def main():
             file.write("[Object" + str(i) + "]\n")
             file.write("Type=\"Mesh\"\n"
                        "Prefab=\"Cube\"\n"
+                       "Name=\"Cube" + str(i) + "\"\n"
                        "Scale=(1.0, 1.0, 1.0)\n"
                        "Rotation=(0.0, 0.0, 0.0)\n"
                        "Material=\"dirty-red-bricks\"\n")
