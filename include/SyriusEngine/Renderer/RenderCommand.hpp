@@ -18,6 +18,8 @@ namespace Syrius{
 
         virtual MeshID createMesh(const MeshDesc& meshDesc) = 0;
 
+        virtual MeshID createMesh(MeshID meshID) = 0;
+
         virtual void transformMesh(MeshID mesh, const glm::mat4& transform) = 0;
 
         virtual void removeMesh(MeshID mesh) = 0;

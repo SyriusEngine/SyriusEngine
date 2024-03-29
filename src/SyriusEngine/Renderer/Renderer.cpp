@@ -100,6 +100,17 @@ namespace Syrius{
         return meshID;
     }
 
+    MeshID Renderer::createMesh(MeshID meshID) {
+        SR_PRECONDITION(m_PBRLayer.get() != nullptr, "PBRRenderLayer is null (%p)", m_PBRLayer.get());
+
+        MeshID newID = 0;
+        // wait for the render thread to create the mesh, otherwise invalid meshIDs may be used
+        m_RenderThread.addTaskSync([this, meshID, &newID]{
+            newID = m_PBRLayer->createMesh(meshID);
+        });
+        return newID;
+    }
+
     void Renderer::transformMesh(MeshID mesh, const glm::mat4 &transform) {
         SR_PRECONDITION(m_PBRLayer.get() != nullptr, "PBRRenderLayer is null (%p)", m_PBRLayer.get());
         SR_PRECONDITION(mesh != 0, "MeshID is 0 (%d)", mesh);

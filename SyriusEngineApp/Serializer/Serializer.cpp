@@ -66,51 +66,26 @@ namespace Syrius{
     }
 
     void Serializer::loadMesh(EasyIni::Section &section) {
-        auto prefab = section["Prefab"].get<std::string>();
         auto name = section["Name"].get<std::string>();
+        auto isInstance = section["IsInstance"].getOrDefault<bool>(false);
+        if (isInstance) {
+            loadInstance(section, name);
+        }
+        else{
+            loadPrefab(section, name);
+        }
         auto position = section["Position"].getVector<float>();
         SR_ASSERT(position.size() == 3, "Mesh position must have 3 components, has %i", position.size());
         auto rotation = section["Rotation"].getVector<float>();
         SR_ASSERT(rotation.size() == 3, "Mesh rotation must have 3 components, has %i", rotation.size());
         auto scale = section["Scale"].getVector<float>();
         SR_ASSERT(scale.size() == 3, "Mesh scale must have 3 components, has %i", scale.size());
-        auto material = section["Material"].get<std::string>();
-        MaterialID mid = privateGetMaterial(material);
 
-        MeshDesc meshDesc;
-        if (prefab == "Triangle"){
-            createTriangle(meshDesc);
-        }
-        else if (prefab == "Rectangle"){
-            createRectangle(meshDesc);
-        }
-        else if (prefab == "Pyramid"){
-            createPyramid(meshDesc);
-        }
-        else if (prefab == "Cube"){
-            createCube(meshDesc);
-        }
-        else if (prefab == "Sphere"){
-            createSphere(meshDesc);
-        }
-        else if (prefab == "Cone"){
-            createCone(meshDesc);
-        }
-        else if (prefab == "Torus"){
-            createTorus(meshDesc);
-        }
-        else if (prefab == "Cylinder"){
-            createCylinder(meshDesc);
-        }
-        else{
-            SR_ASSERT(false, "Unknown prefab %s", prefab.c_str());
-        }
-        auto mesh = createResource<Mesh>(name, meshDesc, m_RenderCommand);
+        auto& mesh = m_Meshes.back();
         mesh->setTranslation(glm::vec3(position[0], position[1], position[2]));
         mesh->setRotation(glm::vec3(rotation[0], rotation[1], rotation[2]));
         mesh->setScale(glm::vec3(scale[0], scale[1], scale[2]));
-        mesh->setMaterial(mid);
-        m_Meshes.push_back(std::move(mesh));
+
     }
 
     MaterialID Serializer::privateGetMaterial(const std::string &materialName) {
@@ -147,4 +122,53 @@ namespace Syrius{
         return mid;
     }
 
+    void Serializer::loadPrefab(EasyIni::Section &section, const std::string &name) {
+        auto prefab = section["Prefab"].get<std::string>();
+        auto material = section["Material"].get<std::string>();
+        MaterialID mid = privateGetMaterial(material);
+
+        MeshDesc meshDesc;
+        if (prefab == "Triangle"){
+            createTriangle(meshDesc);
+        }
+        else if (prefab == "Rectangle"){
+            createRectangle(meshDesc);
+        }
+        else if (prefab == "Pyramid"){
+            createPyramid(meshDesc);
+        }
+        else if (prefab == "Cube"){
+            createCube(meshDesc);
+        }
+        else if (prefab == "Sphere"){
+            createSphere(meshDesc);
+        }
+        else if (prefab == "Cone"){
+            createCone(meshDesc);
+        }
+        else if (prefab == "Torus"){
+            createTorus(meshDesc);
+        }
+        else if (prefab == "Cylinder"){
+            createCylinder(meshDesc);
+        }
+        else{
+            SR_ASSERT(false, "Unknown prefab %s", prefab.c_str());
+        }
+        auto mesh = createResource<Mesh>(name, meshDesc, m_RenderCommand);
+        mesh->setMaterial(mid);
+        m_Meshes.push_back(std::move(mesh));
+    }
+
+    void Serializer::loadInstance(EasyIni::Section &section, const std::string &name) {
+        auto instancedFrom = section["InstancedFrom"].get<std::string>();
+
+        for (auto& mesh : m_Meshes) {
+            if (mesh->getName() == instancedFrom) {
+                auto id = mesh->getMeshID();
+                auto newMesh = createResource<Mesh>(name, id, m_RenderCommand);
+                m_Meshes.push_back(std::move(newMesh));
+            }
+        }
+    }
 }

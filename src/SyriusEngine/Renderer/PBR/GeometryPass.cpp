@@ -68,6 +68,15 @@ namespace Syrius{
         return iid;
     }
 
+    MeshID GeometryPass::createMesh(MeshID meshID) {
+        SR_PRECONDITION(m_MeshInstances.find(meshID) != m_MeshInstances.end(), "MeshID: %d does not exist", meshID)
+
+        MeshDataID meshDataID = m_MeshInstances[meshID];
+        auto iid = m_Meshes[meshDataID].createInstance();
+        m_MeshInstances.emplace(iid, meshDataID);
+        return iid;
+    }
+
     void GeometryPass::transformMesh(MeshID meshID, const glm::mat4 &transform) {
         MeshDataID meshDataID = m_MeshInstances[meshID];
 

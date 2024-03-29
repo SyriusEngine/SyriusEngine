@@ -30,6 +30,10 @@ namespace Syrius{
 
         void loadMesh(EasyIni::Section& section);
 
+        void loadPrefab(EasyIni::Section& section, const std::string& name);
+
+        void loadInstance(EasyIni::Section& section, const std::string& name);
+
         MaterialID privateGetMaterial(const std::string& materialName);
 
     private:

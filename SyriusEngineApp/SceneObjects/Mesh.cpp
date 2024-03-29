@@ -12,6 +12,17 @@ namespace Syrius{
         m_MeshID = m_RenderCommand->createMesh(desc);
     }
 
+    Mesh::Mesh(const std::string &name, MeshID meshID, const ResourceView<RenderCommand> &rdCmd) :
+    m_MeshID(0),
+    m_Name(name),
+    m_RenderCommand(rdCmd),
+    m_Translation(0.0f),
+    m_Rotation(0.0f),
+    m_Scale(1.0f){
+        m_MeshID = m_RenderCommand->createMesh(meshID);
+
+    }
+
     Mesh::~Mesh() {
         m_RenderCommand->removeMesh(m_MeshID);
 
@@ -61,4 +72,5 @@ namespace Syrius{
     const std::string &Mesh::getName() const {
         return m_Name;
     }
+
 }

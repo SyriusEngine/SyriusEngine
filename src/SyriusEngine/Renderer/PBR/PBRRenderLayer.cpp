@@ -97,6 +97,12 @@ namespace Syrius{
         return m_GeometryPass->createMesh(meshDesc);
     }
 
+    MeshID PBRRenderLayer::createMesh(MeshID meshID) {
+        SR_PRECONDITION(m_GeometryPass != nullptr, "GeometryPass is null (%p)", m_GeometryPass);
+
+        return m_GeometryPass->createMesh(meshID);
+    }
+
     void PBRRenderLayer::transformMesh(MeshID mesh, const glm::mat4 &transform) {
         SR_PRECONDITION(m_GeometryPass != nullptr, "GeometryPass is null (%p)", m_GeometryPass);
 

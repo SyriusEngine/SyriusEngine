@@ -25,6 +25,8 @@ namespace Syrius{
 
         MeshID createMesh(const MeshDesc& mesh);
 
+        MeshID createMesh(MeshID meshID);
+
         void transformMesh(MeshID meshID, const glm::mat4& transform);
 
         void removeMesh(MeshID meshID);

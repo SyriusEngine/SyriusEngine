@@ -8,6 +8,8 @@ namespace Syrius{
     public:
         Mesh(const std::string& name, const MeshDesc& desc, const ResourceView<RenderCommand>& rdCmd);
 
+        Mesh(const std::string& name, MeshID meshID, const ResourceView<RenderCommand>& rdCmd);
+
         ~Mesh();
 
         void setTranslation(const glm::vec3& translation);
@@ -23,6 +25,8 @@ namespace Syrius{
         [[nodiscard]] const glm::vec3& getScale() const;
 
         [[nodiscard]] const std::string& getName() const;
+
+        [[nodiscard]] MeshID getMeshID() const { return m_MeshID; }
 
         void setMaterial(MaterialID materialID);
 

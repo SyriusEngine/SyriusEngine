@@ -44,6 +44,8 @@ namespace Syrius{
 
         MeshID createMesh(const MeshDesc& meshDesc) override;
 
+        MeshID createMesh(MeshID meshID) override;
+
         void transformMesh(MeshID mesh, const glm::mat4& transform) override;
 
         void removeMesh(MeshID mesh) override;
