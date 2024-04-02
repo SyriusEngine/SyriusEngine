@@ -125,19 +125,23 @@ namespace Syrius{
         };
         // 1x1 normal texture (normal pointing up)
         std::vector<uint8> normal = {
-                0, 0, 255, 255
+                0, 0, 255, 255, 0, 0, 255, 255,
+                0, 0, 255, 255, 0, 0, 255, 255
         };
         // 1x1 roughness texture (roughness 0.5)
         std::vector<uint8> roughness = {
-                128, 128, 128, 255
+                128, 128, 128, 255, 128, 128, 128, 255,
+                128, 128, 128, 255, 128, 128, 128, 255
         };
         // 1x1 metallic texture (metallic 0.5)
         std::vector<uint8> metallic = {
-                128, 128, 128, 255
+                128, 128, 128, 255, 128, 128, 128, 255,
+                128, 128, 128, 255, 128, 128, 128, 255
         };
         // 1x1 ao texture (ao 1.0)
         std::vector<uint8> ao = {
-                255, 255, 255, 255
+                255, 255, 255, 255, 255, 255, 255, 255,
+                255, 255, 255, 255, 255, 255, 255, 255
         };
         ImageUI8Desc albedoDesc;
         albedoDesc.width = 2;
@@ -146,26 +150,26 @@ namespace Syrius{
         albedoDesc.format = SR_TEXTURE_RGBA_UI8;
 
         ImageUI8Desc normalDesc;
-        normalDesc.width = 1;
-        normalDesc.height = 1;
+        normalDesc.width = 2;
+        normalDesc.height = 2;
         normalDesc.data = normal.data();
         normalDesc.format = SR_TEXTURE_RGBA_UI8;
 
         ImageUI8Desc roughnessDesc;
-        roughnessDesc.width = 1;
-        roughnessDesc.height = 1;
+        roughnessDesc.width = 2;
+        roughnessDesc.height = 2;
         roughnessDesc.data = roughness.data();
         roughnessDesc.format = SR_TEXTURE_RGBA_UI8;
 
         ImageUI8Desc metallicDesc;
-        metallicDesc.width = 1;
-        metallicDesc.height = 1;
+        metallicDesc.width = 2;
+        metallicDesc.height = 2;
         metallicDesc.data = metallic.data();
         metallicDesc.format = SR_TEXTURE_RGBA_UI8;
 
         ImageUI8Desc aoDesc;
-        aoDesc.width = 1;
-        aoDesc.height = 1;
+        aoDesc.width = 2;
+        aoDesc.height = 2;
         aoDesc.data = ao.data();
         aoDesc.format = SR_TEXTURE_RGBA_UI8;
 

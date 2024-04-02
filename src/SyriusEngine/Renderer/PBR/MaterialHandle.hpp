@@ -6,7 +6,7 @@ namespace Syrius{
 
     class MaterialHandle{
     public:
-        MaterialHandle(ResourceView<Context>& context, const MaterialDesc& desc, uint32 startingSlot);
+        MaterialHandle(ResourceView<Context>& context, const MaterialDesc& desc, uint32 slot);
 
         ~MaterialHandle();
 
@@ -22,18 +22,14 @@ namespace Syrius{
 
     private:
 
-        void createTexture2D(const Resource<Image>& image, ResourceView<Texture2D>& texture);
+        void validateImages(const MaterialDesc& desc);
 
     private:
         ResourceView<Context>& m_Context;
 
-        ResourceView<Texture2D> m_Albedo;
-        ResourceView<Texture2D> m_Normal;
-        ResourceView<Texture2D> m_Metallic;
-        ResourceView<Texture2D> m_Roughness;
-        ResourceView<Texture2D> m_Ao;
+        ResourceView<Texture2D> m_Material;
 
-        uint32 m_StartingSlot;
+        uint32 m_Slot;
     };
 
 }

@@ -1,13 +1,14 @@
 def createFastHouse(cube_count: int = 25):
-    file = open("./Resources/Scenes/FastHouse.ini", "w+")
+    file = open("./Resources/Scenes/FastHouse2.ini", "w+")
+    width = int(cube_count ** 0.5)
     file.write("[General]\n"
                "Name=\"BricksCube\"\n"
                "ObjectCount = " + str(cube_count + 2) + "\n\n"
                "[Object0]\n"
                "Type=\"Light\"\n"
                "Name=\"Light0\"\n"
-               "Color=(1.0, 1.0, 1.0)\n"
-               "Position=(0.0, 3.0, 0.0)\n\n")
+               "Color=(100.0, 100.0, 100.0)\n"
+               "Position=(" + str(width / 2) + ".0, 3.0, " + str(width / 2) + ".0)\n\n")
 
     file.write("[Object1]\n"
                 "Type=\"Mesh\"\n"
@@ -21,7 +22,6 @@ def createFastHouse(cube_count: int = 25):
 
     i = 2
     # create square of cubes
-    width = int(cube_count ** 0.5)
     for x in range(width):
         for z in range(width):
             file.write("[Object" + str(i) + "]\n"
@@ -37,7 +37,7 @@ def createFastHouse(cube_count: int = 25):
 
 
 def main():
-    createFastHouse(25)
+    createFastHouse(250)
 
 if __name__ == "__main__":
     main()
