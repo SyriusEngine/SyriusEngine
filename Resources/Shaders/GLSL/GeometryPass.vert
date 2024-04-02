@@ -40,7 +40,7 @@ void main() {
 
     vs_out.texCoords = lTexCoords;
     vs_out.tbn = mat3(T, B, N);
-    vs_out.worldPosition = transform[gl_InstanceID].modelMatrix * vec4(lPosition, 1.0);;
+    vs_out.worldPosition = transform[gl_InstanceID].modelMatrix * vec4(lPosition, 1.0);
 
     gl_Position = perspective * view * vs_out.worldPosition;
 

@@ -23,7 +23,7 @@ namespace Syrius{
         TransformData transformData[SR_MAX_INSTANCES];
         ConstantBufferDesc cbDesc;
         cbDesc.name = gpDesc.modelDataBufferName;
-        cbDesc.size = sizeof(TransformData);
+        cbDesc.size = sizeof(TransformData) * SR_MAX_INSTANCES;
         cbDesc.shaderStage = SR_SHADER_VERTEX;
         cbDesc.usage = SR_BUFFER_USAGE_DYNAMIC;
         cbDesc.data = &transformData;

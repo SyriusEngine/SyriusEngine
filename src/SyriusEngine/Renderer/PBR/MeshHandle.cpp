@@ -80,7 +80,6 @@ namespace Syrius{
         auto index = m_InstanceToIndex[meshID];
         transformData[index].transform = transform;
         transformData[index].inverseTranspose = glm::transpose(glm::inverse(transform));
-
     }
 
     void MeshHandle::removeInstance(MeshID meshID) {
