@@ -1,20 +1,43 @@
+def createFastHouse(cube_count: int = 25):
+    file = open("./Resources/Scenes/FastHouse.ini", "w+")
+    file.write("[General]\n"
+               "Name=\"BricksCube\"\n"
+               "ObjectCount = " + str(cube_count + 2) + "\n\n"
+               "[Object0]\n"
+               "Type=\"Light\"\n"
+               "Name=\"Light0\"\n"
+               "Color=(1.0, 1.0, 1.0)\n"
+               "Position=(0.0, 3.0, 0.0)\n\n")
 
-def main():
-    file = open("./Resources/Scenes/SlowHouse.ini", "w")
+    file.write("[Object1]\n"
+                "Type=\"Mesh\"\n"
+                "Prefab=\"Cube\"\n"
+                "IsInstance=0\n"
+                "Name=\"OriginalCube\"\n"
+                "Scale=(1.0, 1.0, 1.0)\n"
+                "Rotation=(0.0, 0.0, 0.0)\n"
+                "Material=\"dirty-red-bricks\"\n"
+                "Position=(0.0, 0.0, 0.0)\n\n")
 
-    i = 1
-    for x in range(5):
-        for z in range(5):
-            file.write("[Object" + str(i) + "]\n")
-            file.write("Type=\"Mesh\"\n"
-                       "Prefab=\"Cube\"\n"
+    i = 2
+    # create square of cubes
+    width = int(cube_count ** 0.5)
+    for x in range(width):
+        for z in range(width):
+            file.write("[Object" + str(i) + "]\n"
+                       "Type=\"Mesh\"\n"
+                       "IsInstance=1\n"
+                       "InstancedFrom=\"OriginalCube\"\n"
                        "Name=\"Cube" + str(i) + "\"\n"
                        "Scale=(1.0, 1.0, 1.0)\n"
-                       "Rotation=(0.0, 0.0, 0.0)\n"
-                       "Material=\"dirty-red-bricks\"\n")
+                       "Rotation=(0.0, 0.0, 0.0)\n")
             file.write("Position=(" + str(x) + ".0, 0.0, " + str(z) + ".0)\n")
             file.write("\n")
             i += 1
+
+
+def main():
+    createFastHouse(25)
 
 if __name__ == "__main__":
     main()

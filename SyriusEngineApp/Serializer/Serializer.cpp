@@ -164,6 +164,7 @@ namespace Syrius{
         auto instancedFrom = section["InstancedFrom"].get<std::string>();
 
         for (auto& mesh : m_Meshes) {
+            if (mesh == nullptr) continue; // not sure why this is necessary, but engine crashes without it
             if (mesh->getName() == instancedFrom) {
                 auto id = mesh->getMeshID();
                 auto newMesh = createResource<Mesh>(name, id, m_RenderCommand);
