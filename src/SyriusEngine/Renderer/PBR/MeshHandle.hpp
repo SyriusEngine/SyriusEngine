@@ -34,7 +34,7 @@ namespace Syrius{
 
         void draw() const;
 
-        [[nodiscard]] inline uint64 getInstanceCount() const { return transformData.size(); }
+        [[nodiscard]] inline uint64 getInstanceCount() const { return m_InstanceCount; }
 
     public:
         MaterialID materialID;
@@ -48,6 +48,7 @@ namespace Syrius{
         ResourceView<IndexBuffer> m_IndexBuffer;
         ResourceView<VertexArray> m_VertexArray;
 
+        uint64 m_InstanceCount;
         std::unordered_map<MeshID, uint32> m_InstanceToIndex;
 
     };

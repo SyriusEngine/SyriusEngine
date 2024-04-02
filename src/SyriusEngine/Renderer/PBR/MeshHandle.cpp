@@ -6,6 +6,7 @@ namespace Syrius{
     ResourceView<VertexLayout> &vertexDesc):
     m_Context(context),
     materialID(0),
+    m_InstanceCount(0),
     m_InstanceToIndex(),
     transformData(SR_MAX_INSTANCES){
         VertexBufferDesc vbDesc;
@@ -64,13 +65,14 @@ namespace Syrius{
     }
 
     MeshID MeshHandle::createInstance() {
-        SR_PRECONDITION(m_InstanceToIndex.size() < SR_MAX_INSTANCES, "Cannot create more instances than %d", SR_MAX_INSTANCES);
+        SR_PRECONDITION(m_InstanceCount < SR_MAX_INSTANCES, "Cannot create more instances than %d", SR_MAX_INSTANCES);
 
         MeshID iid = generateID();
         auto index = m_InstanceToIndex.size();
         m_InstanceToIndex.insert({iid, index});
         transformData[index].transform = glm::mat4(1.0f);
         transformData[index].inverseTranspose = glm::mat4(1.0f);
+        m_InstanceCount++;
         return iid;
     }
 
@@ -100,6 +102,9 @@ namespace Syrius{
         m_InstanceToIndex.erase(meshID);
         // update index
         m_InstanceToIndex[lastElementKey] = currentDataIndex;
+        m_InstanceCount--;
+
+        SR_POSTCONDITION(m_InstanceCount >= 0, "Instance count cannot be negative");
     }
 
     void MeshHandle::draw() const {
