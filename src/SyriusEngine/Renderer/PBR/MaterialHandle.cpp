@@ -2,24 +2,33 @@
 
 namespace Syrius{
 
-    MaterialHandle::MaterialHandle(ResourceView<Context> &context, const MaterialDesc &desc, uint32 startingSlot):
+    MaterialHandle::MaterialHandle(ResourceView<Context> &context, const MaterialDesc &desc, uint32 slot):
     m_Context(context),
-    m_StartingSlot(startingSlot){
-        createTexture2D(desc.albedo, m_Albedo);
-        createTexture2D(desc.normal, m_Normal);
-        createTexture2D(desc.metallic, m_Metallic);
-        createTexture2D(desc.roughness, m_Roughness);
-        createTexture2D(desc.ao, m_Ao);
+    m_Slot(slot){
+        validateImages(desc);
+        auto width = desc.albedo->getWidth();
+        if (width * 5 > context->getDeviceLimits()->getMaxTextureSize()){
+            SR_LOG_ERROR("Material textures are too large, maximum texture size is: %d", context->getDeviceLimits()->getMaxTextureSize());
+        }
+        // create texture that contains all material textures
+        Texture2DDesc texDesc;
+        texDesc.width = width * 5;
+        texDesc.height = desc.albedo->getHeight();
+        texDesc.format = desc.albedo->getFormat();
+        texDesc.data = desc.albedo->getData(); // immediately copy albedo data
+        m_Material = context->createTexture2D(texDesc);
+
+        // copy other textures to the material texture
+        m_Material->setData(desc.normal->getData(), width, 0, desc.normal->getWidth(), desc.normal->getHeight());
+        m_Material->setData(desc.metallic->getData(), width * 2, 0, desc.metallic->getWidth(), desc.metallic->getHeight());
+        m_Material->setData(desc.roughness->getData(), width * 3, 0, desc.roughness->getWidth(), desc.roughness->getHeight());
+        m_Material->setData(desc.ao->getData(), width * 4, 0, desc.ao->getWidth(), desc.ao->getHeight());
     }
 
     MaterialHandle::MaterialHandle(MaterialHandle &&other) noexcept:
     m_Context(other.m_Context),
-    m_Albedo(other.m_Albedo),
-    m_Normal(other.m_Normal),
-    m_Metallic(other.m_Metallic),
-    m_Roughness(other.m_Roughness),
-    m_Ao(other.m_Ao),
-    m_StartingSlot(other.m_StartingSlot){
+    m_Slot(other.m_Slot),
+    m_Material(other.m_Material){
 
     }
 
@@ -28,12 +37,8 @@ namespace Syrius{
             return *this;
         }
         m_Context = other.m_Context;
-        m_Albedo = other.m_Albedo;
-        m_Normal = other.m_Normal;
-        m_Metallic = other.m_Metallic;
-        m_Roughness = other.m_Roughness;
-        m_Ao = other.m_Ao;
-        m_StartingSlot = other.m_StartingSlot;
+        m_Slot = other.m_Slot;
+        m_Material = other.m_Material;
         return *this;
     }
 
@@ -42,17 +47,22 @@ namespace Syrius{
     }
 
     void MaterialHandle::bind() {
-        m_Albedo->bindShaderResource(m_StartingSlot);
-        m_Normal->bindShaderResource(m_StartingSlot + 1);
-        m_Metallic->bindShaderResource(m_StartingSlot + 2);
-        m_Roughness->bindShaderResource(m_StartingSlot + 3);
-        m_Ao->bindShaderResource(m_StartingSlot + 4);
+        m_Material->bindShaderResource(m_Slot);
     }
 
-    void MaterialHandle::createTexture2D(const Resource<Image> & image, ResourceView<Texture2D> &texture) {
-        Texture2DImageDesc desc;
-        desc.image = createResourceView(image);
-        texture = m_Context->createTexture2D(desc);
+    void MaterialHandle::validateImages(const MaterialDesc &desc) {
+        auto format = desc.albedo->getFormat();
+        if (format != desc.normal->getFormat() || format != desc.metallic->getFormat() || format != desc.roughness->getFormat() || format != desc.ao->getFormat()){
+            SR_LOG_ERROR("Material textures have different formats, selected format is: %d", format);
+        }
+        auto width = desc.albedo->getWidth();
+        if (width != desc.normal->getWidth() || width != desc.metallic->getWidth() || width != desc.roughness->getWidth() || width != desc.ao->getWidth()){
+            SR_LOG_ERROR("Material textures have different widths, selected width is: %d", width);
+        }
+        auto height = desc.albedo->getHeight();
+        if (height != desc.normal->getHeight() || height != desc.metallic->getHeight() || height != desc.roughness->getHeight() || height != desc.ao->getHeight()){
+            SR_LOG_ERROR("Material textures have different heights, selected height is: %d", height);
+        }
     }
 
 }
