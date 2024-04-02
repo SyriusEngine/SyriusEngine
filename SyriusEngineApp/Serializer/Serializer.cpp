@@ -108,14 +108,19 @@ namespace Syrius{
         MaterialDesc material;
         material.albedo = createImage(albedoDesc);
         material.albedo->extendAlpha();
+        //material.albedo->resize(512, 512);
         material.normal = createImage(normalDesc);
         material.normal->extendAlpha();
+        //material.normal->resize(512, 512);
         material.metallic = createImage(metallicDesc);
         material.metallic->extendAlpha();
+        //material.metallic->resize(512, 512);
         material.roughness = createImage(roughnessDesc);
         material.roughness->extendAlpha();
+        //material.roughness->resize(512, 512);
         material.ao = createImage(aoDesc);
         material.ao->extendAlpha();
+        //material.ao->resize(512, 512);
 
         MaterialID mid = m_RenderCommand->createMaterial(material);
         m_Materials[materialName] = mid;
