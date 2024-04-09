@@ -19,6 +19,8 @@ private:
     float m_Y;
 };
 
+void moveComponents(MoveComponent& moveComponent, float x, float y);
+
 class HealthComponent{
 public:
     HealthComponent();

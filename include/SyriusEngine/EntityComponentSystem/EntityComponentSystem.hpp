@@ -80,6 +80,17 @@ namespace Syrius{
             m_Entities[entityID].erase(cID);
         }
 
+        template<typename C, typename... Args>
+        void runSystem(void(*componentFunc)(C&, Args...), Args&&... args){
+            SR_PRECONDITION(m_ComponentMap.find(Component<C>::getID()) != m_ComponentMap.end(), "Component: %s does not exists", typeid(C).name());
+
+            auto cID = Component<C>::getID();
+            auto& data = m_ComponentMap[cID];
+            for (auto& component : data){
+                componentFunc(std::any_cast<C&>(component), std::forward<Args>(args)...);
+            }
+        }
+
     private:
         typedef std::unordered_map<Offset, EntityID> ReverseLookup;
 

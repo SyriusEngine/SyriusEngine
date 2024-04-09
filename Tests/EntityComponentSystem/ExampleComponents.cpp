@@ -25,6 +25,10 @@ float MoveComponent::getY() const {
     return m_Y;
 }
 
+void moveComponents(MoveComponent& moveComponent, float x, float y){
+    moveComponent.move(x, y);
+}
+
 MoveComponent::~MoveComponent() = default;
 
 HealthComponent::HealthComponent():

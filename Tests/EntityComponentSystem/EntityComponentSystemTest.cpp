@@ -189,3 +189,23 @@ TEST_F(EntityComponentSystemTest, RemoveComponentAndAddComponent){
     EXPECT_EQ(move3.getX(), 5.0f);
     EXPECT_EQ(move3.getY(), 6.0f);
 }
+
+TEST_F(EntityComponentSystemTest, RunSystem){
+    EntityComponentSystem ecs;
+
+    auto e1 = ecs.createEntity();
+    auto e2 = ecs.createEntity();
+
+    ecs.addComponent<MoveComponent>(e1, 0.0f, 0.0f);
+    ecs.addComponent<MoveComponent>(e2, 2.0f, 2.0f);
+
+    ecs.runSystem(moveComponents, 2.0f, 2.0f);
+
+    auto move1 = ecs.getComponent<MoveComponent>(e1);
+    EXPECT_EQ(move1.getX(), 2.0f);
+    EXPECT_EQ(move1.getY(), 2.0f);
+
+    auto move2 = ecs.getComponent<MoveComponent>(e2);
+    EXPECT_EQ(move2.getX(), 4.0f);
+    EXPECT_EQ(move2.getY(), 4.0f);
+}
