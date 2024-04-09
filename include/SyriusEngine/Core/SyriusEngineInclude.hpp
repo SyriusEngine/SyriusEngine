@@ -45,5 +45,9 @@ namespace Syrius{
         return dist(gen);
     }
 
+    inline UID generateID(){
+        return getRandom(1, UINT64_MAX);;
+    }
+
 }
 

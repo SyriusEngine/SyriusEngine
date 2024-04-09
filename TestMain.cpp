@@ -1,4 +1,4 @@
-#include "Tests/EngineInitializationTest.hpp"
+#include "Tests/TestInclude.hpp"
 
 class TestDebugMessageHandler{
 public:

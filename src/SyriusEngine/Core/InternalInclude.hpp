@@ -17,8 +17,4 @@
 
 namespace Syrius{
 
-    inline UID generateID(){
-        return getRandom(1, UINT64_MAX);;
-    }
-
 }

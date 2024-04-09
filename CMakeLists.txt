@@ -59,6 +59,12 @@ set(SR_ENGINE_RENDERER_SRC
     src/SyriusEngine/Renderer/PBR/LightPass.cpp
 )
 
+set(SR_ENGINE_ECS_SRC
+    src/SyriusEngine/EntityComponentSystem/Component.cpp
+    src/SyriusEngine/EntityComponentSystem/EntityComponentSystem.cpp
+    )
+
+
 set(SR_ENGINE_UTILS_SRC
     src/SyriusEngine/Utils/Worker.cpp)
 
@@ -66,6 +72,7 @@ set(SR_ENGINE_SRC
     ${SR_ENGINE_CORE_SRC}
     ${SR_ENGINE_RENDERER_SRC}
     ${SR_ENGINE_UTILS_SRC}
+    ${SR_ENGINE_ECS_SRC}
     src/SyriusEngine/SyriusEngine.cpp
     src/SyriusEngine/LayerStack.cpp
     src/SyriusEngine/BuiltIns.cpp
@@ -102,8 +109,10 @@ include_directories(./Dependencies/googletest/googletest/include/)
 link_directories(./cmake-build-debug/lib/)
 
 set(TEST_SRC
-    Tests/EngineInitializationTest.cpp)
 
-add_executable(SyriusEngineTest TestMain.cpp ${TEST_SRC})
-add_dependencies(SyriusEngineTest SyriusEngine)
-target_link_libraries(SyriusEngineTest -lSyriusEngine -lSyriusCore -lgtest)
+    Tests/EntityComponentSystem/EntityComponentSystemTest.cpp
+    Tests/EntityComponentSystem/ExampleComponents.cpp)
+
+add_executable(SyriusEngineTest TestMain.cpp ${SR_ENGINE_SRC} ${TEST_SRC})
+add_dependencies(SyriusEngineTest gtest)
+target_link_libraries(SyriusEngineTest -lSyriusCore -lgtest)
