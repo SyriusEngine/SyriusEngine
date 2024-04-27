@@ -12,13 +12,15 @@ namespace Syrius{
         }
         // create texture that contains all material textures
         Texture2DDesc texDesc;
+        texDesc.usage = SR_BUFFER_USAGE_DYNAMIC;
         texDesc.width = width * 5;
         texDesc.height = desc.albedo->getHeight();
         texDesc.format = desc.albedo->getFormat();
-        texDesc.data = desc.albedo->getData(); // immediately copy albedo data
+        texDesc.data = nullptr;
         m_Material = context->createTexture2D(texDesc);
 
         // copy other textures to the material texture
+        m_Material->setData(desc.albedo->getData(), 0, 0, desc.albedo->getWidth(), desc.albedo->getHeight());
         m_Material->setData(desc.normal->getData(), width, 0, desc.normal->getWidth(), desc.normal->getHeight());
         m_Material->setData(desc.metallic->getData(), width * 2, 0, desc.metallic->getWidth(), desc.metallic->getHeight());
         m_Material->setData(desc.roughness->getData(), width * 3, 0, desc.roughness->getWidth(), desc.roughness->getHeight());
