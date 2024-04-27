@@ -10,12 +10,13 @@
 #include "Layer.hpp"
 #include "RenderLayer.hpp"
 #include "BuiltIns.hpp"
+#include "EngineConfiguration.hpp"
 
 namespace Syrius{
 
     class SR_API SyriusEngine{
     public:
-        explicit SyriusEngine(const std::string& configFile);
+        explicit SyriusEngine(const EngineConfiguration& config);
 
         virtual ~SyriusEngine();
 
@@ -35,7 +36,7 @@ namespace Syrius{
 
     protected:
         Resource<SyriusWindow> m_Window;
-        const std::string m_ConfigFile;
+        EngineConfiguration m_Config;
 
         ResourceView<RenderCommand> m_RenderCommand;
 
@@ -43,7 +44,7 @@ namespace Syrius{
         static uint64 m_InstanceCount;
     };
 
-    SR_API Resource<SyriusEngine> createEngine(const std::string& configFile = "config.ini");
+    SR_API Resource<SyriusEngine> createEngine(const EngineConfiguration& config);
 
     SR_API void setDebugMessageHandler(HandleDebugMessageFunc cb);
 

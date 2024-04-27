@@ -4,7 +4,7 @@
 
 namespace Syrius{
 
-    class EngineConfiguration{
+    class SR_API EngineConfiguration{
     public:
         /**
          * @brief Default constructor, will initialise all engine settings with default values
@@ -17,6 +17,14 @@ namespace Syrius{
          * @param path The path to the file containing the engine settings
          */
         explicit EngineConfiguration(std::string  path);
+
+        /**
+         * @brief Constructor that will load the engine settings from command line arguments. The command line
+         *        arguments will be parsed and the settings will be loaded from them.
+         * @param argc The number of arguments
+         * @param argv The arguments
+         */
+        EngineConfiguration(int argc, char** argv);
 
         void save();
 

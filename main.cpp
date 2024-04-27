@@ -4,12 +4,9 @@
 
 int main(int argc, char** argv) {
     try{
-        if (argc < 2){
-            std::cerr << "Usage: " << argv[0] << " <config file>" << std::endl;
-            return 1;
-        }
+        Syrius::EngineConfiguration config(argc, argv);
         // First create the engine object using a configuration file
-        auto engine =  Syrius::createEngine(argv[1]);
+        auto engine =  Syrius::createEngine(config);
 
         // then create the example layer
         auto appLayer = Syrius::createResource<Syrius::AppLayer>(engine);

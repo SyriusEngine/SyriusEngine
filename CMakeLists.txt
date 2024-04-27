@@ -96,7 +96,6 @@ set(APP_SRC
     SyriusEngineApp/PanelsUI/LightPanel.hpp
     SyriusEngineApp/SceneObjects/LightObject.cpp
     SyriusEngineApp/Serializer/Serializer.cpp
-
 )
 
 add_executable(SyriusEngineApp ${APP_SRC} main.cpp)
@@ -111,7 +110,11 @@ link_directories(./cmake-build-debug/lib/)
 set(TEST_SRC
 
     Tests/EntityComponentSystem/EntityComponentSystemTest.cpp
-    Tests/EntityComponentSystem/ExampleComponents.cpp)
+    Tests/EntityComponentSystem/ExampleComponents.cpp
+
+    Tests/Utils/WorkerTest.cpp
+
+)
 
 add_executable(SyriusEngineTest TestMain.cpp ${SR_ENGINE_SRC} ${TEST_SRC})
 add_dependencies(SyriusEngineTest gtest)

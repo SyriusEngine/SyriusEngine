@@ -63,4 +63,12 @@ namespace Syrius{
             std::abort();
         }
     }
+
+    const std::string &Worker::getName() const {
+        return m_Name;
+    }
+
+    bool Worker::isRunning() const {
+        return m_IsRunning;
+    }
 }

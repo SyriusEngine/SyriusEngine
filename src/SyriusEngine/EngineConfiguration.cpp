@@ -1,4 +1,5 @@
 #include "../../include/SyriusEngine/EngineConfiguration.hpp"
+#include "../../include/SyriusEngine/Core/DebugMessageHandler.hpp"
 
 #include <EasyIni/EasyIni.hpp>
 #include <utility>
@@ -6,7 +7,7 @@
 namespace Syrius{
 
     EngineConfiguration::EngineConfiguration():
-    m_ConfigPath(),
+    m_ConfigPath("Config.ini"),
     windowWidth(SR_DEFAULT_WIDTH),
     windowHeight(SR_DEFAULT_HEIGHT),
     windowPosX(200),
@@ -36,6 +37,42 @@ namespace Syrius{
         clearColor[3] = 1.0f;
         shaderLibraryPath = config["Context"]["ShaderLibrary"].getOrDefault<std::string>("./Resources/Shaders");
         enableSrslShaders = config["Context"]["EnableSrslShaders"].getOrDefault<bool>(true);
+    }
+
+    EngineConfiguration::EngineConfiguration(int argc, char **argv):
+    m_ConfigPath("Config.ini"),
+    windowWidth(SR_DEFAULT_WIDTH),
+    windowHeight(SR_DEFAULT_HEIGHT),
+    windowPosX(200),
+    windowPosY(200),
+    windowTitle("Syrius Engine"),
+    graphicsAPI(SR_API_OPENGL),
+    enableVSync(true),
+    clearColor{0.1f, 0.1f, 0.1f, 1.0f},
+    shaderLibraryPath("./Resources/Shaders"),
+    enableSrslShaders(false){
+        for (uint32 i = 1; i < argc; i++) {
+            std::string arg = argv[i];
+            if (arg == "-api") {
+                std::string value = argv[++i];
+                if (value == "OpenGL") {
+                    graphicsAPI = SR_API_OPENGL;
+                } else if (value == "DirectX11") {
+                    graphicsAPI = SR_API_D3D11;
+                } else{
+                    SR_LOG_WARNING("[EngineConfiguration %p]: Invalid API value: %s, OpenGL will be selected", this, value.c_str());
+                }
+            }
+            else if (arg == "-vsync") {
+                enableVSync = true;
+            }
+            else if (arg == "-config") {
+
+            }
+            else{
+                SR_LOG_WARNING("[EngineConfiguration %p]: Invalid argument: %s", this, arg.c_str());
+            }
+        }
     }
 
     void EngineConfiguration::save() {

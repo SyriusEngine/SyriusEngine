@@ -19,7 +19,7 @@ namespace Syrius{
         cDesc.name = desc.bufferName;
         cDesc.size = sizeof(ProjectionData);
         cDesc.data = &m_Data;
-        cDesc.usage = SR_BUFFER_USAGE_STATIC;
+        cDesc.usage = SR_BUFFER_USAGE_DYNAMIC;
         cDesc.shaderStage = SR_SHADER_VERTEX;
         m_ProjectionBuffer = context->createConstantBuffer(cDesc);
 

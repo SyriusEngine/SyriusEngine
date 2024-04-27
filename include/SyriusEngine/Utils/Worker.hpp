@@ -50,6 +50,10 @@ namespace Syrius{
             }
         }
 
+        const std::string& getName() const;
+
+        bool isRunning() const;
+
     private:
 
         void threadFunc();

@@ -5,8 +5,8 @@ namespace Syrius{
 
     uint64 SyriusEngine::m_InstanceCount = 0;
 
-    SyriusEngine::SyriusEngine(const std::string &configFile):
-    m_ConfigFile(configFile){
+    SyriusEngine::SyriusEngine(const EngineConfiguration& config):
+    m_Config(config){
         if (!m_InstanceCount) {
             setDebugMessageCallback(DebugMessageHandler::receiveSyriusCoreMessage);
         }
@@ -18,8 +18,8 @@ namespace Syrius{
 
     }
 
-    Resource<SyriusEngine> createEngine(const std::string& configFile){
-        return createResource<SyriusEngineImpl>(configFile);
+    Resource<SyriusEngine> createEngine(const EngineConfiguration& config){
+        return createResource<SyriusEngineImpl>(config);
     }
 
     void setDebugMessageHandler(HandleDebugMessageFunc cb){

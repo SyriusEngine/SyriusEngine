@@ -3,8 +3,23 @@
 #include "PlatformDetection.hpp"
 #include <string>
 #include <vector>
+#include <exception>
 
 #include <SyriusCore/SyriusCore.hpp>
+
+class SyriusEngineException : public std::exception{
+public:
+    explicit SyriusEngineException(const std::string& message): m_Message(message){
+
+    }
+
+    [[nodiscard]] const char* what() const noexcept override{
+        return m_Message.c_str();
+    }
+
+private:
+    std::string m_Message;
+};
 
 typedef enum SR_MESSAGE_SOURCE{
     SR_MESSAGE                  = 0x00,
@@ -100,6 +115,33 @@ namespace Syrius{
 #endif
         }
 
+        template<typename... Args>
+        static void engineThrow(
+                const char* function,
+                const char* file,
+                uint32_t line,
+                const char* message,
+                Args... args
+        ){
+            uint64_t formatSize = std::snprintf(nullptr, 0, message, args...);
+            std::vector<uint8_t> formatBuffer(formatSize + 1);
+            std::snprintf(reinterpret_cast<char*>(formatBuffer.data()), formatSize + 1, message, args...);
+
+            std::string msg = "[FATAL ERROR]: " + std::string(reinterpret_cast<char*>(formatBuffer.data()));
+            msg += "\n\n at " + std::string(file) + ":" + std::string(function) + ":" + std::to_string(line);
+            EngineMessage engineMsg;
+            engineMsg.messageType = SR_MESSAGE;
+            engineMsg.severity = SR_MESSAGE_SEVERITY_HIGH;
+            engineMsg.function = function;
+            engineMsg.file = file;
+            engineMsg.line = line;
+            engineMsg.message = msg;
+            if (m_MessageHandler != nullptr){
+                m_MessageHandler(engineMsg);
+            }
+            throw SyriusEngineException(msg);
+        }
+
         static void receiveSyriusCoreMessage(const Syrius::Message& msg);
 
         static void setDebugMessageHandler(HandleDebugMessageFunc cb);
@@ -115,10 +157,12 @@ namespace Syrius{
 
 }
 
+#define SR_THROW(message, ...) Syrius::DebugMessageHandler::engineThrow(__FUNCTION__, __FILE__, __LINE__, message, ##__VA_ARGS__);
+
 #if defined(SR_DEBUG)
-#define SR_LOG_INFO(message, ...) Syrius::DebugMessageHandler::log(SR_MESSAGE, SR_MESSAGE_SEVERITY_INFO, __FUNCTION__, __FILE__, __LINE__, message, ##__VA_ARGS__)
-#define SR_LOG_WARNING(message, ...) Syrius::DebugMessageHandler::log(SR_MESSAGE, SR_MESSAGE_SEVERITY_MEDIUM, __FUNCTION__, __FILE__, __LINE__, message, ##__VA_ARGS__)
-#define SR_LOG_ERROR(message, ...) Syrius::DebugMessageHandler::log(SR_MESSAGE, SR_MESSAGE_SEVERITY_HIGH, __FUNCTION__, __FILE__, __LINE__, message, ##__VA_ARGS__)
+#define SR_LOG_INFO(message, ...) Syrius::DebugMessageHandler::log(SR_MESSAGE, SR_MESSAGE_SEVERITY_INFO, __FUNCTION__, __FILE__, __LINE__, message, ##__VA_ARGS__);
+#define SR_LOG_WARNING(message, ...) Syrius::DebugMessageHandler::log(SR_MESSAGE, SR_MESSAGE_SEVERITY_MEDIUM, __FUNCTION__, __FILE__, __LINE__, message, ##__VA_ARGS__);
+#define SR_LOG_ERROR(message, ...) Syrius::DebugMessageHandler::log(SR_MESSAGE, SR_MESSAGE_SEVERITY_HIGH, __FUNCTION__, __FILE__, __LINE__, message, ##__VA_ARGS__);
 
 #define SR_PRECONDITION(condition, message, ...) if(!(condition)){ Syrius::DebugMessageHandler::engineAssert(SR_MESSAGE_PRECONDITION, #condition, __FUNCTION__, __FILE__, __LINE__, message, ##__VA_ARGS__); }
 #define SR_POSTCONDITION(condition, message, ...) if(!(condition)){ Syrius::DebugMessageHandler::engineAssert(SR_MESSAGE_POSTCONDITION, #condition, __FUNCTION__, __FILE__, __LINE__, message, ##__VA_ARGS__); }

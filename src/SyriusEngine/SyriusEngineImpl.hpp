@@ -9,7 +9,7 @@ namespace Syrius{
 
     class SyriusEngineImpl: public SyriusEngine{
     public:
-        explicit SyriusEngineImpl(const std::string& configFile);
+        explicit SyriusEngineImpl(const EngineConfiguration& config);
 
         ~SyriusEngineImpl() override;
 
@@ -29,7 +29,6 @@ namespace Syrius{
 
     private:
         LayerStack m_LayerStack;
-        EasyIni::Configuration m_Config;
 
         Resource<Renderer> m_Renderer;
     };
