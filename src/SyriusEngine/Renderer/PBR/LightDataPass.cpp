@@ -39,7 +39,7 @@ namespace Syrius{
         m_KeyLightMap.insert({lid, currentIndex});
         m_LightData.m_LightCount.x++;
 
-        m_LightDataBuffer->setData(&m_LightData);
+        m_LightDataBuffer->setData(&m_LightData, sizeof(LightData));
 
         SR_POSTCONDITION(lid != 0, "LightID cannot be %d", lid);
         return lid;
@@ -61,7 +61,7 @@ namespace Syrius{
         }
 
         m_LightData.m_LightCount.x--;
-        m_LightDataBuffer->setData(&m_LightData);
+        m_LightDataBuffer->setData(&m_LightData, sizeof(LightData));
 
         m_KeyLightMap.erase(index);
     }
@@ -73,7 +73,7 @@ namespace Syrius{
         m_LightData.m_Position[currentIndex] = glm::vec4(light.position, 1.0f);
         m_LightData.m_Color[currentIndex] = glm::vec4(light.color, 1.0f);
 
-        m_LightDataBuffer->setData(&m_LightData);
+        m_LightDataBuffer->setData(&m_LightData, sizeof(LightData));
 
     }
 

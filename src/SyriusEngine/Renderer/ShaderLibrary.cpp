@@ -22,27 +22,25 @@ namespace Syrius{
     }
 
     void ShaderLibrary::loadShader(const std::string &name) {
-        ShaderModuleDesc vsmDesc;
+        ShaderModuleFileDesc vsmDesc;
         vsmDesc.shaderType = SR_SHADER_VERTEX;
         vsmDesc.entryPoint = "main";
-        vsmDesc.loadType = SR_LOAD_FROM_FILE;
 
-        ShaderModuleDesc fsmDesc;
+        ShaderModuleFileDesc fsmDesc;
         fsmDesc.shaderType = SR_SHADER_FRAGMENT;
         fsmDesc.entryPoint = "main";
-        fsmDesc.loadType = SR_LOAD_FROM_FILE;
 
         if (m_Context->getType() == SR_API_OPENGL){
-            vsmDesc.codeType = SR_SHADER_CODE_GLSL;
-            vsmDesc.code = m_LibraryPath + "/GLSL/" + name + ".vert";
-            fsmDesc.codeType = SR_SHADER_CODE_GLSL;
-            fsmDesc.code = m_LibraryPath + "/GLSL/" + name + ".frag";
+            vsmDesc.language = SR_SHADER_LANGUAGE_GLSL;
+            vsmDesc.filePath = m_LibraryPath + "/GLSL/" + name + ".vert";
+            fsmDesc.language = SR_SHADER_LANGUAGE_GLSL;
+            fsmDesc.filePath = m_LibraryPath + "/GLSL/" + name + ".frag";
         }
         else if (m_Context->getType() == SR_API_D3D11){
-            vsmDesc.codeType = SR_SHADER_CODE_HLSL;
-            vsmDesc.code = m_LibraryPath + "/HLSL/" + name + ".vs";
-            fsmDesc.codeType = SR_SHADER_CODE_HLSL;
-            fsmDesc.code = m_LibraryPath + "/HLSL/" + name + ".ps";
+            vsmDesc.language = SR_SHADER_LANGUAGE_HLSL;
+            vsmDesc.filePath = m_LibraryPath + "/HLSL/" + name + ".vs";
+            fsmDesc.language = SR_SHADER_LANGUAGE_HLSL;
+            fsmDesc.filePath = m_LibraryPath + "/HLSL/" + name + ".ps";
         }
 
         ShaderPackage package;

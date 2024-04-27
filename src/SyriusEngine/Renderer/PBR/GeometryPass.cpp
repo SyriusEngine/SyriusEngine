@@ -50,7 +50,7 @@ namespace Syrius{
         m_ModelData->bind(m_Slot);
         m_Shader->bind();
         for (const auto& mesh: m_Meshes){
-            m_ModelData->setData(mesh.transformData.data());
+            m_ModelData->setData(mesh.transformData.data(), sizeof(TransformData) * SR_MAX_INSTANCES);
             m_Materials[mesh.materialID].bind();
             mesh.draw();
         }

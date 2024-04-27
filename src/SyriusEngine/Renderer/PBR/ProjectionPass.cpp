@@ -60,6 +60,6 @@ namespace Syrius{
                                          0.0f, m_Projection.windowHeight,
                                          m_Projection.nearPlane, m_Projection.farPlane);
 
-        m_ProjectionBuffer->setData(&m_Data);
+        m_ProjectionBuffer->setData(&m_Data, sizeof(ProjectionData));
     }
 }

@@ -29,6 +29,6 @@ namespace Syrius{
     void CameraDataPass::setCameraData(const glm::mat4 &viewMat, const glm::vec3 &camPos) {
         m_Data.view = viewMat;
         m_Data.position = glm::vec4(camPos, 1.0f);
-        m_CameraBuffer->setData(&m_Data);
+        m_CameraBuffer->setData(&m_Data, sizeof(CameraData));
     }
 }
