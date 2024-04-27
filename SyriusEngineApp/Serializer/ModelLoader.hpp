@@ -6,6 +6,8 @@
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
+#include <assimp/Logger.hpp>
+#include <assimp/DefaultLogger.hpp>
 
 namespace Syrius {
 

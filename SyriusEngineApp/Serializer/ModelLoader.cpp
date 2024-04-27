@@ -1,10 +1,35 @@
+#include <cstddef>
 #include "ModelLoader.hpp"
 
 namespace Syrius{
 
+    void assimpLogStream(const char* message, char* user){
+        SR_LOG_INFO("Assimp: %s", message);
+    }
+
+    class LogStream : public Assimp::LogStream{
+    public:
+        LogStream() = default;
+
+        LogStream(void (*param)(const char *, char *), void* aNullptr){
+            m_Log = param;
+            m_User = aNullptr;
+        }
+
+        void write(const char* message) override{
+            SR_LOG_INFO("Assimp: %s", message);
+        }
+    private:
+        void (*m_Log)(const char*, char*);
+        void* m_User;
+    };
+
     ModelLoader::ModelLoader(const std::string& path, const ResourceView<RenderCommand>& renderCommand):
     m_RenderCommand(renderCommand),
     m_Importer(){
+        Assimp::DefaultLogger::create("", Assimp::Logger::VERBOSE, aiDefaultLogStream_STDOUT);
+        Assimp::DefaultLogger::get()->attachStream(new LogStream(assimpLogStream, nullptr));
+
         m_Scene = m_Importer.ReadFile(path, aiProcess_Triangulate |
                                           aiProcess_FlipUVs |
                                           aiProcess_CalcTangentSpace |
