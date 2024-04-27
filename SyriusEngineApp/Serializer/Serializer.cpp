@@ -1,6 +1,8 @@
 #include "Serializer.hpp"
 #include <EasyIni/EasyIni.hpp>
 
+#include "ModelLoader.hpp"
+
 namespace Syrius{
 
     Serializer::Serializer(const ResourceView<RenderCommand> &renderCommand, std::string materialDir):
@@ -67,12 +69,18 @@ namespace Syrius{
 
     void Serializer::loadMesh(EasyIni::Section &section) {
         auto name = section["Name"].get<std::string>();
-        auto isInstance = section["IsInstance"].getOrDefault<bool>(false);
-        if (isInstance) {
+        auto meshType = section["MeshType"].get<std::string>();
+        if (meshType == "Prefab"){
+            loadPrefab(section, name);
+        }
+        else if (meshType == "Instance"){
             loadInstance(section, name);
         }
+        else if (meshType == "3DModel"){
+            load3DModel(section, name);
+        }
         else{
-            loadPrefab(section, name);
+            SR_THROW("Unknown mesh type %s", meshType.c_str());
         }
         auto position = section["Position"].getVector<float>();
         SR_ASSERT(position.size() == 3, "Mesh position must have 3 components, has %i", position.size());
@@ -128,7 +136,7 @@ namespace Syrius{
     }
 
     void Serializer::loadPrefab(EasyIni::Section &section, const std::string &name) {
-        auto prefab = section["Prefab"].get<std::string>();
+        auto prefab = section["PrefabType"].get<std::string>();
         auto material = section["Material"].get<std::string>();
         MaterialID mid = privateGetMaterial(material);
 
@@ -158,7 +166,7 @@ namespace Syrius{
             createCylinder(meshDesc);
         }
         else{
-            SR_ASSERT(false, "Unknown prefab %s", prefab.c_str());
+            SR_THROW("Unknown prefab %s", prefab.c_str());
         }
         auto mesh = createResource<Mesh>(name, meshDesc, m_RenderCommand);
         mesh->setMaterial(mid);
@@ -176,5 +184,11 @@ namespace Syrius{
                 m_Meshes.push_back(std::move(newMesh));
             }
         }
+    }
+
+    void Serializer::load3DModel(EasyIni::Section &section, const std::string &name) {
+        auto file = section["FilePath"].get<std::string>();
+        ModelLoader loader(file, m_RenderCommand);
+        loader.parse(m_Meshes);
     }
 }

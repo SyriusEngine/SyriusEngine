@@ -34,6 +34,8 @@ namespace Syrius{
 
         void loadInstance(EasyIni::Section& section, const std::string& name);
 
+        void load3DModel(EasyIni::Section& section, const std::string& name);
+
         MaterialID privateGetMaterial(const std::string& materialName);
 
     private:

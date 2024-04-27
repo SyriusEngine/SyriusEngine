@@ -13,6 +13,7 @@ add_subdirectory(./Dependencies/googletest/)
 set(SR_DEPENDENCIES_DLL
     ${CMAKE_CURRENT_BINARY_DIR}/Dependencies/SyriusCore/libSyriusCore.dll
     ${CMAKE_CURRENT_BINARY_DIR}/Dependencies/SRSLCompiler/libSRSLCompiler.dll
+    ${CMAKE_CURRENT_BINARY_DIR}/../Dependencies/assimp/bin/libassimp-5.dll
     )
 
 add_custom_target(CopyDLL ALL
@@ -87,6 +88,8 @@ target_link_libraries(SyriusEngine -lSyriusCore -lSRSLCompiler)
 ################# APP EXECUTABLE #################
 link_directories(./cmake-build-debug/)
 
+include_directories(./Dependencies/assimp/include/)
+
 set(APP_SRC
     SyriusEngineApp/Applayer.cpp
     SyriusEngineApp/Camera.cpp
@@ -96,12 +99,14 @@ set(APP_SRC
     SyriusEngineApp/PanelsUI/LightPanel.hpp
     SyriusEngineApp/SceneObjects/LightObject.cpp
     SyriusEngineApp/Serializer/Serializer.cpp
+    SyriusEngineApp/Serializer/ModelLoader.cpp
+    SyriusEngineApp/Serializer/ModelLoader.hpp
 )
 
 add_executable(SyriusEngineApp ${APP_SRC} main.cpp)
 add_dependencies(SyriusEngineApp SyriusEngine)
 
-target_link_libraries(SyriusEngineApp -lSyriusEngine -lSyriusCore)
+target_link_libraries(SyriusEngineApp -lSyriusEngine -lSyriusCore -lassimp-5)
 
 #################### TESTING ###############################
 include_directories(./Dependencies/googletest/googletest/include/)
