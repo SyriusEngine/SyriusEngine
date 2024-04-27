@@ -6,6 +6,15 @@
 
 namespace Syrius{
 
+    struct MaterialFileDesc{
+        std::string name;
+        std::string albedo;
+        std::string normal;
+        std::string metallic;
+        std::string roughness;
+        std::string ao;
+    };
+
     class Serializer{
     public:
         explicit Serializer(const ResourceView<RenderCommand>& renderCommand, std::string materialDir = "./Resources/Materials/");
@@ -13,6 +22,8 @@ namespace Syrius{
         ~Serializer();
 
         void loadScene(const std::string& iniPath);
+
+        MaterialID loadMaterial(const MaterialFileDesc& desc);
 
         void clear();
 
@@ -37,6 +48,8 @@ namespace Syrius{
         void load3DModel(EasyIni::Section& section, const std::string& name);
 
         MaterialID privateGetMaterial(const std::string& materialName);
+
+        MaterialID privateLoadMaterial(const MaterialFileDesc& desc);
 
     private:
         Worker m_Dispatcher;

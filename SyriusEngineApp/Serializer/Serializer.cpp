@@ -25,6 +25,14 @@ namespace Syrius{
         });
     }
 
+    MaterialID Serializer::loadMaterial(const MaterialFileDesc &desc) {
+        MaterialID mid = 0;
+        m_Dispatcher.addTaskSync([this, &mid, &desc](){
+            mid = privateLoadMaterial(desc);
+        });
+        return mid;
+    }
+
     void Serializer::clear() {
         m_Dispatcher.addTaskSync([this](){
             m_Lights.clear();
@@ -191,4 +199,40 @@ namespace Syrius{
         ModelLoader loader(file, m_RenderCommand);
         loader.parse(m_Meshes);
     }
+
+    MaterialID Serializer::privateLoadMaterial(const MaterialFileDesc &desc) {
+        if (m_Materials.find(desc.name) != m_Materials.end()) {
+            return m_Materials[desc.name];
+        }
+        auto loadTexture = [this](const std::string& path){
+            if (path.empty()){
+                SR_LOG_WARNING("Failed to load texture from path %s", path.c_str());
+                std::vector<uint8> data(4, 255);
+                ImageUI8Desc desc;
+                desc.width = 1;
+                desc.height = 1;
+                desc.format = SR_TEXTURE_RGBA_UI8;
+                desc.data = data.data();
+                auto image = createImageUI8(desc);
+                return std::move(image);
+            }
+            else{
+                ImageFileDesc imageDesc;
+                imageDesc.fileName = path;
+                imageDesc.flipOnAccess = true;
+                auto image = createImage(imageDesc);
+                return std::move(image);
+            }
+        };
+        MaterialDesc material;
+        material.albedo = loadTexture(desc.albedo);
+        material.normal = loadTexture(desc.normal);
+        material.metallic = loadTexture(desc.metallic);
+        material.roughness = loadTexture(desc.roughness);
+        material.ao = loadTexture(desc.ao);
+        auto mid = m_RenderCommand->createMaterial(material);
+        m_Materials[desc.name] = mid;
+        return mid;
+    }
+
 }
