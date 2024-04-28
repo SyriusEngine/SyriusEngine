@@ -12,7 +12,6 @@ namespace Syrius{
         }
         // create texture that contains all material textures
         Texture2DDesc texDesc;
-        texDesc.usage = SR_BUFFER_USAGE_DYNAMIC;
         texDesc.width = width * 5;
         texDesc.height = desc.albedo->getHeight();
         texDesc.format = desc.albedo->getFormat();
