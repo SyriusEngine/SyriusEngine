@@ -11,18 +11,23 @@ layout(location = 1) out vec4 gNormal;
 layout(location = 2) out vec4 gAlbedo;
 layout(location = 3) out vec4 gMetallicRoughnessAO;
 
-layout(binding = 0) uniform sampler2D albedoTex;
-layout(binding = 1) uniform sampler2D normalTex;
-layout(binding = 2) uniform sampler2D metallicTex;
-layout(binding = 3) uniform sampler2D roughnessTex;
-layout(binding = 4) uniform sampler2D aoTex;
+layout(binding = 0) uniform sampler2D materialTex;
+
+const float NUM_TEXTURES = 5.0;
+const float TEXTURE_SIZE = 1.0f / NUM_TEXTURES;
 
 void main() {
-    vec4 tAlbedo = texture(albedoTex, fs_in.texCoords);
-    vec4 tNormal = texture(normalTex, fs_in.texCoords);
-    vec4 tMetallic = texture(metallicTex, fs_in.texCoords);
-    vec4 tRoughness = texture(roughnessTex, fs_in.texCoords);
-    vec4 tAO = texture(aoTex, fs_in.texCoords);
+    vec2 textureOffset = vec2(fs_in.texCoords.x * TEXTURE_SIZE, fs_in.texCoords.y);
+
+    vec4 tAlbedo = texture(materialTex, textureOffset);
+    textureOffset.x += TEXTURE_SIZE;
+    vec4 tNormal = texture(materialTex, textureOffset);
+    textureOffset.x += TEXTURE_SIZE;
+    vec4 tMetallic = texture(materialTex, textureOffset);
+    textureOffset.x += TEXTURE_SIZE;
+    vec4 tRoughness = texture(materialTex, textureOffset);
+    textureOffset.x += TEXTURE_SIZE;
+    vec4 tAO = texture(materialTex, textureOffset);
 
     vec3 N = normalize(fs_in.tbn * (tNormal.xyz * 2.0 - 1.0));
 
