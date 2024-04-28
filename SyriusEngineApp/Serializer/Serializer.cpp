@@ -214,6 +214,7 @@ namespace Syrius{
                 desc.format = SR_TEXTURE_RGBA_UI8;
                 desc.data = data.data();
                 auto image = createImageUI8(desc);
+                image->resize(512, 512);
                 return std::move(image);
             }
             else{
@@ -221,6 +222,7 @@ namespace Syrius{
                 imageDesc.fileName = path;
                 imageDesc.flipOnAccess = true;
                 auto image = createImage(imageDesc);
+                image->resize(512, 512);
                 return std::move(image);
             }
         };

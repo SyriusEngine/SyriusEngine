@@ -24,11 +24,11 @@ namespace Syrius{
 
     void CameraDataPass::execute(PassMap& passMap) {
         m_CameraBuffer->bind(m_Slot);
+        m_CameraBuffer->setData(&m_Data, sizeof(CameraData));
     }
 
     void CameraDataPass::setCameraData(const glm::mat4 &viewMat, const glm::vec3 &camPos) {
         m_Data.view = viewMat;
         m_Data.position = glm::vec4(camPos, 1.0f);
-        m_CameraBuffer->setData(&m_Data, sizeof(CameraData));
     }
 }
