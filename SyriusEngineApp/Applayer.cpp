@@ -120,6 +120,21 @@ namespace Syrius{
         }
         ImGui::PlotHistogram("FT H", times, m_FrameTimes.size(), 0, nullptr, 0.0f, 40.0f, ImVec2(0, 80));
         ImGui::PlotLines("FT L", times, m_FrameTimes.size(), 0, nullptr, 0.0f, 40.0f, ImVec2(0, 80));
+
+        auto timers = SR_GET_TIMING_DATA();
+        ImGui::Text("Timers");
+        ImGui::Columns(2, "Timing Data");
+        ImGui::Separator();
+        ImGui::Text("Name"); ImGui::NextColumn();
+        ImGui::Text("Time"); ImGui::NextColumn();
+        ImGui::Separator();
+        for (const auto& [name, time]: timers){
+            ImGui::Text(name.c_str()); ImGui::NextColumn();
+            ImGui::Text("%f ms", time); ImGui::NextColumn();
+        }
+        ImGui::Separator();
+        ImGui::Columns(1);
+        ImGui::NewLine();
     }
 
     void AppLayer::imGuiDrawMemoryConsumption() {

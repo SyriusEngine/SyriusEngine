@@ -9,6 +9,7 @@ namespace Syrius{
     m_Window(window){
         SR_PRECONDITION(std::filesystem::exists(desc.shaderLibraryPath), "ShaderLibraryPath %s does not exist", desc.shaderLibraryPath.c_str());
 
+        SR_START_TIMER("Renderer::Setup")
         m_RenderThread.addTaskSync([this, &desc]{
             ContextDesc contextDesc;
             contextDesc.api = desc.graphicsAPI;
@@ -28,6 +29,7 @@ namespace Syrius{
         m_PBRLayer = createResourceView(pbrRenderLayer);
         pushRenderLayer(std::move(pbrRenderLayer));
 
+        SR_STOP_TIMER("Renderer::Setup")
     }
 
     Renderer::~Renderer() {
@@ -40,9 +42,11 @@ namespace Syrius{
 
     void Renderer::render() {
         m_RenderThread.addTask([this]{
+            SR_START_TIMER("Renderer::Render")
             m_Context->clear();
 
             m_LayerStack.onRender(m_Context);
+            SR_STOP_TIMER("Renderer::Render")
         });
     }
 

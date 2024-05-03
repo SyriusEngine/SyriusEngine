@@ -36,7 +36,8 @@ include_directories(./Dependencies/SRSTL/include/)
 
 set(SR_ENGINE_CORE_SRC
     src/SyriusEngine/Core/DebugMessageHandler.cpp
-    src/SyriusEngine/Core/InternalInclude.cpp)
+    src/SyriusEngine/Core/InternalInclude.cpp
+    src/SyriusEngine/Core/Profiler.cpp)
 
 set(SR_ENGINE_RENDERER_SRC
     src/SyriusEngine/Renderer/Primitives.cpp

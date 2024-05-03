@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../../../include/SyriusEngine/Core/SyriusEngineInclude.hpp"
+#include "../../../include/SyriusEngine/Core/Profiler.hpp"
 
 #include <EasyIni/EasyIni.hpp>
 
