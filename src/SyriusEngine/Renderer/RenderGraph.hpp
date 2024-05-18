@@ -28,6 +28,11 @@ namespace Syrius{
             return m_PassMap.getPass<T>();
         }
 
+        template<typename T>
+        bool hasPass(){
+            return m_PassMap.hasPass<T>();
+        }
+
         void execute();
 
         /**

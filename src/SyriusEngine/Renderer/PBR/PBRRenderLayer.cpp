@@ -5,9 +5,7 @@ namespace Syrius{
     PBRRenderLayer::PBRRenderLayer(Resource<ShaderLibrary> &shaderLibrary):
     RenderLayer(),
     RenderCommand(),
-    m_ShaderLibrary(shaderLibrary),
-    m_ProjectionPass(nullptr),
-    m_CameraDataPass(nullptr){
+    m_ShaderLibrary(shaderLibrary){
 
     }
 
@@ -38,21 +36,21 @@ namespace Syrius{
         prpDesc.bufferName = "ProjectionData";
         prpDesc.projection.windowWidth = static_cast<float>(context->getWidth());
         prpDesc.projection.windowHeight = static_cast<float>(context->getHeight());
-        m_ProjectionPass = m_RenderGraph->addPass<ProjectionPass>(context, prpDesc);
+        m_RenderGraph->addPass<ProjectionPass>(context, prpDesc);
 
         CameraDataPassDesc cdpDesc;
         cdpDesc.slot = 0;
         cdpDesc.bufferName = "CameraData";
-        m_CameraDataPass = m_RenderGraph->addPass<CameraDataPass>(context, cdpDesc);
+        m_RenderGraph->addPass<CameraDataPass>(context, cdpDesc);
 
         GeometryPassDesc gpDesc;
         gpDesc.modelDataBufferSlot = 2;
         gpDesc.modelDataBufferName = "ModelData";
-        m_GeometryPass = m_RenderGraph->addPass<GeometryPass>(context, m_ShaderLibrary, gpDesc);
+        m_RenderGraph->addPass<GeometryPass>(context, m_ShaderLibrary, gpDesc);
 
         LightDataPassDesc ldpDesc;
         ldpDesc.slot = 3;
-        m_LightDataPass = m_RenderGraph->addPass<LightDataPass>(context, ldpDesc);
+        m_RenderGraph->addPass<LightDataPass>(context, ldpDesc);
 
         m_RenderGraph->addPass<LFWRSamplerPass>(context, 0);
         m_RenderGraph->addPass<GBufferPass>(context);
@@ -74,86 +72,88 @@ namespace Syrius{
     }
 
     void PBRRenderLayer::onResize(uint32_t width, uint32_t height) {
-        SR_PRECONDITION(m_ProjectionPass != nullptr, "Projection pass is null (%p)", m_ProjectionPass);
+        SR_PRECONDITION(m_RenderGraph->hasPass<ProjectionPass>(), "Projection pass does not exist in the render graph");
+        SR_PRECONDITION(m_RenderGraph->hasPass<GBufferPass>(), "GBuffer pass does not exist in the render graph");
 
-        m_ProjectionPass->onResize(width, height);
+        m_RenderGraph->getPass<ProjectionPass>()->onResize(width, height);
+        m_RenderGraph->getPass<GBufferPass>()->onResize(width, height);
     }
 
     void PBRRenderLayer::setProjectionFOV(float fov) {
-        SR_PRECONDITION(m_ProjectionPass != nullptr, "Projection pass is null (%p)", m_ProjectionPass);
+        SR_PRECONDITION(m_RenderGraph->hasPass<ProjectionPass>(), "Projection pass does not exist in the render graph");
 
-        m_ProjectionPass->setFOV(fov);
+        m_RenderGraph->getPass<ProjectionPass>()->setFOV(fov);
     }
 
     void PBRRenderLayer::setPlane(float near, float far) {
-        SR_PRECONDITION(m_ProjectionPass != nullptr, "Projection pass is null (%p)", m_ProjectionPass);
+        SR_PRECONDITION(m_RenderGraph->hasPass<ProjectionPass>(), "Projection pass does not exist in the render graph");
 
-        m_ProjectionPass->setPlane(near, far);
+        m_RenderGraph->getPass<ProjectionPass>()->setPlane(near, far);
     }
 
     MeshID PBRRenderLayer::createMesh(const MeshDesc &meshDesc) {
-        SR_PRECONDITION(m_GeometryPass != nullptr, "GeometryPass is null (%p)", m_GeometryPass);
+        SR_PRECONDITION(m_RenderGraph->hasPass<GeometryPass>(), "Geometry pass does not exist in the render graph");
 
-        return m_GeometryPass->createMesh(meshDesc);
+        return m_RenderGraph->getPass<GeometryPass>()->createMesh(meshDesc);
     }
 
     MeshID PBRRenderLayer::createMesh(MeshID meshID) {
-        SR_PRECONDITION(m_GeometryPass != nullptr, "GeometryPass is null (%p)", m_GeometryPass);
+        SR_PRECONDITION(m_RenderGraph->hasPass<GeometryPass>(), "Geometry pass does not exist in the render graph");
 
-        return m_GeometryPass->createMesh(meshID);
+        return m_RenderGraph->getPass<GeometryPass>()->createMesh(meshID);
     }
 
     void PBRRenderLayer::transformMesh(MeshID mesh, const glm::mat4 &transform) {
-        SR_PRECONDITION(m_GeometryPass != nullptr, "GeometryPass is null (%p)", m_GeometryPass);
+        SR_PRECONDITION(m_RenderGraph->hasPass<GeometryPass>(), "Geometry pass does not exist in the render graph");
 
-        m_GeometryPass->transformMesh(mesh, transform);
+        m_RenderGraph->getPass<GeometryPass>()->transformMesh(mesh, transform);
     }
 
     void PBRRenderLayer::removeMesh(MeshID mesh) {
-        SR_PRECONDITION(m_GeometryPass != nullptr, "GeometryPass is null (%p)", m_GeometryPass);
+        SR_PRECONDITION(m_RenderGraph->hasPass<GeometryPass>(), "Geometry pass does not exist in the render graph");
 
-        m_GeometryPass->removeMesh(mesh);
+        m_RenderGraph->getPass<GeometryPass>()->removeMesh(mesh);
     }
 
     void PBRRenderLayer::updateCamera(const glm::mat4 &viewMat, const glm::vec3 &camPos) {
-        SR_PRECONDITION(m_CameraDataPass != nullptr, "CameraDataPass is null (%p)", m_CameraDataPass);
+        SR_PRECONDITION(m_RenderGraph->hasPass<CameraDataPass>(), "CameraData pass does not exist in the render graph");
 
-        m_CameraDataPass->setCameraData(viewMat, camPos);
+        m_RenderGraph->getPass<CameraDataPass>()->setCameraData(viewMat, camPos);
     }
 
     MaterialID PBRRenderLayer::createMaterial(const MaterialDesc &material) {
-        SR_PRECONDITION(m_GeometryPass != nullptr, "GeometryPass is null (%p)", m_GeometryPass);
+        SR_PRECONDITION(m_RenderGraph->hasPass<GeometryPass>(), "Geometry pass does not exist in the render graph");
 
-        return m_GeometryPass->createMaterial(material);
+        return m_RenderGraph->getPass<GeometryPass>()->createMaterial(material);
     }
 
     void PBRRenderLayer::meshSetMaterial(MeshID meshID, MaterialID materialID) {
-        SR_PRECONDITION(m_GeometryPass != nullptr, "GeometryPass is null (%p)", m_GeometryPass);
+        SR_PRECONDITION(m_RenderGraph->hasPass<GeometryPass>(), "Geometry pass does not exist in the render graph");
 
-        m_GeometryPass->setMeshMaterial(meshID, materialID);
+        m_RenderGraph->getPass<GeometryPass>()->setMeshMaterial(meshID, materialID);
     }
 
     void PBRRenderLayer::removeMaterial(MaterialID materialID) {
-        SR_PRECONDITION(m_GeometryPass != nullptr, "GeometryPass is null (%p)", m_GeometryPass);
+        SR_PRECONDITION(m_RenderGraph->hasPass<GeometryPass>(), "Geometry pass does not exist in the render graph");
 
-        m_GeometryPass->removeMaterial(materialID);
+        m_RenderGraph->getPass<GeometryPass>()->removeMaterial(materialID);
     }
 
     LightID PBRRenderLayer::createLight(const Light &light) {
-        SR_PRECONDITION(m_LightDataPass != nullptr, "LightDataPass is null (%p)", m_LightDataPass);
+        SR_PRECONDITION(m_RenderGraph->hasPass<LightDataPass>(), "LightData pass does not exist in the render graph");
 
-        return m_LightDataPass->createLight(light);
+        return m_RenderGraph->getPass<LightDataPass>()->createLight(light);
     }
 
     void PBRRenderLayer::updateLight(LightID lightID, const Light &light) {
-        SR_PRECONDITION(m_LightDataPass != nullptr, "LightDataPass is null (%p)", m_LightDataPass);
+        SR_PRECONDITION(m_RenderGraph->hasPass<LightDataPass>(), "LightData pass does not exist in the render graph");
 
-        m_LightDataPass->updateLight(lightID, light);
+        m_RenderGraph->getPass<LightDataPass>()->updateLight(lightID, light);
     }
 
     void PBRRenderLayer::removeLight(LightID lightID) {
-        SR_PRECONDITION(m_LightDataPass != nullptr, "LightDataPass is null (%p)", m_LightDataPass);
+        SR_PRECONDITION(m_RenderGraph->hasPass<LightDataPass>(), "LightData pass does not exist in the render graph");
 
-        m_LightDataPass->removeLight(lightID);
+        m_RenderGraph->getPass<LightDataPass>()->removeLight(lightID);
     }
 }

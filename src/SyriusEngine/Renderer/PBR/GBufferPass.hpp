@@ -18,6 +18,8 @@ namespace Syrius{
 
         void bindShaderResources();
 
+        void onResize(uint32 width, uint32 height);
+
     private:
         ResourceView<FrameBuffer> m_FrameBuffer;
 

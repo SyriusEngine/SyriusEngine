@@ -73,4 +73,7 @@ namespace Syrius{
         m_FrameBuffer->getColorAttachment(3)->bindShaderResource(3);
     }
 
+    void GBufferPass::onResize(uint32 width, uint32 height) {
+        m_FrameBuffer->onResize(width, height);
+    }
 }

@@ -68,10 +68,5 @@ namespace Syrius{
         Resource<ShaderLibrary>& m_ShaderLibrary;
 
         Resource<RenderGraph> m_RenderGraph;
-
-        ProjectionPass* m_ProjectionPass;
-        CameraDataPass* m_CameraDataPass;
-        GeometryPass* m_GeometryPass;
-        LightDataPass* m_LightDataPass;
     };
 }

@@ -30,6 +30,11 @@ namespace Syrius{
             return static_cast<T*>(m_PassMap[PassIDGenerator<T>::getID()].get());
         }
 
+        template<typename T>
+        bool hasPass(){
+            return m_PassMap.find(PassIDGenerator<T>::getID()) != m_PassMap.end();
+        }
+
         auto begin() const{
             return m_PassMap.begin();
         }
