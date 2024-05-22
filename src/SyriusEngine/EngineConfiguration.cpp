@@ -14,7 +14,7 @@ namespace Syrius{
     windowPosY(200),
     windowTitle("Syrius Engine"),
     graphicsAPI(SR_API_OPENGL),
-    enableVSync(true),
+    enableVSync(false),
     clearColor{0.1f, 0.1f, 0.1f, 1.0f},
     enableSrslShaders(false){
 
@@ -30,7 +30,7 @@ namespace Syrius{
         windowTitle = config["Window"]["Title"].getOrDefault<std::string>("Syrius Engine");
 
         graphicsAPI = static_cast<SR_SUPPORTED_API>(config["Context"]["API"].getOrDefault<int>(SR_API_OPENGL));
-        enableVSync = config["Context"]["VSync"].getOrDefault<bool>(true);
+        enableVSync = config["Context"]["VSync"].getOrDefault<bool>(false);
         clearColor[0] = config["Context"]["ClearR"].getOrDefault<float>(0.1f);
         clearColor[1] = config["Context"]["ClearG"].getOrDefault<float>(0.1f);
         clearColor[2] = config["Context"]["ClearB"].getOrDefault<float>(0.1f);
@@ -47,7 +47,7 @@ namespace Syrius{
     windowPosY(200),
     windowTitle("Syrius Engine"),
     graphicsAPI(SR_API_OPENGL),
-    enableVSync(true),
+    enableVSync(false),
     clearColor{0.1f, 0.1f, 0.1f, 1.0f},
     shaderLibraryPath("./Resources/Shaders"),
     enableSrslShaders(false){
@@ -57,7 +57,7 @@ namespace Syrius{
                 std::string value = argv[++i];
                 if (value == "OpenGL") {
                     graphicsAPI = SR_API_OPENGL;
-                } else if (value == "DirectX11") {
+                } else if (value == "D3D11") {
                     graphicsAPI = SR_API_D3D11;
                 } else{
                     SR_LOG_WARNING("[EngineConfiguration %p]: Invalid API value: %s, OpenGL will be selected", this, value.c_str());

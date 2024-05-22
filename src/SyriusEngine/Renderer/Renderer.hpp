@@ -12,7 +12,7 @@ namespace Syrius{
     struct RendererDesc{
         SR_SUPPORTED_API graphicsAPI;
         std::string shaderLibraryPath;
-        bool vSync = true;
+        bool vSync = false;
         float clearColor[3];
         bool enableExperimentalSRSLShaderCompiler = false;
     };

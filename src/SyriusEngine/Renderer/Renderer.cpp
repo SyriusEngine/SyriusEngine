@@ -13,7 +13,7 @@ namespace Syrius{
         m_RenderThread.addTaskSync([this, &desc]{
             ContextDesc contextDesc;
             contextDesc.api = desc.graphicsAPI;
-            contextDesc.enableDepthTest = true;
+            contextDesc.enableDepthTest = false;
             m_Context = m_Window->createContext(contextDesc);
             m_Context->setVerticalSynchronisation(desc.vSync);
 
