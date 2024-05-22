@@ -127,7 +127,7 @@ namespace Syrius{
                     desc.height = 1;
                     desc.format = SR_TEXTURE_RGBA_UI8;
                     desc.data = data.data();
-                    auto image = createImageUI8(desc);
+                    auto image = createImage(desc);
                     return std::move(image);
                 }
             };

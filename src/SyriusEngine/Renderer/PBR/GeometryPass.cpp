@@ -174,11 +174,11 @@ namespace Syrius{
         aoDesc.format = SR_TEXTURE_RGBA_UI8;
 
         MaterialDesc material;
-        material.albedo = createImageUI8(albedoDesc);
-        material.normal = createImageUI8(normalDesc);
-        material.roughness = createImageUI8(roughnessDesc);
-        material.metallic = createImageUI8(metallicDesc);
-        material.ao = createImageUI8(aoDesc);
+        material.albedo = createImage(albedoDesc);
+        material.normal = createImage(normalDesc);
+        material.roughness = createImage(roughnessDesc);
+        material.metallic = createImage(metallicDesc);
+        material.ao = createImage(aoDesc);
 
         m_Materials.emplace(0, m_Context, material, m_MaterialStartSlot);
 
