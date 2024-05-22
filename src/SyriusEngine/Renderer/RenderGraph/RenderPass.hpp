@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Pass.hpp"
-#include "ShaderLibrary.hpp"
+#include "../ShaderLibrary.hpp"
 
 namespace Syrius{
 

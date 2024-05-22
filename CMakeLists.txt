@@ -43,23 +43,23 @@ set(SR_ENGINE_RENDERER_SRC
     src/SyriusEngine/Renderer/Primitives.cpp
     src/SyriusEngine/Renderer/Renderer.cpp
 
-    src/SyriusEngine/Renderer/RenderPass.cpp
-    src/SyriusEngine/Renderer/RenderGraph.cpp
-    src/SyriusEngine/Renderer/Pass.cpp
-    src/SyriusEngine/Renderer/PassMap.cpp
+    src/SyriusEngine/Renderer/RenderGraph/RenderPass.cpp
+    src/SyriusEngine/Renderer/RenderGraph/RenderGraph.cpp
+    src/SyriusEngine/Renderer/RenderGraph/Pass.cpp
+    src/SyriusEngine/Renderer/RenderGraph/PassMap.cpp
     src/SyriusEngine/Renderer/ShaderLibrary.cpp
 
-    src/SyriusEngine/Renderer/PBR/PBRRenderLayer.cpp
-    src/SyriusEngine/Renderer/PBR/ProjectionPass.cpp
-    src/SyriusEngine/Renderer/PBR/CameraDataPass.cpp
-    src/SyriusEngine/Renderer/PBR/LFWRSamplerPass.cpp
-    src/SyriusEngine/Renderer/PBR/MeshHandle.cpp
-    src/SyriusEngine/Renderer/PBR/GeometryPass.cpp
-    src/SyriusEngine/Renderer/PBR/MaterialHandle.cpp
-    src/SyriusEngine/Renderer/PBR/GBufferPass.cpp
-    src/SyriusEngine/Renderer/PBR/LightDataPass.cpp
-    src/SyriusEngine/Renderer/PBR/LightPass.cpp
-)
+    src/SyriusEngine/Renderer/RenderGraph/RenderGraphLayer.cpp
+    src/SyriusEngine/Renderer/RenderGraph/Passes/ProjectionPass.cpp
+    src/SyriusEngine/Renderer/RenderGraph/Passes/CameraDataPass.cpp
+    src/SyriusEngine/Renderer/RenderGraph/Passes/LFWRSamplerPass.cpp
+    src/SyriusEngine/Renderer/RenderGraph/Passes/MeshHandle.cpp
+    src/SyriusEngine/Renderer/RenderGraph/Passes/GeometryPass.cpp
+    src/SyriusEngine/Renderer/RenderGraph/Passes/MaterialHandle.cpp
+    src/SyriusEngine/Renderer/RenderGraph/Passes/GBufferPass.cpp
+    src/SyriusEngine/Renderer/RenderGraph/Passes/LightDataPass.cpp
+    src/SyriusEngine/Renderer/RenderGraph/Passes/LightPass.cpp
+    )
 
 set(SR_ENGINE_ECS_SRC
     src/SyriusEngine/EntityComponentSystem/Component.cpp
@@ -120,7 +120,7 @@ set(TEST_SRC
 
     Tests/Utils/WorkerTest.cpp
 
-)
+    src/SyriusEngine/Renderer/RenderGraph/RenderGraphDefs.hpp)
 
 add_executable(SyriusEngineTest TestMain.cpp ${SR_ENGINE_SRC} ${TEST_SRC})
 add_dependencies(SyriusEngineTest gtest)

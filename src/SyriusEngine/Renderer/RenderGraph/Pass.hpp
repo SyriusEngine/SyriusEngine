@@ -1,6 +1,5 @@
 #pragma once
 
-#include "RenderGraphInclude.hpp"
 #include "PassMap.hpp"
 
 namespace Syrius{

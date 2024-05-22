@@ -5,26 +5,6 @@
 
 namespace Syrius{
 
-    typedef uint64 PassID;
-
-    template<typename T>
-    class PassIDGenerator{
-    public:
-        static PassID getID(){
-            static PassID id = generateID();
-            return id;
-        }
-    };
-
-    class Pass;
-
-    struct PassDesc{
-        std::string name;
-        PassID id;
-        std::vector<PassID> dependencies;
-        Pass* pAddress;
-    };
-
     static float s_ScreenVertices[] = {
             // positions        // texture Coords
             -1.0f,  -1.0f,  0.0f, 0.0f,

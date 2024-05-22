@@ -2,7 +2,7 @@
 
 #include "Pass.hpp"
 #include "PassMap.hpp"
-#include "RenderGraphInclude.hpp"
+#include "../RendererInclude.hpp"
 
 namespace Syrius{
 

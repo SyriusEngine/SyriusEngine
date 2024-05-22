@@ -4,7 +4,7 @@
 #include "MeshHandle.hpp"
 #include "MaterialHandle.hpp"
 
-#include <SRSTL/KeyVector.hpp>
+#include "SRSTL/KeyVector.hpp"
 
 
 namespace Syrius{

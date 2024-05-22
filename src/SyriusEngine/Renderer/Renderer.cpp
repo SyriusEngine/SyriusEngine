@@ -25,7 +25,7 @@ namespace Syrius{
             m_ShaderLibrary = createResource<ShaderLibrary>(m_Context, desc.shaderLibraryPath, desc.enableExperimentalSRSLShaderCompiler);
         });
 
-        auto pbrRenderLayer = createResource<PBRRenderLayer>(m_ShaderLibrary);
+        auto pbrRenderLayer = createResource<RenderGraphLayer>(m_ShaderLibrary);
         m_PBRLayer = createResourceView(pbrRenderLayer);
         pushRenderLayer(std::move(pbrRenderLayer));
 

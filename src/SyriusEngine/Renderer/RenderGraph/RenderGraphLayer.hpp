@@ -1,26 +1,26 @@
 #pragma once
 
-#include "../../../include/SyriusEngine/RenderLayer.hpp"
-#include "../../../include/SyriusEngine/Renderer/RenderCommand.hpp"
+#include "../../../../include/SyriusEngine/RenderLayer.hpp"
+#include "../../../../include/SyriusEngine/Renderer/RenderCommand.hpp"
 
 #include "../ShaderLibrary.hpp"
-#include "../RenderGraph.hpp"
+#include "RenderGraph.hpp"
 
-#include "ProjectionPass.hpp"
-#include "CameraDataPass.hpp"
-#include "LFWRSamplerPass.hpp"
-#include "GeometryPass.hpp"
-#include "LightDataPass.hpp"
-#include "GBufferPass.hpp"
-#include "LightPass.hpp"
+#include "Passes/ProjectionPass.hpp"
+#include "Passes/CameraDataPass.hpp"
+#include "Passes/LFWRSamplerPass.hpp"
+#include "Passes/GeometryPass.hpp"
+#include "Passes/LightDataPass.hpp"
+#include "Passes/GBufferPass.hpp"
+#include "Passes/LightPass.hpp"
 
 namespace Syrius{
 
-    class PBRRenderLayer: public RenderLayer, RenderCommand {
+    class RenderGraphLayer: public RenderLayer, RenderCommand {
     public:
-        explicit PBRRenderLayer(Resource<ShaderLibrary>& shaderLibrary);
+        explicit RenderGraphLayer(Resource<ShaderLibrary>& shaderLibrary);
 
-        ~PBRRenderLayer() override;
+        ~RenderGraphLayer() override;
 
         void onAttach() override;
 

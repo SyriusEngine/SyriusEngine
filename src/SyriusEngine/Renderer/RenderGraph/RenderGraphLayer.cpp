@@ -1,33 +1,33 @@
-#include "PBRRenderLayer.hpp"
+#include "RenderGraphLayer.hpp"
 
 namespace Syrius{
 
-    PBRRenderLayer::PBRRenderLayer(Resource<ShaderLibrary> &shaderLibrary):
+    RenderGraphLayer::RenderGraphLayer(Resource<ShaderLibrary> &shaderLibrary):
     RenderLayer(),
     RenderCommand(),
     m_ShaderLibrary(shaderLibrary){
 
     }
 
-    PBRRenderLayer::~PBRRenderLayer() = default;
+    RenderGraphLayer::~RenderGraphLayer() = default;
 
-    void PBRRenderLayer::onAttach() {
-
-    }
-
-    void PBRRenderLayer::onDetach() {
+    void RenderGraphLayer::onAttach() {
 
     }
 
-    void PBRRenderLayer::onUpdate() {
+    void RenderGraphLayer::onDetach() {
 
     }
 
-    bool PBRRenderLayer::onEvent(const Event &event) {
+    void RenderGraphLayer::onUpdate() {
+
+    }
+
+    bool RenderGraphLayer::onEvent(const Event &event) {
         return true;
     }
 
-    void PBRRenderLayer::onRendererAttach(ResourceView<Context> &context) {
+    void RenderGraphLayer::onRendererAttach(ResourceView<Context> &context) {
         // Create resources that depend on the context here
         m_RenderGraph = createResource<RenderGraph>();
 
@@ -61,17 +61,17 @@ namespace Syrius{
         m_RenderGraph->generateDot("RG-PBR.dot");
     }
 
-    void PBRRenderLayer::onRendererDetach(ResourceView<Context> &context) {
+    void RenderGraphLayer::onRendererDetach(ResourceView<Context> &context) {
         // Destroy resources that depend on the context here, not in the destructor
 
         m_RenderGraph.reset();
     }
 
-    void PBRRenderLayer::onRender(ResourceView<Context> &context) {
+    void RenderGraphLayer::onRender(ResourceView<Context> &context) {
         m_RenderGraph->execute();
     }
 
-    void PBRRenderLayer::onResize(uint32_t width, uint32_t height) {
+    void RenderGraphLayer::onResize(uint32_t width, uint32_t height) {
         SR_PRECONDITION(m_RenderGraph->hasPass<ProjectionPass>(), "Projection pass does not exist in the render graph");
         SR_PRECONDITION(m_RenderGraph->hasPass<GBufferPass>(), "GBuffer pass does not exist in the render graph");
 
@@ -79,79 +79,79 @@ namespace Syrius{
         m_RenderGraph->getPass<GBufferPass>()->onResize(width, height);
     }
 
-    void PBRRenderLayer::setProjectionFOV(float fov) {
+    void RenderGraphLayer::setProjectionFOV(float fov) {
         SR_PRECONDITION(m_RenderGraph->hasPass<ProjectionPass>(), "Projection pass does not exist in the render graph");
 
         m_RenderGraph->getPass<ProjectionPass>()->setFOV(fov);
     }
 
-    void PBRRenderLayer::setPlane(float near, float far) {
+    void RenderGraphLayer::setPlane(float near, float far) {
         SR_PRECONDITION(m_RenderGraph->hasPass<ProjectionPass>(), "Projection pass does not exist in the render graph");
 
         m_RenderGraph->getPass<ProjectionPass>()->setPlane(near, far);
     }
 
-    MeshID PBRRenderLayer::createMesh(const MeshDesc &meshDesc) {
+    MeshID RenderGraphLayer::createMesh(const MeshDesc &meshDesc) {
         SR_PRECONDITION(m_RenderGraph->hasPass<GeometryPass>(), "Geometry pass does not exist in the render graph");
 
         return m_RenderGraph->getPass<GeometryPass>()->createMesh(meshDesc);
     }
 
-    MeshID PBRRenderLayer::createMesh(MeshID meshID) {
+    MeshID RenderGraphLayer::createMesh(MeshID meshID) {
         SR_PRECONDITION(m_RenderGraph->hasPass<GeometryPass>(), "Geometry pass does not exist in the render graph");
 
         return m_RenderGraph->getPass<GeometryPass>()->createMesh(meshID);
     }
 
-    void PBRRenderLayer::transformMesh(MeshID mesh, const glm::mat4 &transform) {
+    void RenderGraphLayer::transformMesh(MeshID mesh, const glm::mat4 &transform) {
         SR_PRECONDITION(m_RenderGraph->hasPass<GeometryPass>(), "Geometry pass does not exist in the render graph");
 
         m_RenderGraph->getPass<GeometryPass>()->transformMesh(mesh, transform);
     }
 
-    void PBRRenderLayer::removeMesh(MeshID mesh) {
+    void RenderGraphLayer::removeMesh(MeshID mesh) {
         SR_PRECONDITION(m_RenderGraph->hasPass<GeometryPass>(), "Geometry pass does not exist in the render graph");
 
         m_RenderGraph->getPass<GeometryPass>()->removeMesh(mesh);
     }
 
-    void PBRRenderLayer::updateCamera(const glm::mat4 &viewMat, const glm::vec3 &camPos) {
+    void RenderGraphLayer::updateCamera(const glm::mat4 &viewMat, const glm::vec3 &camPos) {
         SR_PRECONDITION(m_RenderGraph->hasPass<CameraDataPass>(), "CameraData pass does not exist in the render graph");
 
         m_RenderGraph->getPass<CameraDataPass>()->setCameraData(viewMat, camPos);
     }
 
-    MaterialID PBRRenderLayer::createMaterial(const MaterialDesc &material) {
+    MaterialID RenderGraphLayer::createMaterial(const MaterialDesc &material) {
         SR_PRECONDITION(m_RenderGraph->hasPass<GeometryPass>(), "Geometry pass does not exist in the render graph");
 
         return m_RenderGraph->getPass<GeometryPass>()->createMaterial(material);
     }
 
-    void PBRRenderLayer::meshSetMaterial(MeshID meshID, MaterialID materialID) {
+    void RenderGraphLayer::meshSetMaterial(MeshID meshID, MaterialID materialID) {
         SR_PRECONDITION(m_RenderGraph->hasPass<GeometryPass>(), "Geometry pass does not exist in the render graph");
 
         m_RenderGraph->getPass<GeometryPass>()->setMeshMaterial(meshID, materialID);
     }
 
-    void PBRRenderLayer::removeMaterial(MaterialID materialID) {
+    void RenderGraphLayer::removeMaterial(MaterialID materialID) {
         SR_PRECONDITION(m_RenderGraph->hasPass<GeometryPass>(), "Geometry pass does not exist in the render graph");
 
         m_RenderGraph->getPass<GeometryPass>()->removeMaterial(materialID);
     }
 
-    LightID PBRRenderLayer::createLight(const Light &light) {
+    LightID RenderGraphLayer::createLight(const Light &light) {
         SR_PRECONDITION(m_RenderGraph->hasPass<LightDataPass>(), "LightData pass does not exist in the render graph");
 
         return m_RenderGraph->getPass<LightDataPass>()->createLight(light);
     }
 
-    void PBRRenderLayer::updateLight(LightID lightID, const Light &light) {
+    void RenderGraphLayer::updateLight(LightID lightID, const Light &light) {
         SR_PRECONDITION(m_RenderGraph->hasPass<LightDataPass>(), "LightData pass does not exist in the render graph");
 
         m_RenderGraph->getPass<LightDataPass>()->updateLight(lightID, light);
     }
 
-    void PBRRenderLayer::removeLight(LightID lightID) {
+    void RenderGraphLayer::removeLight(LightID lightID) {
         SR_PRECONDITION(m_RenderGraph->hasPass<LightDataPass>(), "LightData pass does not exist in the render graph");
 
         m_RenderGraph->getPass<LightDataPass>()->removeLight(lightID);

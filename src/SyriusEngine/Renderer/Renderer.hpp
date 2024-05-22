@@ -5,7 +5,7 @@
 #include "../../../include/SyriusEngine/Utils/Worker.hpp"
 #include "ShaderLibrary.hpp"
 
-#include "PBR/PBRRenderLayer.hpp"
+#include "RenderGraph/RenderGraphLayer.hpp"
 
 namespace Syrius{
 
@@ -67,7 +67,7 @@ namespace Syrius{
 
         Worker m_RenderThread;
 
-        ResourceView<PBRRenderLayer> m_PBRLayer;
+        ResourceView<RenderGraphLayer> m_PBRLayer;
     };
 
 }

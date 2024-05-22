@@ -1,6 +1,6 @@
 #pragma once
 
-#include "RenderGraphInclude.hpp"
+#include "RenderGraphDefs.hpp"
 
 namespace Syrius{
 
