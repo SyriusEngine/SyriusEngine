@@ -67,7 +67,7 @@ namespace Syrius{
 
         Worker m_RenderThread;
 
-        ResourceView<RenderGraphLayer> m_PBRLayer;
+        ResourceView<RenderGraphLayer> m_ActiveLayer;
     };
 
 }

@@ -26,7 +26,7 @@ namespace Syrius{
         });
 
         auto pbrRenderLayer = createResource<RenderGraphLayer>(m_ShaderLibrary);
-        m_PBRLayer = createResourceView(pbrRenderLayer);
+        m_ActiveLayer = createResourceView(pbrRenderLayer);
         pushRenderLayer(std::move(pbrRenderLayer));
 
         SR_STOP_TIMER("Renderer::Setup")
@@ -68,85 +68,85 @@ namespace Syrius{
     }
 
     void Renderer::onResize(uint32_t width, uint32_t height) {
-        SR_PRECONDITION(m_PBRLayer.get() != nullptr, "PBRRenderLayer is null (%p)", m_PBRLayer.get());
+        SR_PRECONDITION(m_ActiveLayer.get() != nullptr, "PBRRenderLayer is null (%p)", m_ActiveLayer.get());
 
         m_RenderThread.addTask([this, width, height]{
             m_Context->onResize(width, height);
 
-            m_PBRLayer->onResize(width, height);
+            m_ActiveLayer->onResize(width, height);
         });
     }
 
     void Renderer::setProjectionFOV(float fov) {
-        SR_PRECONDITION(m_PBRLayer.get() != nullptr, "PBRRenderLayer is null (%p)", m_PBRLayer.get());
+        SR_PRECONDITION(m_ActiveLayer.get() != nullptr, "PBRRenderLayer is null (%p)", m_ActiveLayer.get());
 
         m_RenderThread.addTask([this, fov]{
-            m_PBRLayer->setProjectionFOV(fov);
+            m_ActiveLayer->setProjectionFOV(fov);
         });
     }
 
     void Renderer::setPlane(float near, float far) {
-        SR_PRECONDITION(m_PBRLayer.get() != nullptr, "PBRRenderLayer is null (%p)", m_PBRLayer.get());
+        SR_PRECONDITION(m_ActiveLayer.get() != nullptr, "PBRRenderLayer is null (%p)", m_ActiveLayer.get());
 
         m_RenderThread.addTask([this, near, far]{
-            m_PBRLayer->setPlane(near, far);
+            m_ActiveLayer->setPlane(near, far);
         });
     }
 
     MeshID Renderer::createMesh(const MeshDesc &meshDesc) {
-        SR_PRECONDITION(m_PBRLayer.get() != nullptr, "PBRRenderLayer is null (%p)", m_PBRLayer.get());
+        SR_PRECONDITION(m_ActiveLayer.get() != nullptr, "PBRRenderLayer is null (%p)", m_ActiveLayer.get());
 
         MeshID meshID = 0;
         // wait for the render thread to create the mesh, otherwise invalid meshIDs may be used
         m_RenderThread.addTaskSync([this, &meshDesc, &meshID]{
-            meshID = m_PBRLayer->createMesh(meshDesc);
+            meshID = m_ActiveLayer->createMesh(meshDesc);
         });
         return meshID;
     }
 
     MeshID Renderer::createMesh(MeshID meshID) {
-        SR_PRECONDITION(m_PBRLayer.get() != nullptr, "PBRRenderLayer is null (%p)", m_PBRLayer.get());
+        SR_PRECONDITION(m_ActiveLayer.get() != nullptr, "PBRRenderLayer is null (%p)", m_ActiveLayer.get());
 
         MeshID newID = 0;
         // wait for the render thread to create the mesh, otherwise invalid meshIDs may be used
         m_RenderThread.addTaskSync([this, meshID, &newID]{
-            newID = m_PBRLayer->createMesh(meshID);
+            newID = m_ActiveLayer->createMesh(meshID);
         });
         return newID;
     }
 
     void Renderer::transformMesh(MeshID mesh, const glm::mat4 &transform) {
-        SR_PRECONDITION(m_PBRLayer.get() != nullptr, "PBRRenderLayer is null (%p)", m_PBRLayer.get());
+        SR_PRECONDITION(m_ActiveLayer.get() != nullptr, "PBRRenderLayer is null (%p)", m_ActiveLayer.get());
         SR_PRECONDITION(mesh != 0, "MeshID is 0 (%d)", mesh);
 
         m_RenderThread.addTask([this, mesh, transform]{
-            m_PBRLayer->transformMesh(mesh, transform);
+            m_ActiveLayer->transformMesh(mesh, transform);
         });
     }
 
     void Renderer::removeMesh(MeshID mesh) {
-        SR_PRECONDITION(m_PBRLayer.get() != nullptr, "PBRRenderLayer is null (%p)", m_PBRLayer.get());
+        SR_PRECONDITION(m_ActiveLayer.get() != nullptr, "PBRRenderLayer is null (%p)", m_ActiveLayer.get());
         SR_PRECONDITION(mesh != 0, "MeshID is 0 (%d)", mesh);
 
         m_RenderThread.addTask([this, mesh]{
-            m_PBRLayer->removeMesh(mesh);
+            m_ActiveLayer->removeMesh(mesh);
         });
     }
 
     void Renderer::updateCamera(const glm::mat4 &viewMat, const glm::vec3 &camPos) {
-        SR_PRECONDITION(m_PBRLayer.get() != nullptr, "PBRRenderLayer is null (%p)", m_PBRLayer.get());
+        SR_PRECONDITION(m_ActiveLayer.get() != nullptr, "PBRRenderLayer is null (%p)", m_ActiveLayer.get());
 
         m_RenderThread.addTask([this, viewMat, camPos]{
-            m_PBRLayer->updateCamera(viewMat, camPos);
+            m_ActiveLayer->updateCamera(viewMat, camPos);
         });
     }
 
     MaterialID Renderer::createMaterial(const MaterialDesc &material) {
-        SR_PRECONDITION(m_PBRLayer.get() != nullptr, "PBRRenderLayer is null (%p)", m_PBRLayer.get());
+        SR_PRECONDITION(m_ActiveLayer.get() != nullptr, "PBRRenderLayer is null (%p)", m_ActiveLayer.get());
 
         MaterialID materialID = 0;
         m_RenderThread.addTaskSync([this, &material, &materialID]{
-            materialID = m_PBRLayer->createMaterial(material);
+            materialID = m_ActiveLayer->createMaterial(material);
         });
 
         SR_POSTCONDITION(materialID != 0, "Material ID is %i", materialID);
@@ -154,29 +154,29 @@ namespace Syrius{
     }
 
     void Renderer::meshSetMaterial(MeshID meshID, MaterialID materialID) {
-        SR_PRECONDITION(m_PBRLayer.get() != nullptr, "PBRRenderLayer is null (%p)", m_PBRLayer.get());
+        SR_PRECONDITION(m_ActiveLayer.get() != nullptr, "PBRRenderLayer is null (%p)", m_ActiveLayer.get());
 
         m_RenderThread.addTask([this, meshID, materialID]{
-            m_PBRLayer->meshSetMaterial(meshID, materialID);
+            m_ActiveLayer->meshSetMaterial(meshID, materialID);
         });
     }
 
     void Renderer::removeMaterial(MaterialID materialID) {
-        SR_PRECONDITION(m_PBRLayer.get() != nullptr, "PBRRenderLayer is null (%p)", m_PBRLayer.get());
+        SR_PRECONDITION(m_ActiveLayer.get() != nullptr, "PBRRenderLayer is null (%p)", m_ActiveLayer.get());
         SR_PRECONDITION(materialID != 0, "Material ID is %i", materialID);
 
         m_RenderThread.addTask([this, materialID]{
-            m_PBRLayer->removeMaterial(materialID);
+            m_ActiveLayer->removeMaterial(materialID);
         });
 
     }
 
     LightID Renderer::createLight(const Light &light) {
-        SR_PRECONDITION(m_PBRLayer.get() != nullptr, "PBRRenderLayer is null (%p)", m_PBRLayer.get());
+        SR_PRECONDITION(m_ActiveLayer.get() != nullptr, "PBRRenderLayer is null (%p)", m_ActiveLayer.get());
 
         LightID lightID = 0;
         m_RenderThread.addTaskSync([this, &light, &lightID]{
-            lightID = m_PBRLayer->createLight(light);
+            lightID = m_ActiveLayer->createLight(light);
         });
 
         SR_POSTCONDITION(lightID != 0, "Light ID is %i", lightID);
@@ -184,18 +184,18 @@ namespace Syrius{
     }
 
     void Renderer::updateLight(LightID lightID, const Light &light) {
-        SR_PRECONDITION(m_PBRLayer.get() != nullptr, "PBRRenderLayer is null (%p)", m_PBRLayer.get());
+        SR_PRECONDITION(m_ActiveLayer.get() != nullptr, "PBRRenderLayer is null (%p)", m_ActiveLayer.get());
 
         m_RenderThread.addTask([this, lightID, light]{
-            m_PBRLayer->updateLight(lightID, light);
+            m_ActiveLayer->updateLight(lightID, light);
         });
     }
 
     void Renderer::removeLight(LightID lightID) {
-        SR_PRECONDITION(m_PBRLayer.get() != nullptr, "PBRRenderLayer is null (%p)", m_PBRLayer.get());
+        SR_PRECONDITION(m_ActiveLayer.get() != nullptr, "PBRRenderLayer is null (%p)", m_ActiveLayer.get());
 
         m_RenderThread.addTask([this, lightID]{
-            m_PBRLayer->removeLight(lightID);
+            m_ActiveLayer->removeLight(lightID);
         });
     }
 
