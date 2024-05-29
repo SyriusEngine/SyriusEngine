@@ -199,4 +199,13 @@ namespace Syrius{
         });
     }
 
+    void Renderer::setSkyBox(const Resource<Image> &radianceMap) {
+        SR_PRECONDITION(m_ActiveLayer.get() != nullptr, "PBRRenderLayer is null (%p)", m_ActiveLayer.get());
+
+        m_RenderThread.addTaskSync([this, &radianceMap]{
+            m_ActiveLayer->setSkyBox(radianceMap);
+        });
+
+    }
+
 }

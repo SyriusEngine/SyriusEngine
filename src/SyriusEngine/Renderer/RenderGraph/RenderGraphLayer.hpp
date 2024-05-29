@@ -13,6 +13,7 @@
 #include "Passes/LightDataPass.hpp"
 #include "Passes/GBufferPass.hpp"
 #include "Passes/LightPass.hpp"
+#include "Passes/SkyBoxPass.hpp"
 
 namespace Syrius{
 
@@ -63,6 +64,8 @@ namespace Syrius{
         void updateLight(LightID lightID, const Light& light) override;
 
         void removeLight(LightID lightID) override;
+
+        void setSkyBox(const Resource<Image>& radianceMap) override;
 
     private:
         Resource<ShaderLibrary>& m_ShaderLibrary;

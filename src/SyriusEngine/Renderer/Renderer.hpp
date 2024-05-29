@@ -57,6 +57,8 @@ namespace Syrius{
 
         void meshSetMaterial(MeshID meshID, MaterialID materialID) override;
 
+        void setSkyBox(const Resource<Image>& radianceMap) override;
+
     private:
         LayerStack& m_LayerStack;
 

@@ -37,6 +37,8 @@ namespace Syrius{
         virtual void updateLight(LightID lightID, const Light& light) = 0;
 
         virtual void removeLight(LightID lightID) = 0;
+
+        virtual void setSkyBox(const Resource<Image>& radianceMap) = 0;
     };
 
 }

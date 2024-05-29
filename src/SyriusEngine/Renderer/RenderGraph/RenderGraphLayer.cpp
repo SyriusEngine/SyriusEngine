@@ -56,6 +56,9 @@ namespace Syrius{
         m_RenderGraph->addPass<GBufferPass>(context);
         m_RenderGraph->addPass<LightPass>(context, m_ShaderLibrary);
 
+        SkyBoxPassDesc sbDesc;
+        m_RenderGraph->addPass<SkyBoxPass>(context, m_ShaderLibrary, sbDesc);
+
         m_RenderGraph->validate();
         m_RenderGraph->compile();
         m_RenderGraph->generateDot("RG-PBR.dot");
@@ -155,5 +158,12 @@ namespace Syrius{
         SR_PRECONDITION(m_RenderGraph->hasPass<LightDataPass>(), "LightData pass does not exist in the render graph");
 
         m_RenderGraph->getPass<LightDataPass>()->removeLight(lightID);
+    }
+
+    void RenderGraphLayer::setSkyBox(const Resource<Image> &radianceMap) {
+        SR_PRECONDITION(m_RenderGraph->hasPass<SkyBoxPass>(), "SkyBox pass does not exist in the render graph");
+
+
+
     }
 }
