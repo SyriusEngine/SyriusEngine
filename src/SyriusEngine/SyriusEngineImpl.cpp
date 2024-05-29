@@ -65,7 +65,7 @@ namespace Syrius{
         rDesc.enableExperimentalSRSLShaderCompiler = m_Config.enableSrslShaders;
 
         m_Renderer = createResource<Renderer>(rDesc, m_LayerStack, m_Window);
-        m_RenderCommand = createResourceView<RenderCommand>(m_Renderer.get());
+        m_RenderCommand = ResourceView<RenderCommand>(m_Renderer);
     }
 
     void SyriusEngineImpl::shutdown() {
