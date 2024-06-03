@@ -59,7 +59,7 @@ set(SR_ENGINE_RENDERER_SRC
     src/SyriusEngine/Renderer/RenderGraph/Passes/GBufferPass.cpp
     src/SyriusEngine/Renderer/RenderGraph/Passes/LightDataPass.cpp
     src/SyriusEngine/Renderer/RenderGraph/Passes/LightPass.cpp
-    src/SyriusEngine/Renderer/RenderGraph/Passes/SkyBoxPass.cpp src/SyriusEngine/Renderer/RenderGraph/Passes/SkyBoxPass.hpp)
+    src/SyriusEngine/Renderer/RenderGraph/Passes/SkyBoxPass.cpp src/SyriusEngine/Renderer/RenderGraph/Passes/SkyBoxPass.hpp src/SyriusEngine/Renderer/MaterialDesc.cpp)
 
 set(SR_ENGINE_ECS_SRC
     src/SyriusEngine/EntityComponentSystem/Component.cpp

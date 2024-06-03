@@ -111,36 +111,9 @@ namespace Syrius{
             return m_Materials[material];
         }
         else{
-            auto loadTexture = [&](aiTextureType type){
-                aiString path;
-                if (material->GetTexture(type, 0, &path) == AI_SUCCESS){
-                    ImageFileDesc fDesc;
-                    fDesc.fileName = m_Path + "/" + path.C_Str();
-                    fDesc.flipOnAccess = true;
-                    return createImage(fDesc);
-                }
-                else{
-                    SR_LOG_WARNING("Failed to load texture of type %i", type)
-                    std::vector<uint8> data(4, 255);
-                    ImageUI8Desc desc;
-                    desc.width = 1;
-                    desc.height = 1;
-                    desc.format = SR_TEXTURE_RGBA_UI8;
-                    desc.data = data.data();
-                    auto image = createImage(desc);
-                    return std::move(image);
-                }
-            };
-            MaterialDesc matDesc;
-            matDesc.albedo = loadTexture(aiTextureType_BASE_COLOR);
-            matDesc.normal = loadTexture(aiTextureType_NORMALS);
-            matDesc.metallic = loadTexture(aiTextureType_METALNESS);
-            matDesc.roughness = loadTexture(aiTextureType_DIFFUSE_ROUGHNESS);
-            matDesc.ao = loadTexture(aiTextureType_AMBIENT_OCCLUSION);
-            auto newMaterialID = m_RenderCommand->createMaterial(matDesc);
-            m_Materials[material] = newMaterialID;
-            return newMaterialID;
+            printf("Fix Assimp material loading\n");
         }
+        return 0;
     }
 
 }

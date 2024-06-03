@@ -128,20 +128,10 @@ namespace Syrius{
                 0, 0, 255, 255, 0, 0, 255, 255,
                 0, 0, 255, 255, 0, 0, 255, 255
         };
-        // 1x1 roughness texture (roughness 0.5)
-        std::vector<uint8> roughness = {
+        // 1x1 MRAO texture (roughness 0.5)
+        std::vector<uint8> mrao = {
                 128, 128, 128, 255, 128, 128, 128, 255,
                 128, 128, 128, 255, 128, 128, 128, 255
-        };
-        // 1x1 metallic texture (metallic 0.5)
-        std::vector<uint8> metallic = {
-                128, 128, 128, 255, 128, 128, 128, 255,
-                128, 128, 128, 255, 128, 128, 128, 255
-        };
-        // 1x1 ao texture (ao 1.0)
-        std::vector<uint8> ao = {
-                255, 255, 255, 255, 255, 255, 255, 255,
-                255, 255, 255, 255, 255, 255, 255, 255
         };
         ImageUI8Desc albedoDesc;
         albedoDesc.width = 2;
@@ -155,30 +145,16 @@ namespace Syrius{
         normalDesc.data = normal.data();
         normalDesc.format = SR_TEXTURE_RGBA_UI8;
 
-        ImageUI8Desc roughnessDesc;
-        roughnessDesc.width = 2;
-        roughnessDesc.height = 2;
-        roughnessDesc.data = roughness.data();
-        roughnessDesc.format = SR_TEXTURE_RGBA_UI8;
-
-        ImageUI8Desc metallicDesc;
-        metallicDesc.width = 2;
-        metallicDesc.height = 2;
-        metallicDesc.data = metallic.data();
-        metallicDesc.format = SR_TEXTURE_RGBA_UI8;
-
-        ImageUI8Desc aoDesc;
-        aoDesc.width = 2;
-        aoDesc.height = 2;
-        aoDesc.data = ao.data();
-        aoDesc.format = SR_TEXTURE_RGBA_UI8;
+        ImageUI8Desc mraoDesc;
+        mraoDesc.width = 2;
+        mraoDesc.height = 2;
+        mraoDesc.data = mrao.data();
+        mraoDesc.format = SR_TEXTURE_RGBA_UI8;
 
         MaterialDesc material;
-        material.albedo = createImage(albedoDesc);
-        material.normal = createImage(normalDesc);
-        material.roughness = createImage(roughnessDesc);
-        material.metallic = createImage(metallicDesc);
-        material.ao = createImage(aoDesc);
+        material.setAlbedo(createImage(albedoDesc));
+        material.setNormal(createImage(normalDesc));
+        material.setMRAO(createImage(mraoDesc));
 
         m_Materials.emplace(0, m_Context, material, m_MaterialStartSlot);
 

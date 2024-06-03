@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../../RendererInclude.hpp"
+#include "../../../include/SyriusEngine/Renderer/MaterialDesc.hpp"
 
 namespace Syrius{
 
@@ -19,10 +20,6 @@ namespace Syrius{
         MaterialHandle& operator=(MaterialHandle&& other) noexcept;
 
         void bind();
-
-    private:
-
-        void validateImages(const MaterialDesc& desc);
 
     private:
         ResourceView<Context>& m_Context;

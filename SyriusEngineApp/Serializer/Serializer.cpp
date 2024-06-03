@@ -110,33 +110,14 @@ namespace Syrius{
             return it->second;
         }
 
-        ImageFileDesc albedoDesc;
-        albedoDesc.fileName = m_MaterialDir + materialName + "/" + materialName + "_basecolor.png";
-        ImageFileDesc normalDesc;
-        normalDesc.fileName = m_MaterialDir + materialName + "/" + materialName + "_normal.png";
-        ImageFileDesc metallicDesc;
-        metallicDesc.fileName = m_MaterialDir + materialName + "/" + materialName + "_metallic.png";
-        ImageFileDesc roughnessDesc;
-        roughnessDesc.fileName = m_MaterialDir + materialName + "/" + materialName + "_roughness.png";
-        ImageFileDesc aoDesc;
-        aoDesc.fileName = m_MaterialDir + materialName + "/" + materialName + "_ao.png";
+        std::string albedoPath = m_MaterialDir + materialName + "/" + materialName + "_basecolor.png";
+        std::string normalPath = m_MaterialDir + materialName + "/" + materialName + "_normal.png";
+        std::string metallicPath = m_MaterialDir + materialName + "/" + materialName + "_metallic.png";
+        std::string roughnessPath = m_MaterialDir + materialName + "/" + materialName + "_roughness.png";
+        std::string aoPath = m_MaterialDir + materialName + "/" + materialName + "_ao.png";
 
         MaterialDesc material;
-        material.albedo = createImage(albedoDesc);
-        material.albedo->extendAlpha();
-        //material.albedo->resize(512, 512);
-        material.normal = createImage(normalDesc);
-        material.normal->extendAlpha();
-        //material.normal->resize(512, 512);
-        material.metallic = createImage(metallicDesc);
-        material.metallic->extendAlpha();
-        //material.metallic->resize(512, 512);
-        material.roughness = createImage(roughnessDesc);
-        material.roughness->extendAlpha();
-        //material.roughness->resize(512, 512);
-        material.ao = createImage(aoDesc);
-        material.ao->extendAlpha();
-        //material.ao->resize(512, 512);
+        material.loadFromFile(albedoPath, normalPath, metallicPath, roughnessPath, aoPath);
 
         MaterialID mid = m_RenderCommand->createMaterial(material);
         m_Materials[materialName] = mid;
@@ -204,34 +185,8 @@ namespace Syrius{
         if (m_Materials.find(desc.name) != m_Materials.end()) {
             return m_Materials[desc.name];
         }
-        auto loadTexture = [this](const std::string& path){
-            if (path.empty()){
-                SR_LOG_WARNING("Failed to load texture from path %s", path.c_str());
-                std::vector<uint8> data(4, 255);
-                ImageUI8Desc desc;
-                desc.width = 1;
-                desc.height = 1;
-                desc.format = SR_TEXTURE_RGBA_UI8;
-                desc.data = data.data();
-                auto image = createImage(desc);
-                image->resize(512, 512);
-                return std::move(image);
-            }
-            else{
-                ImageFileDesc imageDesc;
-                imageDesc.fileName = path;
-                imageDesc.flipOnAccess = true;
-                auto image = createImage(imageDesc);
-                image->resize(512, 512);
-                return std::move(image);
-            }
-        };
         MaterialDesc material;
-        material.albedo = loadTexture(desc.albedo);
-        material.normal = loadTexture(desc.normal);
-        material.metallic = loadTexture(desc.metallic);
-        material.roughness = loadTexture(desc.roughness);
-        material.ao = loadTexture(desc.ao);
+        material.loadFromFile(desc.albedo, desc.normal, desc.metallic, desc.roughness, desc.ao);
         auto mid = m_RenderCommand->createMaterial(material);
         m_Materials[desc.name] = mid;
         return mid;

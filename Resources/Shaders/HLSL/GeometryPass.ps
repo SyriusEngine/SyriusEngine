@@ -16,7 +16,7 @@ SamplerState splr: register(s0);
 
 Texture2D materialTex: register(t0);
 
-static const float NUM_TEXTURES = 5.0;
+static const float NUM_TEXTURES = 3.0;
 static const float TEXTURE_SIZE = 1.0f / NUM_TEXTURES;
 
 PS_OUT main(PS_IN psIn){
@@ -30,17 +30,13 @@ PS_OUT main(PS_IN psIn){
     texCoords.x += TEXTURE_SIZE;
     float3 N = normalize(mul(normal, psIn.TBN));
 
-    float metallic = materialTex.Sample(splr, texCoords).x;
-    texCoords.x += TEXTURE_SIZE;
-    float roughness = materialTex.Sample(splr, texCoords).x;
-    texCoords.x += TEXTURE_SIZE;
-    float ao = materialTex.Sample(splr, texCoords).x;
+    float4 mrao = materialTex.Sample(splr, texCoords);
 
     PS_OUT psOut;
     psOut.gPositions = psIn.worldPosition;
     psOut.gNormals = float4(N, 0.0f);
     psOut.gAlbedo = color;
-    psOut.gMrao = float4(metallic, roughness, ao, 1.0f); // 1.0f indicates that this is a valid fragment
+    psOut.gMrao = mrao;
 
     return psOut;
 }

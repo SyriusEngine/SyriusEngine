@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Primitives.hpp"
+#include "MaterialDesc.hpp"
 
 namespace Syrius{
 

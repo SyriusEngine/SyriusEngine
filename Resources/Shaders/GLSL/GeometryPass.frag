@@ -13,7 +13,7 @@ layout(location = 3) out vec4 gMetallicRoughnessAO;
 
 layout(binding = 0) uniform sampler2D materialTex;
 
-const float NUM_TEXTURES = 5.0;
+const float NUM_TEXTURES = 3.0;
 const float TEXTURE_SIZE = 1.0f / NUM_TEXTURES;
 
 void main() {
@@ -23,16 +23,12 @@ void main() {
     textureOffset.x += TEXTURE_SIZE;
     vec4 tNormal = texture(materialTex, textureOffset);
     textureOffset.x += TEXTURE_SIZE;
-    vec4 tMetallic = texture(materialTex, textureOffset);
-    textureOffset.x += TEXTURE_SIZE;
-    vec4 tRoughness = texture(materialTex, textureOffset);
-    textureOffset.x += TEXTURE_SIZE;
-    vec4 tAO = texture(materialTex, textureOffset);
+    vec4 tMRAO = texture(materialTex, textureOffset);
 
     vec3 N = normalize(fs_in.tbn * (tNormal.xyz * 2.0 - 1.0));
 
     gPosition = fs_in.worldPosition;
     gNormal = vec4(N, 1.0);
     gAlbedo = tAlbedo;
-    gMetallicRoughnessAO = vec4(tMetallic.r, tRoughness.r, tAO.r, 1.0f);
+    gMetallicRoughnessAO = tMRAO;
 }
