@@ -28,9 +28,9 @@ PS_OUT main(PS_IN psIn){
     texCoords.x += TEXTURE_SIZE;
     float3 normal = normalize(2.0f * materialTex.Sample(splr, texCoords).xyz - 1.0f);
     texCoords.x += TEXTURE_SIZE;
-    float3 N = normalize(mul(normal, psIn.TBN));
-
     float4 mrao = materialTex.Sample(splr, texCoords);
+
+    float3 N = normalize(mul(normal, psIn.TBN));
 
     PS_OUT psOut;
     psOut.gPositions = psIn.worldPosition;
