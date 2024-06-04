@@ -6,25 +6,25 @@ namespace Syrius{
             Pass(context, "GBufferPass", PassIDGenerator<GBufferPass>::getID()){
         auto fbDesc = m_Context->createFrameBufferLayout();
 
-        ColorAttachmentDesc f32Attachment;
-        f32Attachment.width = m_Context->getWidth();
-        f32Attachment.height = m_Context->getHeight();
-        f32Attachment.format = SR_TEXTURE_RGBA_F32;
-        f32Attachment.clearColor[0] = 0.0f;
-        f32Attachment.clearColor[1] = 0.0f;
-        f32Attachment.clearColor[2] = 0.0f;
-        f32Attachment.clearColor[3] = 0.0f;
+        ColorAttachmentDesc f16Attachment;
+        f16Attachment.width = m_Context->getWidth();
+        f16Attachment.height = m_Context->getHeight();
+        f16Attachment.format = SR_TEXTURE_RGBA_F16;
+        f16Attachment.clearColor[0] = 0.0f;
+        f16Attachment.clearColor[1] = 0.0f;
+        f16Attachment.clearColor[2] = 0.0f;
+        f16Attachment.clearColor[3] = 0.0f;
 
-        ColorAttachmentDesc albedoAttachment = f32Attachment;
+        ColorAttachmentDesc albedoAttachment = f16Attachment;
         albedoAttachment.clearColor[0] = 0.2f;
         albedoAttachment.clearColor[1] = 0.3f;
         albedoAttachment.clearColor[2] = 0.8f;
         albedoAttachment.clearColor[3] = 1.0f;
 
-        fbDesc->addColorAttachmentDesc(f32Attachment); // positions
-        fbDesc->addColorAttachmentDesc(f32Attachment); // normals
+        fbDesc->addColorAttachmentDesc(f16Attachment); // positions
+        fbDesc->addColorAttachmentDesc(f16Attachment); // normals
         fbDesc->addColorAttachmentDesc(albedoAttachment); // albedo
-        fbDesc->addColorAttachmentDesc(f32Attachment); // metallic + roughness + ao
+        fbDesc->addColorAttachmentDesc(f16Attachment); // metallic + roughness + ao
 
         DepthStencilAttachmentDesc dsaDesc;
         dsaDesc.width = m_Context->getWidth();
