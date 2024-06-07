@@ -44,9 +44,7 @@ namespace Syrius{
         return *this;
     }
 
-    MaterialHandle::~MaterialHandle() {
-
-    }
+    MaterialHandle::~MaterialHandle() = default;
 
     void MaterialHandle::bind() {
         m_Albedo->bindShaderResource(m_Slot);

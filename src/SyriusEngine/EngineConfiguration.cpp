@@ -69,6 +69,12 @@ namespace Syrius{
             else if (arg == "-config") {
 
             }
+            else if (arg == "-width"){
+                windowWidth = std::stoi(argv[++i]);
+            }
+            else if (arg == "-height"){
+                windowHeight = std::stoi(argv[++i]);
+            }
             else{
                 SR_LOG_WARNING("[EngineConfiguration %p]: Invalid argument: %s", this, arg.c_str());
             }
