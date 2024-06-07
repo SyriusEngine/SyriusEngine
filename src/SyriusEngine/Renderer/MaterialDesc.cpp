@@ -105,10 +105,8 @@ namespace Syrius{
             ImageFileDesc imageDesc;
             imageDesc.fileName = path;
             imageDesc.flipOnAccess = true;
+            imageDesc.requestedChannelCount = 4;
             auto image = createImage(imageDesc);
-            if (image->getChannelCount() == 3){
-                image->extendAlpha();
-            }
             if (m_Width == 0 or m_Height == 0 or m_Format == SR_TEXTURE_NONE){
                 m_Width = image->getWidth();
                 m_Height = image->getHeight();
@@ -145,8 +143,6 @@ namespace Syrius{
             mraoPtr[i + 2] = aoPtr[i];
             mraoPtr[i + 3] = 255;
         }
-
-        mrao->writeToFile({"mrap.png"});
 
         return std::move(mrao);
     }

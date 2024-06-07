@@ -11,24 +11,20 @@ layout(location = 1) out vec4 gNormal;
 layout(location = 2) out vec4 gAlbedo;
 layout(location = 3) out vec4 gMetallicRoughnessAO;
 
-layout(binding = 0) uniform sampler2D materialTex;
-
-const float NUM_TEXTURES = 3.0;
-const float TEXTURE_SIZE = 1.0f / NUM_TEXTURES;
+layout(binding = 0) uniform sampler2D albedoTex;
+layout(binding = 1) uniform sampler2D normalTex;
+layout(binding = 2) uniform sampler2D mraoTex;
 
 void main() {
-    vec2 textureOffset = vec2(fs_in.texCoords.x * TEXTURE_SIZE, fs_in.texCoords.y);
+    vec4 albedo = texture(albedoTex, fs_in.texCoords);
+    vec4 normalTexel = texture(normalTex, fs_in.texCoords);
+    vec4 mrao = texture(mraoTex, fs_in.texCoords);
 
-    vec4 tAlbedo = texture(materialTex, textureOffset);
-    textureOffset.x += TEXTURE_SIZE;
-    vec4 tNormal = texture(materialTex, textureOffset);
-    textureOffset.x += TEXTURE_SIZE;
-    vec4 tMRAO = texture(materialTex, textureOffset);
-
-    vec3 N = normalize(fs_in.tbn * (tNormal.xyz * 2.0 - 1.0));
+    vec3 transformedNormal = normalTexel.xyz * 2.0 - 1.0;
+    vec3 normal = normalize(fs_in.tbn * transformedNormal);
 
     gPosition = fs_in.worldPosition;
-    gNormal = vec4(N, 1.0);
-    gAlbedo = tAlbedo;
-    gMetallicRoughnessAO = tMRAO;
+    gNormal = vec4(normal, 1.0);
+    gAlbedo = albedo;
+    gMetallicRoughnessAO = mrao;
 }

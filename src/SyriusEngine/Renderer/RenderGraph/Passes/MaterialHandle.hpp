@@ -24,7 +24,9 @@ namespace Syrius{
     private:
         ResourceView<Context>& m_Context;
 
-        ResourceView<Texture2D> m_Material;
+        ResourceView<Texture2D> m_Albedo;
+        ResourceView<Texture2D> m_Normal;
+        ResourceView<Texture2D> m_MRAO;
 
         uint32 m_Slot;
     };
