@@ -39,6 +39,7 @@ namespace Syrius{
         ResourceView<Shader> m_IrradianceConversionShader;
         ResourceView<VertexArray> m_ConversionCube;
         ResourceView<ConstantBuffer> m_ProjectionBuffer;
+        ResourceView<ConstantBuffer> m_FaceIndexBuffer;
 
     };
 }

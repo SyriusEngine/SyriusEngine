@@ -60,15 +60,19 @@ namespace Syrius{
         radTex->bindShaderResource(0);
         m_IrradianceConversionShader->bind();
         m_ProjectionBuffer->bind(0);
+        m_FaceIndexBuffer->bind(1);
 
+        glm::uvec4 index(0);
         m_Context->beginRenderPass(m_CaptureFrameBuffer);
         for (const auto& view : captureViews) {
             SkyBoxProjectionData projectionData;
             projectionData.projection = glm::perspective(glm::radians(90.0f), 1.0f, 0.1f, 10.0f);
             projectionData.view = view;
             m_ProjectionBuffer->setData(&projectionData, sizeof(SkyBoxProjectionData));
+            m_FaceIndexBuffer->setData(&index, sizeof(glm::uvec4));
 
             m_Context->draw(m_ConversionCube);
+            index.x++;
         }
         m_Context->endRenderPass();
 
@@ -136,5 +140,14 @@ namespace Syrius{
         cbDesc.shaderStage = SR_SHADER_VERTEX;
         cbDesc.name = "SkyBoxProjectionData";
         m_ProjectionBuffer = m_Context->createConstantBuffer(cbDesc);
+
+        glm::uvec4 index(0);
+        ConstantBufferDesc faceIndexBufferDesc;
+        faceIndexBufferDesc.data = &index;
+        faceIndexBufferDesc.size = sizeof(glm::uvec4);
+        faceIndexBufferDesc.usage = SR_BUFFER_USAGE_DYNAMIC;
+        faceIndexBufferDesc.shaderStage = SR_SHADER_FRAGMENT;
+        faceIndexBufferDesc.name = "FaceIndexData";
+        m_FaceIndexBuffer = m_Context->createConstantBuffer(faceIndexBufferDesc);
     }
 }

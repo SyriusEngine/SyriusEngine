@@ -12,6 +12,10 @@ layout(location = 5) out vec4 back;
 
 layout(binding = 0) uniform sampler2D texMap;
 
+layout(std140, binding = 1) uniform FaceIndexData {
+    uvec4 attachmentIndex;
+};
+
 const vec2 invAtan = vec2(0.1591, 0.3183);
 
 vec2 sampleSphere(vec3 v){
@@ -25,8 +29,7 @@ void main() {
     vec3 v = normalize(fWorldPos);
     vec2 uv = sampleSphere(v);
     vec4 color = texture(texMap, uv);
-    uint attachmentIndex = uint(fFaceID);
-    switch(attachmentIndex){
+    switch(attachmentIndex.x){
         case 0: left = color;   break;
         case 1: right = color;  break;
         case 2: top = color;    break;
