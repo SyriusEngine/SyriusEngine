@@ -56,7 +56,13 @@ namespace Syrius{
         m_RenderGraph->addPass<GBufferPass>(context);
         m_RenderGraph->addPass<LightPass>(context, m_ShaderLibrary);
 
+        ImageFileDesc radianceMapDesc;
+        radianceMapDesc.fileName = "./Resources/Skybox/photo_studio_loft_hall_2k.hdr";
+        radianceMapDesc.requestedChannelCount = 4;
+        radianceMapDesc.flipOnAccess = true;
+
         SkyBoxPassDesc sbDesc;
+        sbDesc.radianceMap = createImage(radianceMapDesc);
         m_RenderGraph->addPass<SkyBoxPass>(context, m_ShaderLibrary, sbDesc);
 
         m_RenderGraph->validate();

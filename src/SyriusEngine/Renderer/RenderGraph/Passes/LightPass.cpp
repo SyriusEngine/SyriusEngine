@@ -25,7 +25,7 @@ namespace Syrius{
     void LightPass::execute(PassMap &passMap) {
         auto gbp = passMap.getPass<GBufferPass>();
 
-        m_Context->beginRenderPass();
+        m_Context->getDefaultFrameBuffer()->bind();
 
         m_VertexArray->bind();
         m_Shader->bind();

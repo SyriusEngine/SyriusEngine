@@ -6,6 +6,11 @@ namespace Syrius{
 
     constexpr uint32 SKYBOX_MAP_SIZE = 512;
 
+    struct SkyBoxProjectionData{
+        glm::mat4 projection;
+        glm::mat4 view;
+    };
+
     struct SkyBoxPassDesc{
         Resource<Image> radianceMap;
     };
@@ -24,10 +29,16 @@ namespace Syrius{
 
         void setupCaptureFrameBuffer();
 
-    private:
+        void setupConversionObjects();
 
+    private:
+        ResourceView<VertexArray> m_SkyBoxCube;
+
+        // for irradiance conversion
         ResourceView<FrameBuffer> m_CaptureFrameBuffer;
-        ResourceView<Shader> m_EquirectangularConversionShader;
+        ResourceView<Shader> m_IrradianceConversionShader;
+        ResourceView<VertexArray> m_ConversionCube;
+        ResourceView<ConstantBuffer> m_ProjectionBuffer;
 
     };
 }
