@@ -37,7 +37,7 @@ namespace Syrius{
         m_Context->getDefaultFrameBuffer()->setDepthFunc(SR_COMPARISON_FUNC_LESS_EQUAL);
         m_Context->beginRenderPass();
 
-        m_CaptureFrameBuffer->getCubeColorAttachment(0)->bindShaderResource(0);
+        m_SkyboxMap->bindShaderResource(0);
         m_Shader->bind();
         m_Context->draw(m_SkyBoxCube);
 
@@ -62,34 +62,41 @@ namespace Syrius{
         m_ProjectionBuffer->bind(0);
         m_FaceIndexBuffer->bind(1);
 
+        auto cmlDesc = m_Context->createCubeMapLayout(SKYBOX_MAP_SIZE, SKYBOX_MAP_SIZE, SR_TEXTURE_RGBA_F32);
+
         glm::uvec4 index(0);
         m_Context->beginRenderPass(m_CaptureFrameBuffer);
-        for (const auto& view : captureViews) {
+        for (uint32 i = 0; i < 6; i++) {
+            m_CaptureFrameBuffer->clear();
+
             SkyBoxProjectionData projectionData;
             projectionData.projection = glm::perspective(glm::radians(90.0f), 1.0f, 0.1f, 10.0f);
-            projectionData.view = view;
+            projectionData.view = captureViews[i];
             m_ProjectionBuffer->setData(&projectionData, sizeof(SkyBoxProjectionData));
             m_FaceIndexBuffer->setData(&index, sizeof(glm::uvec4));
 
             m_Context->draw(m_ConversionCube);
+            auto face = m_CaptureFrameBuffer->getColorAttachment(0)->getData();
+            cmlDesc->addFace(static_cast<SR_CUBEMAP_FACE>(i), face);
+
             index.x++;
         }
         m_Context->endRenderPass();
 
-
+        m_SkyboxMap = m_Context->createCubeMap(cmlDesc);
     }
 
     void SkyBoxPass::setupCaptureFrameBuffer() {
         auto layout = m_Context->createFrameBufferLayout();
-        CubeColorAttachmentDesc ccaDesc;
+        ColorAttachmentDesc ccaDesc;
         ccaDesc.width = SKYBOX_MAP_SIZE;
         ccaDesc.height = SKYBOX_MAP_SIZE;
-        ccaDesc.format = SR_TEXTURE_RGBA_F16;
+        ccaDesc.format = SR_TEXTURE_RGBA_F32;
         ccaDesc.clearColor[0] = 0.0f;
         ccaDesc.clearColor[1] = 0.0f;
         ccaDesc.clearColor[2] = 0.0f;
         ccaDesc.clearColor[3] = 1.0f;
-        layout->addCubeColorAttachmentDesc(ccaDesc);
+        layout->addColorAttachmentDesc(ccaDesc);
 
         ViewportDesc vpDesc;
         vpDesc.width = SKYBOX_MAP_SIZE;

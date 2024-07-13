@@ -32,7 +32,9 @@ namespace Syrius{
         void setupConversionObjects();
 
     private:
+        // Skybox
         ResourceView<VertexArray> m_SkyBoxCube;
+        ResourceView<CubeMap> m_SkyboxMap;
 
         // for irradiance conversion
         ResourceView<FrameBuffer> m_CaptureFrameBuffer;
