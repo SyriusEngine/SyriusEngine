@@ -3,126 +3,39 @@ project(SyriusEngine)
 
 set(CMAKE_CXX_STANDARD 17)
 
-add_compile_definitions(SR_EXPORT_DLL)
-add_compile_definitions(SR_DEBUG)
+include(SyriusBuildUtils/CMakeUtils.cmake)
+include(cmake/FetchLibs.cmake)
 
-add_subdirectory(./Dependencies/SRSLCompiler/)
-add_subdirectory(./Dependencies/SyriusCore/)
-add_subdirectory(./Dependencies/googletest/)
+include_or_fetch(SyriusUtils SYRIUS_UTILS_DIR)
+message(STATUS "SyriusUtils found in ${SYRIUS_UTILS_DIR}")
+include_or_fetch(SyriusCore SYRIUS_CORE_DIR)
+message(STATUS "SyriusCore found in ${SYRIUS_CORE_DIR}")
 
-set(SR_DEPENDENCIES_DLL
-    ${CMAKE_CURRENT_BINARY_DIR}/Dependencies/SyriusCore/libSyriusCore.dll
-    ${CMAKE_CURRENT_BINARY_DIR}/Dependencies/SRSLCompiler/libSRSLCompiler.dll
-    ${CMAKE_CURRENT_BINARY_DIR}/../Dependencies/assimp/bin/libassimp-5.dll
-    )
-
-add_custom_target(CopyDLL ALL
-    COMMAND ${CMAKE_COMMAND} -E copy_if_different ${SR_DEPENDENCIES_DLL} ${CMAKE_CURRENT_BINARY_DIR}
-    DEPENDS ${VISU3D_DEPENDECIES_DLL}
-    COMMENT "Copying DLLs to build tree")
-add_dependencies(CopyDLL SyriusCore SRSLCompiler)
-
-include_directories(./Dependencies/SyriusCore/include/)
-link_directories(${CMAKE_CURRENT_BINARY_DIR}/Dependencies/SyriusCore/)
-
-include_directories(./Dependencies/SRSLCompiler/include/)
-link_directories(${CMAKE_CURRENT_BINARY_DIR}/Dependencies/SRSLCompiler/)
-
-include_directories(./Dependencies/glm/)
-
-include_directories(./Dependencies/EasyIni/include/)
-
-include_directories(./Dependencies/SRSTL/include/)
-
-set(SR_ENGINE_CORE_SRC
-    src/SyriusEngine/Core/DebugMessageHandler.cpp
-    src/SyriusEngine/Core/InternalInclude.cpp
-    src/SyriusEngine/Core/Profiler.cpp)
-
-set(SR_ENGINE_RENDERER_SRC
-    src/SyriusEngine/Renderer/Primitives.cpp
-    src/SyriusEngine/Renderer/Renderer.cpp
-
-    src/SyriusEngine/Renderer/RenderGraph/RenderPass.cpp
-    src/SyriusEngine/Renderer/RenderGraph/RenderGraph.cpp
-    src/SyriusEngine/Renderer/RenderGraph/Pass.cpp
-    src/SyriusEngine/Renderer/RenderGraph/PassMap.cpp
-    src/SyriusEngine/Renderer/ShaderLibrary.cpp
-
-    src/SyriusEngine/Renderer/RenderGraph/RenderGraphLayer.cpp
-    src/SyriusEngine/Renderer/RenderGraph/Passes/ProjectionPass.cpp
-    src/SyriusEngine/Renderer/RenderGraph/Passes/CameraDataPass.cpp
-    src/SyriusEngine/Renderer/RenderGraph/Passes/LFWRSamplerPass.cpp
-    src/SyriusEngine/Renderer/RenderGraph/Passes/MeshHandle.cpp
-    src/SyriusEngine/Renderer/RenderGraph/Passes/GeometryPass.cpp
-    src/SyriusEngine/Renderer/RenderGraph/Passes/MaterialHandle.cpp
-    src/SyriusEngine/Renderer/RenderGraph/Passes/GBufferPass.cpp
-    src/SyriusEngine/Renderer/RenderGraph/Passes/LightDataPass.cpp
-    src/SyriusEngine/Renderer/RenderGraph/Passes/LightPass.cpp
-    src/SyriusEngine/Renderer/RenderGraph/Passes/SkyBoxPass.cpp
-    src/SyriusEngine/Renderer/MaterialDesc.cpp)
-
-set(SR_ENGINE_ECS_SRC
-    src/SyriusEngine/EntityComponentSystem/Component.cpp
-    src/SyriusEngine/EntityComponentSystem/EntityComponentSystem.cpp
-    )
-
-
-set(SR_ENGINE_UTILS_SRC
-    src/SyriusEngine/Utils/Worker.cpp)
+set(CMAKE_POSITION_INDEPENDENT_CODE ON) # Needed to link this static lib into a dynamic lib
 
 set(SR_ENGINE_SRC
-    ${SR_ENGINE_CORE_SRC}
-    ${SR_ENGINE_RENDERER_SRC}
-    ${SR_ENGINE_UTILS_SRC}
-    ${SR_ENGINE_ECS_SRC}
-    src/SyriusEngine/SyriusEngine.cpp
-    src/SyriusEngine/LayerStack.cpp
-    src/SyriusEngine/BuiltIns.cpp
-    src/SyriusEngine/SyriusEngineImpl.cpp
-    src/SyriusEngine/EngineConfiguration.cpp)
-
-add_library(SyriusEngine SHARED ${SR_ENGINE_SRC})
-add_dependencies(SyriusEngine CopyDLL)
-target_link_libraries(SyriusEngine -lSyriusCore -lSRSLCompiler)
-
-
-################# APP EXECUTABLE #################
-link_directories(./cmake-build-debug/)
-
-include_directories(./Dependencies/assimp/include/)
-
-set(APP_SRC
-    SyriusEngineApp/Applayer.cpp
-    SyriusEngineApp/Camera.cpp
-    SyriusEngineApp/SceneObjects/Mesh.cpp
-    SyriusEngineApp/PanelsUI/MeshPanel.cpp
-    SyriusEngineApp/PanelsUI/LightPanel.cpp
-    SyriusEngineApp/PanelsUI/LightPanel.hpp
-    SyriusEngineApp/SceneObjects/LightObject.cpp
-    SyriusEngineApp/Serializer/Serializer.cpp
-    SyriusEngineApp/Serializer/ModelLoader.cpp
-    SyriusEngineApp/Serializer/ModelLoader.hpp
+    src/SyriusEngine.cpp
 )
 
-add_executable(SyriusEngineApp ${APP_SRC} main.cpp)
-add_dependencies(SyriusEngineApp SyriusEngine)
+add_library(SyriusEngine SHARED ${SR_ENGINE_SRC})
+target_include_directories(SyriusEngine PUBLIC include)
+target_link_libraries(SyriusEngine PUBLIC SyriusUtils SyriusCore)
 
-target_link_libraries(SyriusEngineApp -lSyriusEngine -lSyriusCore -lassimp-5)
+set(SR_ENGINE_TEST_SRC)
 
-#################### TESTING ###############################
-include_directories(./Dependencies/googletest/googletest/include/)
-link_directories(./cmake-build-debug/lib/)
+if ((CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME) AND BUILD_TESTS)
+    enable_testing()
 
-set(TEST_SRC
+    message(STATUS "Building tests")
 
-    Tests/EntityComponentSystem/EntityComponentSystemTest.cpp
-    Tests/EntityComponentSystem/ExampleComponents.cpp
+    add_executable(TestSyriusEngine ${SR_ENGINE_TEST_SRC} ${SR_ENGINE_SRC})
+    add_dependencies(TestSyriusEngine gtest)
 
-    Tests/Utils/WorkerTest.cpp
+    target_link_libraries(TestSyriusEngine  GTest::gtest GTest::gtest_main)
 
-    src/SyriusEngine/Renderer/RenderGraph/RenderGraphDefs.hpp)
+endif ()
 
-add_executable(SyriusEngineTest TestMain.cpp ${SR_ENGINE_SRC} ${TEST_SRC})
-add_dependencies(SyriusEngineTest gtest)
-target_link_libraries(SyriusEngineTest -lSyriusCore -lgtest)
+if ((CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME) AND BUILD_APP)
+    add_executable(SyriusEngineApp main.cpp)
+    target_link_libraries(SyriusEngineApp PUBLIC SyriusEngine)
+endif ()

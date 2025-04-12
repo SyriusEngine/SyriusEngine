@@ -1,0 +1,59 @@
+name: CI
+
+on: [push, pull_request]
+
+jobs:
+  build-gnu:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y cmake git g++ mesa-common-dev xorg-dev
+
+      - name: Compile with g++
+        run: |
+          mkdir build
+          cd build
+          cmake .. -DBUILD_TESTS=on -DCMAKE_C_COMPILER=gcc -DCMAKE_CXX_COMPILER=g++ -DGLFW_BUILD_X11=on -DGLFW_BUILD_WAYLAND=off
+          make
+
+  build-clang:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y cmake git g++ mesa-common-dev
+
+      - name: Compile with clang
+        run: |
+          mkdir build
+          cd build
+          cmake .. -DBUILD_TESTS=on -DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=clang++ -DGLFW_BUILD_X11=0 -DGLFW_BUILD_WAYLAND=0
+          make
+
+  build-windows:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Install dependencies
+        run: choco install cmake git
+
+      - name: Compile with MSVC
+        run: |
+          mkdir build
+          cd build
+          cmake .. -DBUILD_TESTS=on
+          cmake --build . --config Release

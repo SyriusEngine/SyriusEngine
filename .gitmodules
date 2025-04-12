@@ -13,3 +13,6 @@
 [submodule "Dependencies/googletest"]
 	path = Dependencies/googletest
 	url = https://github.com/google/googletest
+[submodule "SyriusBuildUtils"]
+	path = SyriusBuildUtils
+	url = https://github.com/SyriusEngine/SyriusBuildUtils.git
