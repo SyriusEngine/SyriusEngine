@@ -1,7 +1,9 @@
 #pragma once
 
 #include <SyriusEngine/SyriusEngine.hpp>
+
 #include "LayerStack.hpp"
+#include "Communication/DispatcherManager.hpp"
 
 namespace Syrius {
 
@@ -11,6 +13,7 @@ namespace Syrius {
 
     public:
         LayerStack layerStack;
+        DispatcherManager dispatcherManager;
     };
 
 }

@@ -47,6 +47,7 @@ target_link_libraries(SyriusEngine PUBLIC ${SR_ENGINE_LIBRARIES})
 add_dependencies(SyriusEngine glm)
 
 set(SR_ENGINE_TEST_SRC
+    Test/TestEngineConfiguration.cpp
     Test/Communication/TestDispatcherManager.cpp)
 
 if ((CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME) AND BUILD_TESTS)
