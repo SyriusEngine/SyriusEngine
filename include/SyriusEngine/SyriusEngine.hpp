@@ -34,7 +34,7 @@ namespace Syrius{
 
     private:
         UP<SyriusWindow> m_Window = nullptr;
-        UP<EngineData> m_Data = nullptr;
+        UP<EngineData> m_Data;
     };
 
 }
