@@ -2,7 +2,7 @@
 
 #include <SyriusEngine/Renderer/RenderLayer.hpp>
 
-namespace Syrius {
+namespace Syrius::Renderer {
 
     class RenderGraphLayer: public IRenderLayer {
     public:
@@ -20,9 +20,13 @@ namespace Syrius {
 
         void createMesh(MeshID meshID, const Mesh& mesh, const ResourceView<Context>& ctx) override;
 
+        void createInstance(InstanceID instanceID, MeshID meshID, const ResourceView<Context> &ctx) override;
+
         void destroyMesh(MeshID meshID, const ResourceView<Context>& ctx) override;
 
-        void setMeshTransform(MeshID meshID, const Transform& transform, const ResourceView<Context>& ctx) override;
+        void destroyInstance(InstanceID instanceID) override;
+
+        void setInstanceTransform(MeshID meshID, const Transform& transform, const ResourceView<Context>& ctx) override;
 
         void createCamera(CameraID cameraID, const Camera& camera, const ResourceView<Context>& ctx) override;
 

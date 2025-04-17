@@ -2,6 +2,11 @@
 
 #include <SyriusEngine/Renderer/RenderPrimitives.hpp>
 
-namespace Syrius {
+namespace Syrius::Renderer {
+
+    class GeometryStore {
+
+    };
+
 
 }

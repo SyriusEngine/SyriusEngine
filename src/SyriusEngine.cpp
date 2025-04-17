@@ -14,11 +14,11 @@ namespace Syrius{
         windowDesc.title = "SyriusEngine";
         m_Window = createWindow(windowDesc);
 
-        RendererDesc rendererDesc;
+        Renderer::RendererDesc rendererDesc;
         rendererDesc.api = config.api;
         rendererDesc.enableVsync = config.vsync;
 
-        m_Data->renderer = createUP<Renderer>(m_Window, m_Data->dispatcherManager, rendererDesc);
+        m_Data->renderer = createUP<Renderer::Renderer>(m_Window, m_Data->dispatcherManager, rendererDesc);
 
         SR_STOP_TIMER("EngineStartup");
         const Duration startupTime = SR_GET_TIME("EngineStartup");

@@ -1,6 +1,6 @@
 #include "ShaderStore.hpp"
 
-namespace Syrius {
+namespace Syrius::Renderer {
 
     ShaderStore::ShaderStore(fs::path &path):
     m_BasePath(path) {

@@ -11,6 +11,7 @@ typedef enum SR_RENDERER_SYSTEM {
 namespace Syrius{
 
     using MeshID = UID;
+    using InstanceID = UID;
     using TransformID = UID;
     using MaterialID = UID;
     using LightID = UID;

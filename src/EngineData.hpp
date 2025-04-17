@@ -15,7 +15,7 @@ namespace Syrius {
     public:
         LayerStack layerStack;
         SP<DispatcherManager> dispatcherManager;
-        UP<Renderer> renderer;
+        UP<Renderer::Renderer> renderer;
     };
 
 }

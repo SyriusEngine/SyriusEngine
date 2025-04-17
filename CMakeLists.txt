@@ -22,6 +22,7 @@ set(SR_ENGINE_HEADERS
 
     include/SyriusEngine/Renderer/RenderPrimitives.hpp
     include/SyriusEngine/Renderer/RenderLayer.hpp
+    include/SyriusEngine/Utils/EngineLimits.hpp
 )
 
 set(SR_ENGINE_RENDERER_SRC
@@ -31,8 +32,8 @@ set(SR_ENGINE_RENDERER_SRC
     src/Renderer/RenderGraph/RenderGraphLayer.hpp
     src/Renderer/RenderGraph/Stores/ShaderStore.cpp
     src/Renderer/RenderGraph/Stores/ShaderStore.hpp
-    src/Renderer/RenderGraph/Stores/MeshStore.cpp
-    src/Renderer/RenderGraph/Stores/MeshStore.hpp
+    src/Renderer/RenderGraph/Stores/GeometryStore.cpp
+    src/Renderer/RenderGraph/Stores/GeometryStore.hpp
 )
 
 set(SR_ENGINE_UTILS_SRC
@@ -57,6 +58,8 @@ set(SR_ENGINE_SRC
     src/LayerStack.hpp
     src/EngineData.cpp
     src/EngineData.hpp
+    src/Renderer/RenderGraph/Handles/MeshHandle.cpp
+    src/Renderer/RenderGraph/Handles/MeshHandle.hpp
 )
 
 add_library(SyriusEngine SHARED ${SR_ENGINE_SRC} ${SR_ENGINE_HEADERS})

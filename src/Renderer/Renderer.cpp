@@ -1,6 +1,6 @@
 #include "Renderer.hpp"
 
-namespace Syrius {
+namespace Syrius::Renderer {
 
     /*
      * With all lambda expressions here, we do not want to take in these parameters by reference, we want to make a

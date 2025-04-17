@@ -1,6 +1,6 @@
 #include "RenderGraphLayer.hpp"
 
-namespace Syrius {
+namespace Syrius::Renderer {
 
     void RenderGraphLayer::onRendererAttach(const ResourceView<Context> &ctx) {
 
@@ -22,11 +22,18 @@ namespace Syrius {
 
     }
 
+    void RenderGraphLayer::createInstance(InstanceID instanceID, MeshID meshID, const ResourceView<Context> &ctx) {  }
+
+
     void RenderGraphLayer::destroyMesh(MeshID meshID, const ResourceView<Context> &ctx) {
 
     }
 
-    void RenderGraphLayer::setMeshTransform(MeshID meshID, const Transform &transform, const ResourceView<Context> &ctx) {
+    void RenderGraphLayer::destroyInstance(InstanceID instanceID) {
+
+    }
+
+    void RenderGraphLayer::setInstanceTransform(MeshID meshID, const Transform &transform, const ResourceView<Context> &ctx) {
 
     }
 

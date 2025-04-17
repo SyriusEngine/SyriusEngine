@@ -6,7 +6,7 @@
 #include "../Communication/DispatcherManager.hpp"
 #include "../Utils/Worker.hpp"
 
-namespace Syrius {
+namespace Syrius::Renderer {
 
     struct RendererDesc {
         SR_SUPPORTED_API api = SR_API_OPENGL;

@@ -2,7 +2,7 @@
 
 #include <SyriusEngine/Renderer/RenderPrimitives.hpp>
 
-namespace Syrius {
+namespace Syrius::Renderer {
 
     struct ShaderProgram {
         ResourceView<ShaderModule> vertexShader;
