@@ -10,6 +10,7 @@ namespace Syrius {
 
     struct RendererDesc {
         SR_SUPPORTED_API api = SR_API_OPENGL;
+        SR_RENDERER_SYSTEM rendererSystem = SR_RENDERER_SYSTEM_DEFAULT;
         bool enableVsync = false;
     };
 
@@ -36,6 +37,10 @@ namespace Syrius {
         void setupContext(const RendererDesc& desc);
 
         void terminateContext();
+
+        void createMesh(MeshID meshID, SP<Mesh> mesh);
+
+        void destroyMesh(MeshID meshID);
 
     private:
         UP<SyriusWindow>& m_Window;

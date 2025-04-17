@@ -20,6 +20,7 @@ set(SR_ENGINE_HEADERS
     include/SyriusEngine/Renderer/RenderPrimitives.hpp
     include/SyriusEngine/Utils/EngineInclude.hpp
     include/SyriusEngine/Layer.hpp
+        include/SyriusEngine/Renderer/RendererSystem.hpp
 )
 
 set(SR_ENGINE_SRC

@@ -7,6 +7,20 @@
 #include <typeindex>
 #include <typeinfo>
 
+template <typename T>
+inline void hash_combine(std::size_t& seed, const T& value) {
+    seed ^= std::hash<T>{}(value) + 0x9e3779b9 + (seed << 6) + (seed >> 2);
+}
+
+struct IndexHash {
+    std::size_t operator()(const std::pair<std::type_index, std::type_index>& index) const {
+        std::size_t seed = 0;
+        hash_combine(seed, index.first);
+        hash_combine(seed, index.second);
+        return seed;
+    }
+};
+
 namespace Syrius {
 
     class DispatcherManager {
@@ -15,17 +29,22 @@ namespace Syrius {
 
         ~DispatcherManager() = default;
 
-        template<typename T>
-        SP<Dispatcher<T>> getDispatcher() {
-            auto type = std::type_index(typeid(T));
-            auto it = m_Dispatchers.find(type);
+        template<typename KEY, typename DATA>
+        SP<Dispatcher<KEY, DATA>> getDispatcher() {
+            const Index key = { std::type_index(typeid(KEY)), std::type_index(typeid(DATA)) };
+            auto it = m_Dispatchers.find(key);
             if (it == m_Dispatchers.end()) {
-                m_Dispatchers[type] = std::make_shared<Dispatcher<T>>();
+                m_Dispatchers[key] = std::make_shared<Dispatcher<KEY, DATA>>();
             }
-            return std::static_pointer_cast<Dispatcher<T>>(m_Dispatchers[type]);
+            auto dispatcher = std::static_pointer_cast<Dispatcher<KEY, DATA>>(m_Dispatchers[key]);
+            if (dispatcher == nullptr) {
+                SR_LOG_THROW("DispatcherManager", "Failed to cast dispatcher to the requested type");
+            }
+            return dispatcher;
         }
 
     private:
-        std::unordered_map<std::type_index, SP<IDispatcher>> m_Dispatchers;
+        using Index = std::pair<std::type_index, std::type_index>;
+        std::unordered_map<Index, SP<IDispatcher>, IndexHash> m_Dispatchers;
     };
 }

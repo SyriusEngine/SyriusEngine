@@ -7,7 +7,7 @@ namespace Syrius {
      m_DispatcherManager(dispatcherManager),
      m_Worker("RenderThread") {
           bool renderThreadSetupFinished = false;
-          m_Worker.add([this, &renderThreadSetupFinished, desc] {
+          m_Worker.add([&] {
                setupContext(desc);
                renderThreadSetupFinished = true;
           });
@@ -46,7 +46,13 @@ namespace Syrius {
           m_RenderLayers.erase(it, m_RenderLayers.end());
      }
 
-     void Renderer::render() {  }
+     void Renderer::render() {
+          m_Worker.add([&] {
+               for (const auto& layer : m_RenderLayers) {
+                    layer->onRender(m_Context);
+               }
+          });
+     }
 
      void Renderer::swapFrontAndBackBuffer() {
           m_Worker.addSync([this] {
@@ -54,7 +60,15 @@ namespace Syrius {
           });
      }
 
-     void Renderer::setupDispatchers() {  }
+     void Renderer::setupDispatchers() {
+          const auto meshDispatcher = m_DispatcherManager->getDispatcher<MeshID, Mesh>();
+          meshDispatcher->registerCreate([this](const MeshID meshID, SP<Mesh> mesh) {
+               createMesh(meshID, mesh);
+          });
+          meshDispatcher->registerDelete([&](const MeshID meshID) {
+               destroyMesh(meshID);
+          });
+     }
 
      void Renderer::setupContext(const RendererDesc &desc) {
           ContextDesc contextDesc;
@@ -67,4 +81,21 @@ namespace Syrius {
      void Renderer::terminateContext() {
           m_Window->destroyContext();
      }
+
+     void Renderer::createMesh(const MeshID meshID, SP<Mesh> mesh) {
+          m_Worker.add([&] {
+               for (const auto& layer : m_RenderLayers) {
+                    layer->createMesh(meshID, *mesh, m_Context);
+               }
+          });
+     }
+
+     void Renderer::destroyMesh(const MeshID meshID) {
+          m_Worker.add([&] {
+               for (const auto& layer : m_RenderLayers) {
+                    layer->destroyMesh(meshID, m_Context);
+               }
+          });
+     }
+
 }

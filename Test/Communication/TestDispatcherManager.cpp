@@ -50,11 +50,11 @@ TEST_F(TestDispatcherManager, dispatch_dummy_data) {
 
     // Setup and register functions
     DispatcherManager manager;
-    auto dummyDataDispatcher = manager.getDispatcher<DummyData>();
-    dummyDataDispatcher->registerCreate([&](UID uid, SP<DummyData> data) {
+    auto dummyDataDispatcher = manager.getDispatcher<UID, DummyData>();
+    dummyDataDispatcher->registerCreate([&](const UID uid, SP<DummyData> data) {
         receiver.onCreate(uid, data);
     });
-    dummyDataDispatcher->registerUpdate([&](UID uid, SP<DummyData> data) {
+    dummyDataDispatcher->registerUpdate([&](const UID uid, SP<DummyData> data) {
         receiver.onUpdate(uid, data);
     });
     dummyDataDispatcher->registerDelete([&](UID uid) {

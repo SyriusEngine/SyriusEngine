@@ -3,6 +3,11 @@
 #include <SyriusEngine/Utils/EngineInclude.hpp>
 #include <glm/glm.hpp>
 
+typedef enum SR_RENDERER_SYSTEM {
+    SR_RENDERER_SYSTEM_NONE = 0,
+    SR_RENDERER_SYSTEM_DEFAULT = 1,
+} SR_RENDERER_SYSTEM;
+
 namespace Syrius{
 
     using MeshID = UID;

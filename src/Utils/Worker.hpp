@@ -34,7 +34,7 @@ namespace Syrius {
             }
             {
                 std::lock_guard lock(m_Mutex);
-                m_Queue.emplace_back(std::bind<Args>(args)...);
+                m_Queue.emplace_back(std::forward<Args>(args)...);
             }
             m_Condition.notify_all();
         }

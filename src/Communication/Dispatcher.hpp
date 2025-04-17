@@ -10,32 +10,32 @@ namespace Syrius {
         virtual ~IDispatcher() = default;
     };
 
-    template<typename T>
+    template<typename KEY, typename DATA>
     class Dispatcher: public IDispatcher{
     public:
         Dispatcher() = default;
 
         ~Dispatcher() override = default;
 
-        void registerCreate(CreateFunc<T> func) {
+        void registerCreate(CreateFunc<KEY, DATA> func) {
             m_Creates.push_back(func);
         }
 
-        void registerUpdate(UpdateFunc<T> func) {
+        void registerUpdate(UpdateFunc<KEY, DATA> func) {
             m_Updates.push_back(func);
         }
 
-        void registerDelete(DeleteFunc<T> func) {
+        void registerDelete(DeleteFunc<KEY> func) {
             m_Deletes.push_back(func);
         }
 
-        void dispatchCreate(const UID uid, SP<T> component) {
+        void dispatchCreate(const KEY uid, SP<DATA> component) {
             for (const auto& func : m_Creates) {
                 func(uid, component);
             }
         }
 
-        void dispatchUpdate(const UID uid, SP<T> component) {
+        void dispatchUpdate(const KEY uid, SP<DATA> component) {
             for (const auto& func : m_Updates) {
                 func(uid, component);
             }
@@ -48,9 +48,9 @@ namespace Syrius {
         }
 
     private:
-        std::vector<CreateFunc<T>> m_Creates;
-        std::vector<UpdateFunc<T>> m_Updates;
-        std::vector<DeleteFunc<T>> m_Deletes;
+        std::vector<CreateFunc<KEY, DATA>> m_Creates;
+        std::vector<UpdateFunc<KEY, DATA>> m_Updates;
+        std::vector<DeleteFunc<KEY>> m_Deletes;
     };
 
 }

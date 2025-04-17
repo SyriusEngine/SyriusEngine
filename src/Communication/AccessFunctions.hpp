@@ -5,13 +5,13 @@
 
 namespace Syrius {
 
-    template<typename T>
-    using CreateFunc = std::function<void(UID, SP<T>)>;
+    template<typename KEY, typename DATA>
+    using CreateFunc = std::function<void(KEY, SP<DATA>)>;
 
-    template<typename T>
-    using UpdateFunc = std::function<void(UID, SP<T>)>;
+    template<typename KEY, typename DATA>
+    using UpdateFunc = std::function<void(KEY, SP<DATA>)>;
 
-    template<typename T>
-    using DeleteFunc = std::function<void(UID)>;
+    template<typename KEY>
+    using DeleteFunc = std::function<void(KEY)>;
 
 }
