@@ -83,6 +83,7 @@ namespace Syrius {
         m_Context = m_Window->createContext(contextDesc);
 
         m_Context->setVerticalSynchronisation(desc.enableVsync);
+        SR_LOG_INFO("Renderer", "VSync: {}", desc.enableVsync);
     }
 
     void Renderer::terminateContext() { m_Window->destroyContext(); }

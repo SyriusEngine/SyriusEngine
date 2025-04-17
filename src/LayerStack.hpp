@@ -14,7 +14,7 @@ namespace Syrius {
 
         void popLayer(LayerID layerID);
 
-        void onUpdate() const;
+        void onUpdate(Duration deltaTime) const;
 
         void onEvent(const Event& event);
 

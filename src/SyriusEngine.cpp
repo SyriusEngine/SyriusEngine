@@ -25,6 +25,7 @@ namespace Syrius{
     void SyriusEngine::run() const {
         SR_PRECONDITION(m_Window != nullptr, "Window is null");
 
+        TimePoint lastFrameTime = getTime();
         while (m_Window->isOpen()) {
             // 1. Events
             m_Window->pollEvents();
@@ -34,7 +35,10 @@ namespace Syrius{
             }
 
             // 2. Update
-            m_Data->layerStack.onUpdate();
+            auto currentTime = getTime();
+            Duration deltaTime = currentTime - lastFrameTime;
+            lastFrameTime = currentTime;
+            m_Data->layerStack.onUpdate(deltaTime);
 
             // 3. Render
             m_Data->renderer->render();

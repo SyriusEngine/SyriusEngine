@@ -20,9 +20,9 @@ namespace Syrius {
         m_Layers.erase(it, m_Layers.end());
     }
 
-    void LayerStack::onUpdate() const {
+    void LayerStack::onUpdate(const Duration deltaTime) const {
         for (const auto& layer : m_Layers){
-            layer->onUpdate();
+            layer->onUpdate(deltaTime);
         }
     }
 

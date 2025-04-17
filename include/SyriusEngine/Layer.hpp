@@ -27,7 +27,7 @@ namespace Syrius {
          * @brief Called when the layer is updated. This function is called once a frame. Use this function to update
          *        the layer's logic
          */
-        virtual void onUpdate() = 0;
+        virtual void onUpdate(Duration deltaTime) = 0;
 
         /**
          * @brief Called when the window receives an event. This function can be called zero or more times a frame. Use

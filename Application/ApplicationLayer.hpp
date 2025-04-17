@@ -1,6 +1,7 @@
 #pragma once
 
 #include <SyriusEngine/SyriusEngine.hpp>
+#include <deque>
 
 namespace Syrius {
 
@@ -18,7 +19,7 @@ namespace Syrius {
 
         void onRendererDetach(const ResourceView<Context> &ctx) override;
 
-        void onUpdate() override;
+        void onUpdate(Duration deltaTime) override;
 
         bool onEvent(const Event& event) override;
 
@@ -26,10 +27,12 @@ namespace Syrius {
 
     private:
 
-        void ImGuiDebugWindow(const ResourceView<Context> &ctx);
+        void imGuiDebugWindow(const ResourceView<Context> &ctx);
 
     private:
         SyriusEngine &m_Engine;
+
+        std::deque<Duration> m_FrameTimes;
     };
 
 }
