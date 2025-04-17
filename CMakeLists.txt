@@ -32,6 +32,8 @@ set(SR_ENGINE_SRC
     src/Communication/AccessFunctions.hpp
     src/Communication/Dispatcher.hpp
     src/Communication/DispatcherManager.hpp
+    src/Utils/Worker.cpp
+    src/Utils/Worker.hpp
 )
 
 add_library(SyriusEngine SHARED ${SR_ENGINE_SRC} ${SR_ENGINE_HEADERS})
