@@ -74,6 +74,8 @@ if ((CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME) AND BUILD_TESTS)
 endif ()
 
 if ((CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME) AND BUILD_APP)
-    add_executable(SyriusEngineApp main.cpp)
+    add_executable(SyriusEngineApp main.cpp
+        Application/ApplicationLayer.cpp
+        Application/ApplicationLayer.hpp)
     target_link_libraries(SyriusEngineApp PUBLIC SyriusEngine)
 endif ()

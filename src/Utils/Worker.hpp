@@ -29,9 +29,6 @@ namespace Syrius {
 
         template<typename... Args>
         void add(Args&&... args) {
-            if (!m_IsRunning) {
-                SR_LOG_WARNING(m_Name, "Worker is not running. Task will not be added.");
-            }
             {
                 std::lock_guard lock(m_Mutex);
                 m_Queue.emplace_back(std::forward<Args>(args)...);

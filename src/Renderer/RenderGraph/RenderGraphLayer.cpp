@@ -2,11 +2,11 @@
 
 namespace Syrius {
 
-    void RenderGraphLayer::create(const ResourceView<Context> &ctx) {
+    void RenderGraphLayer::onRendererAttach(const ResourceView<Context> &ctx) {
 
     }
 
-    void RenderGraphLayer::destroy(const ResourceView<Context> &ctx) {
+    void RenderGraphLayer::onRendererDetach(const ResourceView<Context> &ctx) {
 
     }
 

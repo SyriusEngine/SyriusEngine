@@ -8,12 +8,16 @@ namespace Syrius {
 
     using RenderLayerID = UID;
 
-    class IRenderLayer {
+    class SR_ENGINE_API IRenderLayer {
     public:
         IRenderLayer():
         m_ID(generateID()){}
 
-        virtual ~IRenderLayer();
+        virtual ~IRenderLayer() = default;
+
+        virtual void onRendererAttach(const ResourceView<Context>& ctx){};
+
+        virtual void onRendererDetach(const ResourceView<Context>& ctx){};
 
         virtual void onRender(const ResourceView<Context>& ctx) = 0;
 

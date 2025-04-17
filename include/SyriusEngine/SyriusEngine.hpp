@@ -33,6 +33,8 @@ namespace Syrius{
 
         void destroyMesh(MeshID meshID);
 
+        const UP<SyriusWindow>& getWindow() const { return m_Window; }
+
     private:
 
         class EngineData; // PIMPL

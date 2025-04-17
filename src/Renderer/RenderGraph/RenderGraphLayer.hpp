@@ -10,9 +10,9 @@ namespace Syrius {
         
         ~RenderGraphLayer() override = default;
 
-        void create(const ResourceView<Context>& ctx);
+        void onRendererAttach(const ResourceView<Context>& ctx) override;
 
-        void destroy(const ResourceView<Context>& ctx);
+        void onRendererDetach(const ResourceView<Context>& ctx) override;
 
         void onRender(const ResourceView<Context>& ctx) override;
 
