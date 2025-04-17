@@ -34,6 +34,9 @@ set(SR_ENGINE_SRC
     src/Communication/DispatcherManager.hpp
     src/Utils/Worker.cpp
     src/Utils/Worker.hpp
+    include/SyriusEngine/Renderer/RenderLayer.hpp
+    src/Renderer/Renderer.cpp
+    src/Renderer/Renderer.hpp
 )
 
 add_library(SyriusEngine SHARED ${SR_ENGINE_SRC} ${SR_ENGINE_HEADERS})

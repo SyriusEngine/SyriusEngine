@@ -2,4 +2,10 @@
 
 namespace Syrius {
 
+     SyriusEngine::EngineData::EngineData():
+     dispatcherManager(createSP<DispatcherManager>()) {
+
+     }
+
+
 }

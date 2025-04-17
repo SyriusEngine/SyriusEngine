@@ -4,16 +4,18 @@
 
 #include "LayerStack.hpp"
 #include "Communication/DispatcherManager.hpp"
+#include "Renderer/Renderer.hpp"
 
 namespace Syrius {
 
     class SyriusEngine::EngineData {
     public:
-        EngineData() = default;
+        EngineData();
 
     public:
         LayerStack layerStack;
-        DispatcherManager dispatcherManager;
+        SP<DispatcherManager> dispatcherManager;
+        UP<Renderer> renderer;
     };
 
 }

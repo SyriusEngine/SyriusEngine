@@ -1,10 +1,11 @@
 #pragma once
 
+#include <SyriusEngine/Renderer/RenderLayer.hpp>
 #include <SyriusEngine/EngineConfiguration.hpp>
 #include <SyriusEngine/Layer.hpp>
 
-#include <SyriusEngine/Utils/ExportEngine.hpp>
 #include <SyriusEngine/Utils/EngineInclude.hpp>
+#include <SyriusEngine/Utils/ExportEngine.hpp>
 
 #include <SyriusEngine/Renderer/RenderPrimitives.hpp>
 
@@ -21,6 +22,10 @@ namespace Syrius{
         void pushLayer(const SP<ILayer> &layer) const;
 
         void popLayer(LayerID layerID) const;
+
+        void pushRenderLayer(const SP<IRenderLayer>& renderLayer);
+
+        void popRenderLayer(RenderLayerID layerID);
 
         MeshID createMesh(const Mesh& mesh);
 

@@ -10,6 +10,12 @@ namespace Syrius{
         windowDesc.height = config.windowHeight;
         windowDesc.title = "SyriusEngine";
         m_Window = createWindow(windowDesc);
+
+        RendererDesc rendererDesc;
+        rendererDesc.api = config.api;
+        rendererDesc.enableVsync = config.vsync;
+
+        m_Data->renderer = createUP<Renderer>(m_Window, m_Data->dispatcherManager, rendererDesc);
     }
 
     SyriusEngine::~SyriusEngine() {
@@ -29,6 +35,12 @@ namespace Syrius{
 
             // 2. Update
             m_Data->layerStack.onUpdate();
+
+            // 3. Render
+            m_Data->renderer->render();
+
+            // 4. Swap buffers
+            m_Data->renderer->swapFrontAndBackBuffer();
         }
     }
 
@@ -38,6 +50,14 @@ namespace Syrius{
 
     void SyriusEngine::popLayer(const LayerID layerID) const {
         m_Data->layerStack.popLayer(layerID);
+    }
+
+    void SyriusEngine::pushRenderLayer(const SP<IRenderLayer> &renderLayer) {
+        m_Data->renderer->pushRenderLayer(renderLayer);
+    }
+
+    void SyriusEngine::popRenderLayer(RenderLayerID layerID) {
+        m_Data->renderer->popRenderLayer(layerID);
     }
 
     MeshID SyriusEngine::createMesh(const Mesh &mesh) {

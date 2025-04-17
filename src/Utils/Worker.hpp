@@ -39,6 +39,25 @@ namespace Syrius {
             m_Condition.notify_all();
         }
 
+        template<typename... Args>
+        void addSync(Args&&... args) {
+            bool finished = false;
+
+            {
+                std::lock_guard<std::mutex> lk(m_Mutex);
+                m_Queue.push_back([func = std::bind(std::forward<Args>(args)...), &finished](){
+                    func();
+                    finished = true;
+                });
+            }
+
+            m_Condition.notify_all();
+
+            while (!finished){
+                std::this_thread::sleep_for(1.0ms);
+            }
+        }
+
     private:
 
         void run();
