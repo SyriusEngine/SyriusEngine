@@ -11,7 +11,7 @@ int main(int argc, char* argv[]) {
         Syrius::SyriusEngine engine(config);
 
         // Create Application Layer
-        auto appLayer = Syrius::createSP<Syrius::ApplicationLayer>(engine);
+        const auto appLayer = Syrius::createSP<Syrius::ApplicationLayer>(engine);
         engine.pushLayer(appLayer); // General stuff
         engine.pushRenderLayer(appLayer); // UI stuff
 

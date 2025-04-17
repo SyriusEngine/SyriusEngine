@@ -16,29 +16,47 @@ set(CMAKE_POSITION_INDEPENDENT_CODE ON) # Needed to link this static lib into a 
 set(SR_ENGINE_HEADERS
     include/SyriusEngine/SyriusEngine.hpp
     include/SyriusEngine/EngineConfiguration.hpp
+    include/SyriusEngine/Layer.hpp
+
+    include/SyriusEngine/Utils/EngineInclude.hpp
 
     include/SyriusEngine/Renderer/RenderPrimitives.hpp
-    include/SyriusEngine/Utils/EngineInclude.hpp
-    include/SyriusEngine/Layer.hpp
+    include/SyriusEngine/Renderer/RenderLayer.hpp
+)
+
+set(SR_ENGINE_RENDERER_SRC
+    src/Renderer/Renderer.cpp
+    src/Renderer/Renderer.hpp
+    src/Renderer/RenderGraph/RenderGraphLayer.cpp
+    src/Renderer/RenderGraph/RenderGraphLayer.hpp
+    src/Renderer/RenderGraph/Stores/ShaderStore.cpp
+    src/Renderer/RenderGraph/Stores/ShaderStore.hpp
+    src/Renderer/RenderGraph/Stores/MeshStore.cpp
+    src/Renderer/RenderGraph/Stores/MeshStore.hpp
+)
+
+set(SR_ENGINE_UTILS_SRC
+    src/Utils/Worker.cpp
+    src/Utils/Worker.hpp
+)
+
+set(SR_ENGINE_COMMUNICATION_SRC
+    src/Communication/AccessFunctions.hpp
+    src/Communication/Dispatcher.hpp
+    src/Communication/DispatcherManager.hpp
 )
 
 set(SR_ENGINE_SRC
+    ${SR_ENGINE_UTILS_SRC}
+    ${SR_ENGINE_RENDERER_SRC}
+    ${SR_ENGINE_COMMUNICATION_SRC}
+
     src/EngineConfiguration.cpp
     src/SyriusEngine.cpp
     src/LayerStack.cpp
     src/LayerStack.hpp
     src/EngineData.cpp
     src/EngineData.hpp
-    src/Communication/AccessFunctions.hpp
-    src/Communication/Dispatcher.hpp
-    src/Communication/DispatcherManager.hpp
-    src/Utils/Worker.cpp
-    src/Utils/Worker.hpp
-    include/SyriusEngine/Renderer/RenderLayer.hpp
-    src/Renderer/Renderer.cpp
-    src/Renderer/Renderer.hpp
-    src/Renderer/RenderGraph/RenderGraphLayer.cpp
-    src/Renderer/RenderGraph/RenderGraphLayer.hpp
 )
 
 add_library(SyriusEngine SHARED ${SR_ENGINE_SRC} ${SR_ENGINE_HEADERS})

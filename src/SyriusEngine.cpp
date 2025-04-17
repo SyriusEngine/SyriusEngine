@@ -1,10 +1,13 @@
 #include <SyriusEngine/SyriusEngine.hpp>
 #include "EngineData.hpp"
+#include <SyriusUtils/Clock/ClockMacros.hpp>
 
 namespace Syrius{
 
     SyriusEngine::SyriusEngine(const EngineConfiguration& config):
     m_Data(createUP<EngineData>()) {
+        SR_START_TIMER("EngineStartup");
+
         WindowDesc windowDesc;
         windowDesc.width = config.windowWidth;
         windowDesc.height = config.windowHeight;
@@ -16,6 +19,10 @@ namespace Syrius{
         rendererDesc.enableVsync = config.vsync;
 
         m_Data->renderer = createUP<Renderer>(m_Window, m_Data->dispatcherManager, rendererDesc);
+
+        SR_STOP_TIMER("EngineStartup");
+        const Duration startupTime = SR_GET_TIME("EngineStartup");
+        SR_LOG_INFO("SyriusEngine", "Setup Completed (took {})!", startupTime)
     }
 
     SyriusEngine::~SyriusEngine() {
@@ -36,7 +43,7 @@ namespace Syrius{
 
             // 2. Update
             auto currentTime = getTime();
-            Duration deltaTime = currentTime - lastFrameTime;
+            const Duration deltaTime = currentTime - lastFrameTime;
             lastFrameTime = currentTime;
             m_Data->layerStack.onUpdate(deltaTime);
 
@@ -50,18 +57,22 @@ namespace Syrius{
 
     void SyriusEngine::pushLayer(const SP<ILayer> &layer) const {
         m_Data->layerStack.pushLayer(layer);
+        SR_LOG_INFO("SyriusEngine", "Pushed Layer: {}", layer->getID());
     }
 
     void SyriusEngine::popLayer(const LayerID layerID) const {
         m_Data->layerStack.popLayer(layerID);
+        SR_LOG_INFO("SyriusEngine", "Popped Layer: {}", layerID);
     }
 
     void SyriusEngine::pushRenderLayer(const SP<IRenderLayer> &renderLayer) {
         m_Data->renderer->pushRenderLayer(renderLayer);
+        SR_LOG_INFO("SyriusEngine", "Pushed Render Layer: {}", renderLayer->getID());
     }
 
     void SyriusEngine::popRenderLayer(RenderLayerID layerID) {
         m_Data->renderer->popRenderLayer(layerID);
+        SR_LOG_INFO("SyriusEngine", "Popped Render Layer: {}", layerID);
     }
 
     MeshID SyriusEngine::createMesh(const Mesh &mesh) {
