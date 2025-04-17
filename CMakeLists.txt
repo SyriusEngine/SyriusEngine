@@ -37,6 +37,8 @@ set(SR_ENGINE_SRC
     include/SyriusEngine/Renderer/RenderLayer.hpp
     src/Renderer/Renderer.cpp
     src/Renderer/Renderer.hpp
+    src/Renderer/RenderGraph/RenderGraphLayer.cpp
+    src/Renderer/RenderGraph/RenderGraphLayer.hpp
 )
 
 add_library(SyriusEngine SHARED ${SR_ENGINE_SRC} ${SR_ENGINE_HEADERS})
