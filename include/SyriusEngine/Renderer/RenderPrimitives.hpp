@@ -18,6 +18,8 @@ namespace Syrius{
     using CameraID = UID;
     using ProjectionID = UID;
 
+    constexpr ProjectionID SR_DEFAULT_PROJECTION = 0;
+
     struct SR_ENGINE_API Vertex{
         glm::vec3 position;
         glm::vec3 normal;

@@ -1,9 +1,17 @@
 #include "RenderGraphLayer.hpp"
 
+#include "RenderGraphDefs.hpp"
+
 namespace Syrius::Renderer {
 
-    void RenderGraphLayer::onRendererAttach(const ResourceView<Context> &ctx) {
+    RenderGraphLayer::RenderGraphLayer(const fs::path &shaderPath) {
+        m_RenderGraphData.shaderStore = createUP<ShaderStore>(shaderPath);
+    }
 
+    void RenderGraphLayer::onRendererAttach(const ResourceView<Context> &ctx) {
+        SR_PRECONDITION(m_RenderGraphData.shaderStore != nullptr, "Shader store is not initialized");
+
+        m_RenderGraphData.geometryStore = createUP<GeometryStore>(m_RenderGraphData.shaderStore, ctx);
     }
 
     void RenderGraphLayer::onRendererDetach(const ResourceView<Context> &ctx) {
@@ -11,26 +19,41 @@ namespace Syrius::Renderer {
     }
 
     void RenderGraphLayer::onRender(const ResourceView<Context> &ctx) {
-
+        const ShaderProgram& shaderProgram = m_RenderGraphData.shaderStore->getShader(s_GEOMETRY_PASS_SHADER, ctx);
+        shaderProgram.shader->bind();
+        const auto& meshes = m_RenderGraphData.geometryStore->getMeshHandles();
+        for (const auto& mesh : meshes) {
+            mesh.drawMesh(ctx);
+        }
     }
 
     void RenderGraphLayer::onResize(u32 width, u32 height, const ResourceView<Context> &ctx) {
 
     }
 
-    void RenderGraphLayer::createMesh(MeshID meshID, const Mesh &mesh, const ResourceView<Context> &ctx) {
+    void RenderGraphLayer::createMesh(const MeshID meshID, const Mesh &mesh, const ResourceView<Context> &ctx) {
+        SR_PRECONDITION(m_RenderGraphData.geometryStore != nullptr, "Geometry store is not initialized");
 
+        m_RenderGraphData.geometryStore->createMesh(meshID, mesh, ctx);
     }
 
-    void RenderGraphLayer::createInstance(InstanceID instanceID, MeshID meshID, const ResourceView<Context> &ctx) {  }
+    void RenderGraphLayer::createInstance(const InstanceID instanceID, const MeshID meshID, const ResourceView<Context> &ctx) {
+        SR_PRECONDITION(m_RenderGraphData.geometryStore != nullptr, "Geometry store is not initialized");
 
-
-    void RenderGraphLayer::destroyMesh(MeshID meshID, const ResourceView<Context> &ctx) {
-
+        m_RenderGraphData.geometryStore->createInstance(instanceID, meshID, ctx);
     }
 
-    void RenderGraphLayer::destroyInstance(InstanceID instanceID) {
 
+    void RenderGraphLayer::destroyMesh(const MeshID meshID, const ResourceView<Context> &ctx) {
+        SR_PRECONDITION(m_RenderGraphData.geometryStore != nullptr, "Geometry store is not initialized");
+
+        m_RenderGraphData.geometryStore->destroyMesh(meshID, ctx);
+    }
+
+    void RenderGraphLayer::destroyInstance(const InstanceID instanceID) {
+        SR_PRECONDITION(m_RenderGraphData.geometryStore != nullptr, "Geometry store is not initialized");
+
+        m_RenderGraphData.geometryStore->destroyInstance(instanceID);
     }
 
     void RenderGraphLayer::setInstanceTransform(MeshID meshID, const Transform &transform, const ResourceView<Context> &ctx) {

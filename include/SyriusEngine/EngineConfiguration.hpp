@@ -15,6 +15,7 @@ namespace Syrius {
         u32 windowWidth = SR_DEFAULT_WIDTH;
         u32 windowHeight = SR_DEFAULT_HEIGHT;
         bool vsync = true;
+        fs::path shaderDirectory = fs::current_path() / "Resources" / "Shaders";
 
     };
 }

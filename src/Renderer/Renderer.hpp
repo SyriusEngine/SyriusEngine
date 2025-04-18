@@ -12,6 +12,7 @@ namespace Syrius::Renderer {
         SR_SUPPORTED_API api = SR_API_OPENGL;
         SR_RENDERER_SYSTEM rendererSystem = SR_RENDERER_SYSTEM_DEFAULT;
         bool enableVsync = false;
+        fs::path shaderDirectory = fs::current_path();
     };
 
     class Renderer {

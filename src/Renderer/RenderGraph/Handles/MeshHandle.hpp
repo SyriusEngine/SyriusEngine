@@ -28,11 +28,11 @@ namespace Syrius::Renderer {
 
         MeshHandle& operator=(MeshHandle&& other) noexcept;
 
-        void createInstance(InstanceID instanceID, const ResourceView<Context>& ctx);
+        void createInstance(InstanceID instanceID);
 
         void setTransformation(InstanceID instanceID, const Transform& transform, const ResourceView<Context>& ctx);
 
-        void removeInstance(InstanceID instanceID, const ResourceView<Context>& ctx);
+        void removeInstance(InstanceID instanceID);
 
         void drawMesh(const ResourceView<Context>& ctx) const;
 

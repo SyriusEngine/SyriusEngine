@@ -1,5 +1,7 @@
 #include "Renderer.hpp"
 
+#include "RenderGraph/RenderGraphLayer.hpp"
+
 namespace Syrius::Renderer {
 
     /*
@@ -22,6 +24,16 @@ namespace Syrius::Renderer {
         setupDispatchers();
         while (!renderThreadSetupFinished) {
             std::this_thread::sleep_for(1.0ms);
+        }
+
+        // Set the initial render layer
+        switch (desc.rendererSystem) {
+            case SR_RENDERER_SYSTEM_DEFAULT: {
+                auto renderGraphLayer = createSP<RenderGraphLayer>(desc.shaderDirectory);
+                pushRenderLayer(renderGraphLayer);
+                break;
+            }
+            default: break;
         }
     }
 

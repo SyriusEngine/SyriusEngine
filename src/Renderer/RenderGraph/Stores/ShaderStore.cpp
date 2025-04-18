@@ -2,7 +2,7 @@
 
 namespace Syrius::Renderer {
 
-    ShaderStore::ShaderStore(fs::path &path):
+    ShaderStore::ShaderStore(const fs::path &path):
     m_BasePath(path) {
         SR_LOG_INFO("ShaderStore", "ShaderStore will use: {} as a base dir to discover shaders",
             m_BasePath.string());
@@ -35,6 +35,7 @@ namespace Syrius::Renderer {
                 vsmDesc.filePath = m_BasePath / "GLSL" / vertexShaderName;
                 fsmDesc.language = SR_SHADER_LANGUAGE_GLSL;
                 fsmDesc.filePath = m_BasePath / "GLSL" / fragmentShaderName;
+                break;
             }
             case SR_API_D3D11: {
                 const std::string vertexShaderName = name + ".vs";
@@ -43,6 +44,7 @@ namespace Syrius::Renderer {
                 vsmDesc.filePath = m_BasePath / "HLSL" / vertexShaderName;
                 fsmDesc.language = SR_SHADER_LANGUAGE_HLSL;
                 fsmDesc.filePath = m_BasePath / "HLSL" / fragmentShaderName;
+                break;
             }
             default: {
                 SR_LOG_WARNING("ShaderStore", "ShaderStore does not support API {}", ctx->getType());
@@ -69,6 +71,8 @@ namespace Syrius::Renderer {
         program.shader = ctx->createShader(sDesc);
 
         m_ShaderMap.insert({name, program});
+        SR_LOG_INFO("ShaderStore", "Loaded shader {} with vertex shader {} and fragment shader {}",
+            name, vsmDesc.filePath.string(), fsmDesc.filePath.string());
     }
 
 

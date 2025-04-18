@@ -28,6 +28,8 @@ namespace Syrius::Renderer {
          vaDesc.vertexShader = vertexShader;
          vaDesc.drawMode = SR_DRAW_TRIANGLES;
          m_VertexArray = ctx->createVertexArray(vaDesc);
+
+         SR_LOG_INFO("MeshHandle", "MeshID {} created with {} vertices and {} indices", m_MeshID, mesh.vertices.size(), mesh.indices.size());
     }
 
     MeshHandle::MeshHandle(MeshHandle &&other) noexcept:
@@ -53,7 +55,7 @@ namespace Syrius::Renderer {
         return *this;
     }
 
-    void MeshHandle::createInstance(InstanceID instanceID, const ResourceView<Context> &ctx) {
+    void MeshHandle::createInstance(InstanceID instanceID) {
         if (m_InstanceToTransform.getSize() >= SR_MAX_INSTANCES){
             SR_LOG_WARNING("MeshHandle", "Cannot create more instances than {}", SR_MAX_INSTANCES);
             return;
@@ -75,7 +77,7 @@ namespace Syrius::Renderer {
         m_InstanceToTransform[instanceID].inverseTranspose = glm::transpose(glm::inverse(transform.model));
     }
 
-    void MeshHandle::removeInstance(InstanceID instanceID, const ResourceView<Context> &ctx) {
+    void MeshHandle::removeInstance(InstanceID instanceID) {
         if (!m_InstanceToTransform.has(instanceID)){
             SR_LOG_WARNING("MeshHandle", "InstanceID {} does not exist for mesh {}", instanceID, m_MeshID);
             return;

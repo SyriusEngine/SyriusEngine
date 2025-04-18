@@ -12,7 +12,7 @@ namespace Syrius::Renderer {
 
     class ShaderStore {
     public:
-        explicit ShaderStore(fs::path& path);
+        explicit ShaderStore(const fs::path& path);
 
         ~ShaderStore() = default;
 

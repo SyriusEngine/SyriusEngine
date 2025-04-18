@@ -2,11 +2,13 @@
 
 #include <SyriusEngine/Renderer/RenderLayer.hpp>
 
+#include "RenderGraphData.hpp"
+
 namespace Syrius::Renderer {
 
     class RenderGraphLayer: public IRenderLayer {
     public:
-        RenderGraphLayer() = default;
+        explicit RenderGraphLayer(const fs::path& shaderPath);
         
         ~RenderGraphLayer() override = default;
 
@@ -45,6 +47,9 @@ namespace Syrius::Renderer {
         void updateProjection(ProjectionID projectionID, const Projection& projection, const ResourceView<Context>& ctx) override;
 
         void destroyProjection(ProjectionID projectionID, const ResourceView<Context>& ctx) override;
+
+    private:
+        RenderGraphData m_RenderGraphData;
 
 
     };

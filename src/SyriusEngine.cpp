@@ -17,6 +17,8 @@ namespace Syrius{
         Renderer::RendererDesc rendererDesc;
         rendererDesc.api = config.api;
         rendererDesc.enableVsync = config.vsync;
+        rendererDesc.rendererSystem = SR_RENDERER_SYSTEM_DEFAULT;
+        rendererDesc.shaderDirectory = config.shaderDirectory;
 
         m_Data->renderer = createUP<Renderer::Renderer>(m_Window, m_Data->dispatcherManager, rendererDesc);
 
@@ -77,7 +79,9 @@ namespace Syrius{
 
     MeshID SyriusEngine::createMesh(const Mesh &mesh) {
         MeshID meshID = generateID();
-        // TODO: Dispatch mesh to the renderer
+        const auto meshDispatcher = m_Data->dispatcherManager->getDispatcher<MeshID, Mesh>();
+        auto meshPtr = createSP<Mesh>(mesh);
+        meshDispatcher->dispatchCreate(meshID, meshPtr);
         return meshID;
     }
 

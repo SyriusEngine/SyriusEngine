@@ -34,6 +34,11 @@ set(SR_ENGINE_RENDERER_SRC
     src/Renderer/RenderGraph/Stores/ShaderStore.hpp
     src/Renderer/RenderGraph/Stores/GeometryStore.cpp
     src/Renderer/RenderGraph/Stores/GeometryStore.hpp
+    src/Renderer/RenderGraph/RenderGraphNode.cpp
+    src/Renderer/RenderGraph/RenderGraphNode.hpp
+    src/Renderer/RenderGraph/RenderGraphData.cpp
+    src/Renderer/RenderGraph/RenderGraphData.hpp
+    src/Renderer/RenderGraph/RenderGraphDefs.hpp
 )
 
 set(SR_ENGINE_UTILS_SRC
