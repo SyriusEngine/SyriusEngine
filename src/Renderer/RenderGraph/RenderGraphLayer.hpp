@@ -51,6 +51,8 @@ namespace Syrius::Renderer {
     private:
         RenderGraphData m_RenderGraphData;
 
+        ResourceView<ConstantBuffer> m_ModelData;
+
 
     };
 }

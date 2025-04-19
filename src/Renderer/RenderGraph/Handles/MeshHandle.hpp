@@ -43,6 +43,10 @@ namespace Syrius::Renderer {
 
         inline void setMaterialID(const MaterialID materialID) { m_MaterialID = materialID; }
 
+        const Srstl::KeyVector<InstanceID, TransformData>& getInstanceToTransform() const {
+            return m_InstanceToTransform;
+        }
+
     private:
         MeshID m_MeshID = 0;
         MaterialID m_MaterialID = 0;

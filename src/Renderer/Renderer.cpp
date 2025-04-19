@@ -58,7 +58,7 @@ namespace Syrius::Renderer {
 
     void Renderer::popRenderLayer(RenderLayerID layerID) {
         m_Worker.add([this, layerID] {
-            auto it =
+            const auto it =
             std::remove_if(m_RenderLayers.begin(), m_RenderLayers.end(), [layerID](const SP<IRenderLayer> &layer) {
                 if (layer->getID() == layerID) {
                     return true; // mark for removal

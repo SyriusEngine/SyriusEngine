@@ -73,6 +73,9 @@ namespace Syrius::Renderer {
         m_ShaderMap.insert({name, program});
         SR_LOG_INFO("ShaderStore", "Loaded shader {} with vertex shader {} and fragment shader {}",
             name, vsmDesc.filePath.string(), fsmDesc.filePath.string());
+
+        SR_PRECONDITION(m_ShaderMap.find(name) != m_ShaderMap.end(),
+            "Shader {} not added in the shader store", name);
     }
 
 
