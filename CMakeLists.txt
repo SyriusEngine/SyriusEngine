@@ -30,15 +30,21 @@ set(SR_ENGINE_RENDERER_SRC
     src/Renderer/Renderer.hpp
     src/Renderer/RenderGraph/RenderGraphLayer.cpp
     src/Renderer/RenderGraph/RenderGraphLayer.hpp
+    src/Renderer/RenderGraph/RenderGraphNode.cpp
+    src/Renderer/RenderGraph/RenderGraphNode.hpp
+    src/Renderer/RenderGraph/RenderGraphData.hpp
+    src/Renderer/RenderGraph/RenderGraphDefs.cpp
+    src/Renderer/RenderGraph/RenderGraphDefs.hpp
+    src/Renderer/RenderGraph/RenderGraph.cpp
+    src/Renderer/RenderGraph/RenderGraph.hpp
+
     src/Renderer/RenderGraph/Stores/ShaderStore.cpp
     src/Renderer/RenderGraph/Stores/ShaderStore.hpp
     src/Renderer/RenderGraph/Stores/GeometryStore.cpp
     src/Renderer/RenderGraph/Stores/GeometryStore.hpp
-    src/Renderer/RenderGraph/RenderGraphNode.cpp
-    src/Renderer/RenderGraph/RenderGraphNode.hpp
-    src/Renderer/RenderGraph/RenderGraphData.cpp
-    src/Renderer/RenderGraph/RenderGraphData.hpp
-    src/Renderer/RenderGraph/RenderGraphDefs.hpp
+
+    src/Renderer/RenderGraph/Handles/MeshHandle.cpp
+    src/Renderer/RenderGraph/Handles/MeshHandle.hpp
 )
 
 set(SR_ENGINE_UTILS_SRC
@@ -63,8 +69,6 @@ set(SR_ENGINE_SRC
     src/LayerStack.hpp
     src/EngineData.cpp
     src/EngineData.hpp
-    src/Renderer/RenderGraph/Handles/MeshHandle.cpp
-    src/Renderer/RenderGraph/Handles/MeshHandle.hpp
 )
 
 add_library(SyriusEngine SHARED ${SR_ENGINE_SRC} ${SR_ENGINE_HEADERS})
@@ -83,7 +87,8 @@ set(SR_ENGINE_TEST_SRC
     Test/TestEngineConfiguration.cpp
     Test/Communication/TestDispatcherManager.cpp
     Test/TestLayerStack.cpp
-    Test/Renderer/RenderGraph/Handles/TestMeshHandle.cpp)
+    Test/Renderer/RenderGraph/Handles/TestMeshHandle.cpp
+    Test/Renderer/RenderGraph/TestRenderGraph.cpp)
 
 if ((CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME) AND BUILD_TESTS)
     message(STATUS "Building tests")
