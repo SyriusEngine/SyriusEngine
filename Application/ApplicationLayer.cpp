@@ -10,16 +10,22 @@ namespace Syrius {
     }
 
     void ApplicationLayer::onAttach() {
-        Mesh triangle;
-        triangle.vertices = {
-            {glm::vec3(-0.5f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, -1.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec2(0.0f, 0.0f)},
-            {glm::vec3(0.5f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, -1.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec2(1.0f, 0.0f)},
-            {glm::vec3(0.0f, 0.5f, 0.0f), glm::vec3(0.0f, 0.0f, -1.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec2(0.5f, 1.0f)}
+        Mesh rectangle;
+        rectangle.vertices = {
+            {glm::vec3(-0.25f, -0.25f, 0.0f), glm::vec3(0.0f, 0.0f, -1.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec2(0.0f, 0.0f)},
+            {glm::vec3(0.25f, -0.25f, 0.0f), glm::vec3(0.0f, 0.0f, -1.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec2(1.0f, 0.0f)},
+            {glm::vec3(0.25f, 0.25f, 0.0f), glm::vec3(0.0f, 0.0f, -1.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec2(1.0f, 1.0f)},
+            {glm::vec3(-0.25f, 0.25f, 0.0f), glm::vec3(0.0f, 0.0f, -1.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec2(0.0f, 1.0f)}
         };
-        triangle.indices = {0, 1, 2};
-        m_Engine.createMesh(triangle);
-
-
+        rectangle.indices = {
+            0, 1, 2,
+            0, 2, 3,
+    };
+        MeshID triangleID = m_Engine.createMesh(rectangle);
+        InstanceID leftUnder = m_Engine.createInstance(triangleID);
+        InstanceID rightUnder = m_Engine.createInstance(triangleID);
+        InstanceID leftUpper = m_Engine.createInstance(triangleID);
+        InstanceID rightUpper = m_Engine.createInstance(triangleID);
     }
 
     void ApplicationLayer::onDetach() {

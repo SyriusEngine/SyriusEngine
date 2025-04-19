@@ -29,9 +29,11 @@ namespace Syrius{
 
         MeshID createMesh(const Mesh& mesh);
 
-        void updateMesh(MeshID meshID, const Mesh& mesh);
+        InstanceID createInstance(MeshID meshID);
 
         void destroyMesh(MeshID meshID);
+
+        void destroyInstance(InstanceID instance);
 
         const UP<SyriusWindow>& getWindow() const { return m_Window; }
 

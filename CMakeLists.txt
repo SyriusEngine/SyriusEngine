@@ -82,7 +82,8 @@ add_dependencies(SyriusEngine glm)
 set(SR_ENGINE_TEST_SRC
     Test/TestEngineConfiguration.cpp
     Test/Communication/TestDispatcherManager.cpp
-    Test/TestLayerStack.cpp)
+    Test/TestLayerStack.cpp
+    Test/Renderer/RenderGraph/Handles/TestMeshHandle.cpp)
 
 if ((CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME) AND BUILD_TESTS)
     message(STATUS "Building tests")

@@ -12,6 +12,15 @@ namespace Syrius {
     public:
         EngineData();
 
+        template<typename KEY, typename DATA>
+        KEY dispatchDataCreate(const DATA& data) {
+            KEY key = generateID();
+            const auto dispatcher = dispatcherManager->getDispatcher<KEY, DATA>();
+            auto dataPtr = createSP<DATA>(data);
+            dispatcher->dispatchCreate(key, dataPtr);
+            return key;
+        }
+
     public:
         LayerStack layerStack;
         SP<DispatcherManager> dispatcherManager;

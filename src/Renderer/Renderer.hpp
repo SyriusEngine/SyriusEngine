@@ -41,7 +41,11 @@ namespace Syrius::Renderer {
 
         void createMesh(MeshID meshID, SP<Mesh> mesh);
 
+        void createInstance(InstanceID instanceID, const SP<MeshID>& meshID);
+
         void destroyMesh(MeshID meshID);
+
+        void destroyInstance(InstanceID instanceID);
 
     private:
         UP<SyriusWindow>& m_Window;

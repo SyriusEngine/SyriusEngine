@@ -78,18 +78,15 @@ namespace Syrius{
     }
 
     MeshID SyriusEngine::createMesh(const Mesh &mesh) {
-        MeshID meshID = generateID();
-        const auto meshDispatcher = m_Data->dispatcherManager->getDispatcher<MeshID, Mesh>();
-        auto meshPtr = createSP<Mesh>(mesh);
-        meshDispatcher->dispatchCreate(meshID, meshPtr);
-        return meshID;
+        return m_Data->dispatchDataCreate<MeshID, Mesh>(mesh);
     }
 
-    void SyriusEngine::updateMesh(MeshID meshID, const Mesh &mesh) {
-
+    InstanceID SyriusEngine::createInstance(MeshID meshID) {
+        return m_Data->dispatchDataCreate<InstanceID, MeshID>(meshID);
     }
 
     void SyriusEngine::destroyMesh(MeshID meshID) {
+
 
     }
 

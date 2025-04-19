@@ -3,6 +3,7 @@
 #include <SyriusEngine/Renderer/RenderPrimitives.hpp>
 #include <SyriusEngine/Utils/EngineLimits.hpp>
 #include <SyriusUtils/Srstl/KeyVector.hpp>
+#include <SyriusUtils/DevUtils/TestingMacros.hpp>
 
 namespace Syrius::Renderer {
 
@@ -50,9 +51,10 @@ namespace Syrius::Renderer {
         ResourceView<IndexBuffer> m_IndexBuffer;
         ResourceView<VertexArray> m_VertexArray;
 
+        Size m_InstanceCount = 0;
         Srstl::KeyVector<InstanceID, TransformData> m_InstanceToTransform;
 
-
+        SR_GET_PRIVATE_MEMBER(MeshHandle, m_InstanceToTransform);
     };
 
 }

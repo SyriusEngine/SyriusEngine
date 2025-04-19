@@ -85,8 +85,14 @@ namespace Syrius::Renderer {
 
     void Renderer::setupDispatchers() {
         const auto meshDispatcher = m_DispatcherManager->getDispatcher<MeshID, Mesh>();
-        meshDispatcher->registerCreate([this](const MeshID meshID, SP<Mesh> mesh) { createMesh(meshID, mesh); });
+        meshDispatcher->registerCreate([this](const MeshID meshID, const SP<Mesh> &mesh) { createMesh(meshID, mesh); });
         meshDispatcher->registerDelete([&](const MeshID meshID) { destroyMesh(meshID); });
+
+        const auto instanceDispatcher = m_DispatcherManager->getDispatcher<InstanceID, MeshID>();
+        instanceDispatcher->registerCreate([this](const InstanceID instanceID, const SP<MeshID> &meshID) {
+            createInstance(instanceID, meshID);
+        });
+        instanceDispatcher->registerDelete([&](const InstanceID instanceID) { destroyInstance(instanceID); });
     }
 
     void Renderer::setupContext(const RendererDesc &desc) {
@@ -108,6 +114,14 @@ namespace Syrius::Renderer {
         });
     }
 
+    void Renderer::createInstance(const InstanceID instanceID, const SP<MeshID>& meshID) {
+        m_Worker.add([this, instanceID, meshID] {
+            for (const auto &layer: m_RenderLayers) {
+                layer->createInstance(instanceID, *meshID, m_Context);
+            }
+        });
+    }
+
     void Renderer::destroyMesh(const MeshID meshID) {
         m_Worker.add([this, meshID] {
             for (const auto &layer: m_RenderLayers) {
@@ -115,4 +129,13 @@ namespace Syrius::Renderer {
             }
         });
     }
+
+    void Renderer::destroyInstance(const InstanceID instanceID) {
+        m_Worker.add([this, instanceID] {
+            for (const auto &layer: m_RenderLayers) {
+                layer->destroyInstance(instanceID);
+            }
+        });
+    }
+
 } // namespace Syrius

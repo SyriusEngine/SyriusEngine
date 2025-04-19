@@ -35,10 +35,11 @@ namespace Syrius::Renderer {
     MeshHandle::MeshHandle(MeshHandle &&other) noexcept:
     m_MeshID(other.m_MeshID),
     m_MaterialID(other.m_MaterialID),
+    m_InstanceCount(other.m_InstanceCount),
     m_VertexBuffer(other.m_VertexBuffer),
     m_IndexBuffer(other.m_IndexBuffer),
     m_VertexArray(other.m_VertexArray),
-    m_InstanceToTransform(std::move(other.m_InstanceToTransform)){
+    m_InstanceToTransform(other.m_InstanceToTransform){
 
     }
 
@@ -51,7 +52,8 @@ namespace Syrius::Renderer {
         m_VertexBuffer = other.m_VertexBuffer;
         m_IndexBuffer = other.m_IndexBuffer;
         m_VertexArray = other.m_VertexArray;
-        m_InstanceToTransform = std::move(other.m_InstanceToTransform);
+        m_InstanceToTransform = other.m_InstanceToTransform;
+        m_InstanceCount = other.m_InstanceCount;
         return *this;
     }
 
@@ -65,6 +67,10 @@ namespace Syrius::Renderer {
             return;
         }
         m_InstanceToTransform.emplace(instanceID, TransformData());
+        m_InstanceCount++;
+        SR_LOG_INFO("MeshHandle", "InstanceID {} created for mesh {}", instanceID, m_MeshID);
+
+        SR_POSTCONDITION(m_InstanceToTransform.has(instanceID), "InstanceID {} does not exist for mesh {}", instanceID, m_MeshID);
     }
 
     void MeshHandle::setTransformation(InstanceID instanceID, const Transform &transform, const ResourceView<Context> &ctx) {
@@ -83,10 +89,13 @@ namespace Syrius::Renderer {
             return;
         }
         m_InstanceToTransform.remove(instanceID);
+        m_InstanceCount--;
+
+        SR_POSTCONDITION(!m_InstanceToTransform.has(instanceID), "InstanceID {} still exists for mesh {}", instanceID, m_MeshID);
     }
 
     void MeshHandle::drawMesh(const ResourceView<Context> &ctx) const {
-        ctx->draw(m_VertexArray);
+        ctx->drawInstanced(m_VertexArray, m_InstanceCount);
     }
 
 }
