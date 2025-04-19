@@ -81,17 +81,19 @@ add_dependencies(SyriusEngine glm)
 
 set(SR_ENGINE_TEST_SRC
     Test/TestEngineConfiguration.cpp
-    Test/Communication/TestDispatcherManager.cpp)
+    Test/Communication/TestDispatcherManager.cpp
+    Test/TestLayerStack.cpp)
 
 if ((CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME) AND BUILD_TESTS)
     enable_testing()
 
     message(STATUS "Building tests")
 
-    add_executable(TestSyriusEngine ${SR_ENGINE_TEST_SRC})
+    add_executable(TestSyriusEngine ${SR_ENGINE_TEST_SRC} ${SR_ENGINE_SRC} ${SR_ENGINE_HEADERS})
     add_dependencies(TestSyriusEngine gtest)
+    target_include_directories(TestSyriusEngine PUBLIC include)
 
-    target_link_libraries(TestSyriusEngine SyriusEngine GTest::gtest GTest::gtest_main)
+    target_link_libraries(TestSyriusEngine PUBLIC ${SR_ENGINE_LIBRARIES} GTest::gtest GTest::gtest_main)
 
     add_test(NAME CTestSyriusEngine COMMAND ${PROOT} $<TARGET_FILE:TestSyriusEngine> OpenGL)
     set_tests_properties(CTestSyriusEngine PROPERTIES

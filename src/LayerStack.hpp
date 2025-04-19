@@ -18,6 +18,12 @@ namespace Syrius {
 
         void onEvent(const Event& event);
 
+        [[nodiscard]] Size getLayerCount() const {
+            return m_Layers.size();
+        }
+
+        bool hasLayer(LayerID layerID) const;
+
     private:
         std::vector<SP<ILayer>> m_Layers;
     };

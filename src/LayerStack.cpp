@@ -5,6 +5,7 @@ namespace Syrius {
 
     void LayerStack::pushLayer(SP<ILayer> layer) {
         m_Layers.push_back(layer);
+        layer->onAttach();
     }
 
     void LayerStack::popLayer(LayerID layerID) {
@@ -35,8 +36,8 @@ namespace Syrius {
         }
     }
 
-
-
-
-
+    bool LayerStack::hasLayer(LayerID layerID) const {
+        return std::any_of(m_Layers.begin(), m_Layers.end(),
+                           [layerID](const SP<ILayer>& layer) { return layer->getID() == layerID; });
+    }
 }
