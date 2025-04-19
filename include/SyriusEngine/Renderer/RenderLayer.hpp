@@ -29,9 +29,9 @@ namespace Syrius {
 
         virtual void destroyMesh(MeshID meshID, const ResourceView<Context>& ctx){}
 
-        virtual void destroyInstance(InstanceID instanceID){}
+        virtual void destroyInstance(InstanceID instanceID, const ResourceView<Context>& ctx){}
 
-        virtual void setInstanceTransform(MeshID meshID, const Transform& transform, const ResourceView<Context>& ctx){}
+        virtual void setInstanceTransform(InstanceID instanceID, const Transform& transform, const ResourceView<Context>& ctx){}
 
         virtual void createCamera(CameraID cameraID, const Camera& camera, const ResourceView<Context>& ctx){}
 

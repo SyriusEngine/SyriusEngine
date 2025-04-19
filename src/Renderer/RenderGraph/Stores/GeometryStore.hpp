@@ -21,7 +21,7 @@ namespace Syrius::Renderer {
 
         void destroyInstance(InstanceID instanceID);
 
-        inline const Srstl::KeyVector<UID, MeshHandle>& getMeshHandles() const {
+        inline Srstl::KeyVector<MeshID, MeshHandle>& getMeshHandles() {
             return m_MeshHandles;
         }
 
@@ -29,7 +29,7 @@ namespace Syrius::Renderer {
         UP<ShaderStore>& m_ShaderStore;
 
         ResourceView<VertexLayout> m_VertexLayout;
-        Srstl::KeyVector<UID, MeshHandle> m_MeshHandles;
+        Srstl::KeyVector<MeshID, MeshHandle> m_MeshHandles;
         std::unordered_map<InstanceID, MeshID> m_InstanceToMeshID;
 
     };

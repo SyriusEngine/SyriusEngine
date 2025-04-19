@@ -67,28 +67,36 @@ namespace Syrius{
         SR_LOG_INFO("SyriusEngine", "Popped Layer: {}", layerID);
     }
 
-    void SyriusEngine::pushRenderLayer(const SP<IRenderLayer> &renderLayer) {
+    void SyriusEngine::pushRenderLayer(const SP<IRenderLayer> &renderLayer) const {
         m_Data->renderer->pushRenderLayer(renderLayer);
         SR_LOG_INFO("SyriusEngine", "Pushed Render Layer: {}", renderLayer->getID());
     }
 
-    void SyriusEngine::popRenderLayer(RenderLayerID layerID) {
+    void SyriusEngine::popRenderLayer(RenderLayerID layerID) const {
         m_Data->renderer->popRenderLayer(layerID);
         SR_LOG_INFO("SyriusEngine", "Popped Render Layer: {}", layerID);
     }
 
-    MeshID SyriusEngine::createMesh(const Mesh &mesh) {
+    MeshID SyriusEngine::createMesh(const Mesh &mesh) const {
         return m_Data->dispatchDataCreate<MeshID, Mesh>(mesh);
     }
 
-    InstanceID SyriusEngine::createInstance(MeshID meshID) {
+    InstanceID SyriusEngine::createInstance(MeshID meshID) const {
         return m_Data->dispatchDataCreate<InstanceID, MeshID>(meshID);
     }
 
-    void SyriusEngine::destroyMesh(MeshID meshID) {
-
-
+    void SyriusEngine::destroyMesh(const MeshID meshID) const {
+        m_Data->dispatchDataDelete<MeshID, Mesh>(meshID);
     }
+
+    void SyriusEngine::destroyInstance(const InstanceID instance) const {
+        m_Data->dispatchDataDelete<InstanceID, MeshID>(instance);
+    }
+
+    void SyriusEngine::setInstanceTransform(InstanceID instanceID, const Transform &transform) const {
+        m_Data->dispatchDataUpdate<InstanceID, Transform>(instanceID, transform);
+    }
+
 
 
 }

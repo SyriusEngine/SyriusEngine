@@ -1,4 +1,8 @@
 #include "ApplicationLayer.hpp"
+#define GLM_ENABLE_EXPERIMENTAL
+#include <glm/glm.hpp>
+#include <glm/ext.hpp>
+#include <glm/gtx/quaternion.hpp>
 
 #define APP_MAX_TIMES 50
 
@@ -26,6 +30,19 @@ namespace Syrius {
         InstanceID rightUnder = m_Engine.createInstance(triangleID);
         InstanceID leftUpper = m_Engine.createInstance(triangleID);
         InstanceID rightUpper = m_Engine.createInstance(triangleID);
+
+        glm::vec3 transformations[4] = {
+            {-0.5f, -0.5f, 0.0f},
+            {0.5f, -0.5f, 0.0f},
+            {-0.5f, 0.5f, 0.0f},
+            {0.5f, 0.5f, 0.0f}
+        };
+        std::vector<InstanceID> instances = {leftUnder, rightUnder, leftUpper, rightUpper};
+        for (u32 i = 0; i < instances.size(); i++) {
+            Transform transform;
+            transform.model = glm::translate(glm::vec3(transformations[i]));
+            m_Engine.setInstanceTransform(instances[i], transform);
+        }
     }
 
     void ApplicationLayer::onDetach() {

@@ -26,9 +26,9 @@ namespace Syrius::Renderer {
 
         void destroyMesh(MeshID meshID, const ResourceView<Context>& ctx) override;
 
-        void destroyInstance(InstanceID instanceID) override;
+        void destroyInstance(InstanceID instanceID, const ResourceView<Context>& ctx) override;
 
-        void setInstanceTransform(MeshID meshID, const Transform& transform, const ResourceView<Context>& ctx) override;
+        void setInstanceTransform(InstanceID instanceID, const Transform& transform, const ResourceView<Context>& ctx) override;
 
         void createCamera(CameraID cameraID, const Camera& camera, const ResourceView<Context>& ctx) override;
 

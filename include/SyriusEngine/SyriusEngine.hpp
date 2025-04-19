@@ -23,17 +23,19 @@ namespace Syrius{
 
         void popLayer(LayerID layerID) const;
 
-        void pushRenderLayer(const SP<IRenderLayer>& renderLayer);
+        void pushRenderLayer(const SP<IRenderLayer>& renderLayer) const;
 
-        void popRenderLayer(RenderLayerID layerID);
+        void popRenderLayer(RenderLayerID layerID) const;
 
-        MeshID createMesh(const Mesh& mesh);
+        MeshID createMesh(const Mesh& mesh) const;
 
-        InstanceID createInstance(MeshID meshID);
+        InstanceID createInstance(MeshID meshID) const;
 
-        void destroyMesh(MeshID meshID);
+        void destroyMesh(MeshID meshID) const;
 
-        void destroyInstance(InstanceID instance);
+        void destroyInstance(InstanceID instance) const;
+
+        void setInstanceTransform(InstanceID instanceID, const Transform& transform) const;
 
         const UP<SyriusWindow>& getWindow() const { return m_Window; }
 

@@ -52,6 +52,7 @@ namespace Syrius::Renderer {
         SR_PRECONDITION(m_RenderGraphData.geometryStore != nullptr, "Geometry store is not initialized");
 
         m_RenderGraphData.geometryStore->createInstance(instanceID, meshID, ctx);
+        m_RenderGraphData.instanceToMeshID.emplace(instanceID, meshID);
     }
 
 
@@ -61,14 +62,24 @@ namespace Syrius::Renderer {
         m_RenderGraphData.geometryStore->destroyMesh(meshID, ctx);
     }
 
-    void RenderGraphLayer::destroyInstance(const InstanceID instanceID) {
+    void RenderGraphLayer::destroyInstance(const InstanceID instanceID, const ResourceView<Context>& ctx) {
         SR_PRECONDITION(m_RenderGraphData.geometryStore != nullptr, "Geometry store is not initialized");
 
         m_RenderGraphData.geometryStore->destroyInstance(instanceID);
+        auto it = m_RenderGraphData.instanceToMeshID.find(instanceID);
+        if (it != m_RenderGraphData.instanceToMeshID.end()) {
+            m_RenderGraphData.instanceToMeshID.erase(it);
+        } else {
+            SR_LOG_WARNING("RenderGraphLayer", "Instance {} does not exist!", instanceID);
+        }
     }
 
-    void RenderGraphLayer::setInstanceTransform(MeshID meshID, const Transform &transform, const ResourceView<Context> &ctx) {
+    void RenderGraphLayer::setInstanceTransform(InstanceID instanceID, const Transform &transform, const ResourceView<Context> &ctx) {
+        SR_PRECONDITION(m_RenderGraphData.geometryStore != nullptr, "Geometry store is not initialized");
 
+        MeshID meshID = m_RenderGraphData.instanceToMeshID.at(instanceID);
+        auto& meshHandles = m_RenderGraphData.geometryStore->getMeshHandles();
+        meshHandles[meshID].setTransformation(instanceID, transform, ctx);
     }
 
     void RenderGraphLayer::createCamera(CameraID cameraID, const Camera &camera, const ResourceView<Context> &ctx) {

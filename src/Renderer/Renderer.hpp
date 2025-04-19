@@ -19,7 +19,7 @@ namespace Syrius::Renderer {
     public:
         Renderer() = delete;
 
-        Renderer(UP<SyriusWindow>& window, SP<DispatcherManager> dispatcherManager, const RendererDesc& desc);
+        Renderer(UP<SyriusWindow>& window, const SP<DispatcherManager> &dispatcherManager, const RendererDesc& desc);
 
         ~Renderer();
 
@@ -39,13 +39,15 @@ namespace Syrius::Renderer {
 
         void terminateContext();
 
-        void createMesh(MeshID meshID, SP<Mesh> mesh);
+        void createMesh(MeshID meshID, const SP<Mesh>& mesh);
 
         void createInstance(InstanceID instanceID, const SP<MeshID>& meshID);
 
         void destroyMesh(MeshID meshID);
 
         void destroyInstance(InstanceID instanceID);
+
+        void setInstanceTransform(InstanceID instanceID, const SP<Transform>& transform);
 
     private:
         UP<SyriusWindow>& m_Window;

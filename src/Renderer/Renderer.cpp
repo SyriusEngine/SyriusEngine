@@ -12,7 +12,7 @@ namespace Syrius::Renderer {
      * preventing the object from being destroyed.
      */
 
-    Renderer::Renderer(UP<SyriusWindow> &window, SP<DispatcherManager> dispatcherManager, const RendererDesc &desc) :
+    Renderer::Renderer(UP<SyriusWindow> &window, const SP<DispatcherManager> &dispatcherManager, const RendererDesc &desc) :
         m_Window(window), m_DispatcherManager(dispatcherManager), m_Worker("RenderThread") {
         bool renderThreadSetupFinished = false;
         m_Worker.add([&] {
@@ -93,6 +93,12 @@ namespace Syrius::Renderer {
             createInstance(instanceID, meshID);
         });
         instanceDispatcher->registerDelete([&](const InstanceID instanceID) { destroyInstance(instanceID); });
+
+        const auto transformDispatcher = m_DispatcherManager->getDispatcher<InstanceID, Transform>();
+        transformDispatcher->registerUpdate([this](const InstanceID instanceID, const SP<Transform> &transform) {
+            setInstanceTransform(instanceID, transform);
+        });
+
     }
 
     void Renderer::setupContext(const RendererDesc &desc) {
@@ -106,7 +112,7 @@ namespace Syrius::Renderer {
 
     void Renderer::terminateContext() { m_Window->destroyContext(); }
 
-    void Renderer::createMesh(const MeshID meshID, SP<Mesh> mesh) {
+    void Renderer::createMesh(const MeshID meshID, const SP<Mesh>& mesh) {
         m_Worker.add([this, meshID, mesh] {
             for (const auto &layer: m_RenderLayers) {
                 layer->createMesh(meshID, *mesh, m_Context);
@@ -133,7 +139,15 @@ namespace Syrius::Renderer {
     void Renderer::destroyInstance(const InstanceID instanceID) {
         m_Worker.add([this, instanceID] {
             for (const auto &layer: m_RenderLayers) {
-                layer->destroyInstance(instanceID);
+                layer->destroyInstance(instanceID, m_Context);
+            }
+        });
+    }
+
+    void Renderer::setInstanceTransform(InstanceID instanceID, const SP<Transform>& transform) {
+        m_Worker.add([this, instanceID, transform] {
+            for (const auto &layer: m_RenderLayers) {
+                layer->setInstanceTransform(instanceID, *transform, m_Context);
             }
         });
     }
