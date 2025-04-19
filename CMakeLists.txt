@@ -85,9 +85,10 @@ set(SR_ENGINE_TEST_SRC
     Test/TestLayerStack.cpp)
 
 if ((CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME) AND BUILD_TESTS)
-    enable_testing()
-
     message(STATUS "Building tests")
+
+    enable_testing()
+    add_compile_definitions(SR_TESTING)
 
     add_executable(TestSyriusEngine ${SR_ENGINE_TEST_SRC} ${SR_ENGINE_SRC} ${SR_ENGINE_HEADERS})
     add_dependencies(TestSyriusEngine gtest)
