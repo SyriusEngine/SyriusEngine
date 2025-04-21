@@ -14,6 +14,10 @@ namespace Syrius::Renderer {
         std::unordered_set<SR_RENDER_NODE> knownNodes;
         for (const auto& node : m_Nodes) {
             for (const auto providedType: node.provides) {
+                if (knownNodes.find(providedType) != knownNodes.end()) {
+                    SR_LOG_WARNING("RenderGraph", "Node {} provides type {} but it is already provided by another node", node.id, renderNodeToString(providedType));
+                    return false;
+                }
                 knownNodes.insert(providedType);
             }
         }
@@ -38,16 +42,21 @@ namespace Syrius::Renderer {
         std::unordered_map<NodeID, RenderGraphNode*> nodeMap;
         std::unordered_map<NodeID, u32> inDegree;
         std::unordered_map<NodeID, std::vector<NodeID>> adjacencyList;
+        std::unordered_map<SR_RENDER_NODE, RenderGraphNode*> provides; // Only a single node can provide a type, a node can provide multiple types
         for (auto& node : m_Nodes) {
             nodeMap[node.id] = &node;
             inDegree[node.id] = 0;
+            for (const auto& providedType: node.provides) {
+                provides[providedType] = &node;
+            }
         }
 
         // Count the in-degrees and build the adjacency lists
         for (const auto& node : m_Nodes) {
             for (const auto& dependency : node.needs) {
-                inDegree[dependency]++;
-                adjacencyList[dependency].push_back(node.id);
+                RenderGraphNode* dependencyNode = provides[dependency];
+                inDegree[node.id]++;
+                adjacencyList[dependencyNode->id].push_back(node.id);
             }
         }
 
