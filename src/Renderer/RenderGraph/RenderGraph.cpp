@@ -9,7 +9,7 @@ namespace Syrius::Renderer {
         m_Nodes.push_back(node);
     }
 
-    bool RenderGraph::validate() {
+    bool RenderGraph::validate() const {
         // Build a set of all the known types
         std::unordered_set<SR_RENDER_NODE> knownNodes;
         for (const auto& node : m_Nodes) {

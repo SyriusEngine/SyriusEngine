@@ -5,12 +5,9 @@
 #include <SyriusUtils/Srstl/KeyVector.hpp>
 #include <SyriusUtils/DevUtils/TestingMacros.hpp>
 
-namespace Syrius::Renderer {
+#include "../RenderGraphDefs.hpp"
 
-    struct TransformData {
-        glm::mat4 modelMatrix = glm::mat4(1.0f);
-        glm::mat4 inverseTranspose = glm::mat4(1.0f);
-    };
+namespace Syrius::Renderer {
 
     class MeshHandle {
     public:
@@ -43,7 +40,7 @@ namespace Syrius::Renderer {
 
         inline void setMaterialID(const MaterialID materialID) { m_MaterialID = materialID; }
 
-        const Srstl::KeyVector<InstanceID, TransformData>& getInstanceToTransform() const {
+        const Srstl::KeyVector<InstanceID, InstanceData>& getInstanceToTransform() const {
             return m_InstanceToTransform;
         }
 
@@ -56,7 +53,7 @@ namespace Syrius::Renderer {
         ResourceView<VertexArray> m_VertexArray;
 
         Size m_InstanceCount = 0;
-        Srstl::KeyVector<InstanceID, TransformData> m_InstanceToTransform;
+        Srstl::KeyVector<InstanceID, InstanceData> m_InstanceToTransform;
 
         SR_GET_PRIVATE_MEMBER(MeshHandle, m_InstanceToTransform);
     };

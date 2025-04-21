@@ -17,7 +17,7 @@ namespace Syrius::Renderer {
          * @brief Checks if every added node its dependencies are added as well
          * @return false if a node has missing dependencies.
          */
-        bool validate();
+        bool validate() const;
 
         /**
          * @brief Topologically sorts the render graph and creates the executor list

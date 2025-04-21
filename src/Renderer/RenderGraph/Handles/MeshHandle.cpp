@@ -66,7 +66,7 @@ namespace Syrius::Renderer {
             SR_LOG_WARNING("MeshHandle", "InstanceID {} already exists for mesh {}", instanceID, m_MeshID);
             return;
         }
-        m_InstanceToTransform.emplace(instanceID, TransformData());
+        m_InstanceToTransform.emplace(instanceID, InstanceData());
         m_InstanceCount++;
         SR_LOG_INFO("MeshHandle", "InstanceID {} created for mesh {}", instanceID, m_MeshID);
 

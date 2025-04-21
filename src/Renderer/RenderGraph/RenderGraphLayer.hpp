@@ -3,6 +3,7 @@
 #include <SyriusEngine/Renderer/RenderLayer.hpp>
 
 #include "RenderGraphData.hpp"
+#include "RenderGraph.hpp"
 
 namespace Syrius::Renderer {
 
@@ -49,10 +50,11 @@ namespace Syrius::Renderer {
         void destroyProjection(ProjectionID projectionID, const ResourceView<Context>& ctx) override;
 
     private:
+
+        void createPNRRenderGraph();
+
+    private:
         RenderGraphData m_RenderGraphData;
-
-        ResourceView<ConstantBuffer> m_ModelData;
-
-
+        RenderGraph m_RenderGraph;
     };
 }

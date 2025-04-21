@@ -12,15 +12,9 @@ namespace Syrius::Renderer {
         SR_PRECONDITION(m_RenderGraphData.shaderStore != nullptr, "Shader store is not initialized");
 
         m_RenderGraphData.geometryStore = createUP<GeometryStore>(m_RenderGraphData.shaderStore, ctx);
+        m_RenderGraphData.transformHandle = createUP<TransformHandle>(ctx);
 
-        TransformData transformData[SR_MAX_INSTANCES];
-        ConstantBufferDesc cbDesc;
-        cbDesc.name = "ModelData";
-        cbDesc.size = sizeof(TransformData) * SR_MAX_INSTANCES;
-        cbDesc.shaderStage = SR_SHADER_VERTEX;
-        cbDesc.usage = SR_BUFFER_USAGE_DYNAMIC;
-        cbDesc.data = &transformData;
-        m_ModelData = ctx->createConstantBuffer(cbDesc);
+        createPNRRenderGraph();
     }
 
     void RenderGraphLayer::onRendererDetach(const ResourceView<Context> &ctx) {
@@ -28,14 +22,7 @@ namespace Syrius::Renderer {
     }
 
     void RenderGraphLayer::onRender(const ResourceView<Context> &ctx) {
-        const ShaderProgram& shaderProgram = m_RenderGraphData.shaderStore->getShader(s_GEOMETRY_PASS_SHADER, ctx);
-        shaderProgram.shader->bind();
-        m_ModelData->bind(2);
-        const auto& meshes = m_RenderGraphData.geometryStore->getMeshHandles();
-        for (const auto& mesh : meshes) {
-            m_ModelData->setData(mesh.getInstanceToTransform().getData().data(), sizeof(TransformData) * SR_MAX_INSTANCES);
-            mesh.drawMesh(ctx);
-        }
+        m_RenderGraph.execute(m_RenderGraphData, ctx);
     }
 
     void RenderGraphLayer::onResize(u32 width, u32 height, const ResourceView<Context> &ctx) {
@@ -118,5 +105,34 @@ namespace Syrius::Renderer {
 
     }
 
+    void RenderGraphLayer::createPNRRenderGraph() {
+        RenderGraphNode transformNode = {
+            {},
+            {SR_NODE_TRANSFORM_DATA},
+            [](const ResourceView<Context>& ctx, const RenderGraphData& graphData) {
+                graphData.transformHandle->bind(2);
+            }
+        };
+        m_RenderGraph.addNode(transformNode);
 
+        RenderGraphNode geometryPass = {
+            {SR_NODE_TRANSFORM_DATA},
+            {SR_NODE_DRAW_GEOMETRY},
+            [](const ResourceView<Context>& ctx, const RenderGraphData & graphData) {
+                const ShaderProgram& shaderProgram = graphData.shaderStore->getShader(s_GEOMETRY_PASS_SHADER, ctx);
+                shaderProgram.shader->bind();
+                const auto& meshes = graphData.geometryStore->getMeshHandles();
+                for (const auto& mesh : meshes) {
+                    graphData.transformHandle->setData(mesh.getInstanceToTransform());
+                    mesh.drawMesh(ctx);
+                }
+            }
+        };
+        m_RenderGraph.addNode(geometryPass);
+
+        if (!m_RenderGraph.validate()) {
+            SR_LOG_THROW("RenderGraphLayer", "Render graph is invalid");
+        }
+        m_RenderGraph.compile();
+    }
 }

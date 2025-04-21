@@ -30,7 +30,6 @@ set(SR_ENGINE_RENDERER_SRC
     src/Renderer/Renderer.hpp
     src/Renderer/RenderGraph/RenderGraphLayer.cpp
     src/Renderer/RenderGraph/RenderGraphLayer.hpp
-    src/Renderer/RenderGraph/RenderGraphNode.cpp
     src/Renderer/RenderGraph/RenderGraphNode.hpp
     src/Renderer/RenderGraph/RenderGraphData.hpp
     src/Renderer/RenderGraph/RenderGraphDefs.cpp
@@ -45,6 +44,8 @@ set(SR_ENGINE_RENDERER_SRC
 
     src/Renderer/RenderGraph/Handles/MeshHandle.cpp
     src/Renderer/RenderGraph/Handles/MeshHandle.hpp
+    src/Renderer/RenderGraph/Handles/TransformHandle.cpp
+    src/Renderer/RenderGraph/Handles/TransformHandle.hpp
 )
 
 set(SR_ENGINE_UTILS_SRC

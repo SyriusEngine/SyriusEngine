@@ -6,6 +6,11 @@
 
 namespace Syrius::Renderer {
 
+    struct InstanceData {
+        glm::mat4 modelMatrix = glm::mat4(1.0f);
+        glm::mat4 inverseTranspose = glm::mat4(1.0f);
+    };
+
     typedef enum SR_RENDER_NODE {
         SR_NODE_NONE = 0,
         SR_NODE_TRANSFORM_DATA = 1,
