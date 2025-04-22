@@ -99,6 +99,11 @@ namespace Syrius::Renderer {
             setInstanceTransform(instanceID, transform);
         });
 
+        const auto projectionDispatcher = m_DispatcherManager->getDispatcher<ProjectionID, Projection>();
+        projectionDispatcher->registerUpdate([this](const ProjectionID projectionID, const SP<Projection> &projection) {
+            setProjection(projectionID, projection);
+        });
+
     }
 
     void Renderer::setupContext(const RendererDesc &desc) {
@@ -151,5 +156,14 @@ namespace Syrius::Renderer {
             }
         });
     }
+
+    void Renderer::setProjection(ProjectionID projectionID, const SP<Projection> &projection) {
+        m_Worker.add([this, projectionID, projection] {
+            for (const auto &layer: m_RenderLayers) {
+                layer->setProjection(projectionID, *projection, m_Context);
+            }
+        });
+    }
+
 
 } // namespace Syrius

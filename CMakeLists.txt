@@ -46,6 +46,10 @@ set(SR_ENGINE_RENDERER_SRC
     src/Renderer/RenderGraph/Handles/MeshHandle.hpp
     src/Renderer/RenderGraph/Handles/TransformHandle.cpp
     src/Renderer/RenderGraph/Handles/TransformHandle.hpp
+    src/Renderer/RenderGraph/Handles/CameraHandle.cpp
+    src/Renderer/RenderGraph/Handles/CameraHandle.hpp
+    src/Renderer/RenderGraph/Handles/ProjectionHandle.cpp
+    src/Renderer/RenderGraph/Handles/ProjectionHandle.hpp
 )
 
 set(SR_ENGINE_UTILS_SRC

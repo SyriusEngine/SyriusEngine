@@ -12,7 +12,10 @@ namespace Syrius::Renderer {
         SR_PRECONDITION(m_RenderGraphData.shaderStore != nullptr, "Shader store is not initialized");
 
         m_RenderGraphData.geometryStore = createUP<GeometryStore>(m_RenderGraphData.shaderStore, ctx);
+
         m_RenderGraphData.transformHandle = createUP<TransformHandle>(ctx);
+        m_RenderGraphData.projectionHandle = createUP<ProjectionHandle>(ctx);
+        m_RenderGraphData.cameraHandle = createUP<CameraHandle>(ctx);
 
         createPNRRenderGraph();
     }
@@ -69,15 +72,7 @@ namespace Syrius::Renderer {
         meshHandles[meshID].setTransformation(instanceID, transform, ctx);
     }
 
-    void RenderGraphLayer::createCamera(CameraID cameraID, const Camera &camera, const ResourceView<Context> &ctx) {
-
-    }
-
-    void RenderGraphLayer::updateCamera(CameraID cameraID, const Camera &camera, const ResourceView<Context> &ctx) {
-
-    }
-
-    void RenderGraphLayer::destroyCamera(CameraID cameraID, const ResourceView<Context> &ctx) {
+    void RenderGraphLayer::setCamera(CameraID cameraID, const Camera &camera, const ResourceView<Context> &ctx) {
 
     }
 
@@ -93,16 +88,10 @@ namespace Syrius::Renderer {
 
     }
 
-    void RenderGraphLayer::createProjection(ProjectionID projectionID, const Projection &projection, const ResourceView<Context> &ctx) {
+    void RenderGraphLayer::setProjection(ProjectionID projectionID, const Projection &projection, const ResourceView<Context> &ctx) {
+        SR_PRECONDITION(m_RenderGraphData.projectionHandle != nullptr, "Projection handle is not initialized");
 
-    }
-
-    void RenderGraphLayer::updateProjection(ProjectionID projectionID, const Projection &projection, const ResourceView<Context> &ctx) {
-
-    }
-
-    void RenderGraphLayer::destroyProjection(ProjectionID projectionID, const ResourceView<Context> &ctx) {
-
+        m_RenderGraphData.projectionHandle->updateProjection(projectionID, projection);
     }
 
     void RenderGraphLayer::createPNRRenderGraph() {
@@ -115,8 +104,25 @@ namespace Syrius::Renderer {
         };
         m_RenderGraph.addNode(transformNode);
 
+        RenderGraphNode projectionNode = {
+            {},
+            {SR_NODE_PROJECTION_DATA},
+            [](const ResourceView<Context>& ctx, const RenderGraphData& graphData) {
+                graphData.projectionHandle->bind(1);
+            }
+        };
+        m_RenderGraph.addNode(projectionNode);
+
+        RenderGraphNode cameraNode = {
+            {},
+            {SR_NODE_CAMERA_DATA},
+            [](const ResourceView<Context>& ctx, const RenderGraphData& graphData) {
+                graphData.cameraHandle->bind(0);
+            }
+        };
+
         RenderGraphNode geometryPass = {
-            {SR_NODE_TRANSFORM_DATA},
+            {SR_NODE_TRANSFORM_DATA, SR_NODE_CAMERA_DATA, SR_NODE_PROJECTION_DATA},
             {SR_NODE_DRAW_GEOMETRY},
             [](const ResourceView<Context>& ctx, const RenderGraphData & graphData) {
                 const ShaderProgram& shaderProgram = graphData.shaderStore->getShader(s_GEOMETRY_PASS_SHADER, ctx);

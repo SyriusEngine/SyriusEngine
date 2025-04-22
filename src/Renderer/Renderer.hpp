@@ -49,6 +49,8 @@ namespace Syrius::Renderer {
 
         void setInstanceTransform(InstanceID instanceID, const SP<Transform>& transform);
 
+        void setProjection(ProjectionID projectionID, const SP<Projection>& projection);
+
     private:
         UP<SyriusWindow>& m_Window;
         SP<DispatcherManager> m_DispatcherManager;

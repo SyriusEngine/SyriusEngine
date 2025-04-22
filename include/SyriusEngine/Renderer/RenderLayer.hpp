@@ -33,11 +33,7 @@ namespace Syrius {
 
         virtual void setInstanceTransform(InstanceID instanceID, const Transform& transform, const ResourceView<Context>& ctx){}
 
-        virtual void createCamera(CameraID cameraID, const Camera& camera, const ResourceView<Context>& ctx){}
-
-        virtual void updateCamera(CameraID cameraID, const Camera& camera, const ResourceView<Context>& ctx){}
-
-        virtual void destroyCamera(CameraID cameraID, const ResourceView<Context>& ctx){}
+        virtual void setCamera(CameraID cameraID, const Camera& camera, const ResourceView<Context>& ctx){}
 
         virtual void createLight(LightID lightID, const Light& light, const ResourceView<Context>& ctx){}
 
@@ -45,11 +41,7 @@ namespace Syrius {
 
         virtual void destroyLight(LightID lightID, const ResourceView<Context>& ctx){}
 
-        virtual void createProjection(ProjectionID projectionID, const Projection& projection, const ResourceView<Context>& ctx){}
-
-        virtual void updateProjection(ProjectionID projectionID, const Projection& projection, const ResourceView<Context>& ctx){}
-
-        virtual void destroyProjection(ProjectionID projectionID, const ResourceView<Context>& ctx){}
+        virtual void setProjection(ProjectionID projectionID, const Projection& projection, const ResourceView<Context>& ctx){}
 
         RenderLayerID getID() const {
             return m_ID;

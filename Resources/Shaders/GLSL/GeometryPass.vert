@@ -18,7 +18,6 @@ layout(std140, binding = 0) uniform CameraData {
 
 layout(std140, binding = 1) uniform ProjectionData {
     mat4 perspective;
-    mat4 orthogonal;
 };
 
 struct TransformationData{
@@ -43,5 +42,4 @@ void main() {
     vs_out.worldPosition = transform[gl_InstanceID].modelMatrix * vec4(lPosition, 1.0);
 
     gl_Position = perspective * view * vs_out.worldPosition;
-
 }

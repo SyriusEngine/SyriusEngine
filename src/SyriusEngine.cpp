@@ -8,19 +8,8 @@ namespace Syrius{
     m_Data(createUP<EngineData>()) {
         SR_START_TIMER("EngineStartup");
 
-        WindowDesc windowDesc;
-        windowDesc.width = config.windowWidth;
-        windowDesc.height = config.windowHeight;
-        windowDesc.title = "SyriusEngine";
-        m_Window = createWindow(windowDesc);
-
-        Renderer::RendererDesc rendererDesc;
-        rendererDesc.api = config.api;
-        rendererDesc.enableVsync = config.vsync;
-        rendererDesc.rendererSystem = SR_RENDERER_SYSTEM_DEFAULT;
-        rendererDesc.shaderDirectory = config.shaderDirectory;
-
-        m_Data->renderer = createUP<Renderer::Renderer>(m_Window, m_Data->dispatcherManager, rendererDesc);
+        setupWindow(config);
+        setupRenderer(config);
 
         SR_STOP_TIMER("EngineStartup");
         const Duration startupTime = SR_GET_TIME("EngineStartup");
@@ -93,9 +82,44 @@ namespace Syrius{
         m_Data->dispatchDataDelete<InstanceID, MeshID>(instance);
     }
 
-    void SyriusEngine::setInstanceTransform(InstanceID instanceID, const Transform &transform) const {
+    void SyriusEngine::setInstanceTransform(const InstanceID instanceID, const Transform &transform) const {
         m_Data->dispatchDataUpdate<InstanceID, Transform>(instanceID, transform);
     }
+
+    void SyriusEngine::setProjection(const ProjectionID projectionID, const Projection &projection) const {
+        m_Data->dispatchDataUpdate<ProjectionID, Projection>(projectionID, projection);
+    }
+
+    void SyriusEngine::setupWindow(const EngineConfiguration &config) {
+        WindowDesc windowDesc;
+        windowDesc.width = config.windowWidth;
+        windowDesc.height = config.windowHeight;
+        windowDesc.title = "SyriusEngine";
+        m_Window = createWindow(windowDesc);
+    }
+
+    void SyriusEngine::setupRenderer(const EngineConfiguration &config) {
+        SR_PRECONDITION(m_Window != nullptr, "Window is null");
+
+        Renderer::RendererDesc rendererDesc;
+        rendererDesc.api = config.api;
+        rendererDesc.enableVsync = config.vsync;
+        rendererDesc.rendererSystem = SR_RENDERER_SYSTEM_DEFAULT;
+        rendererDesc.shaderDirectory = config.shaderDirectory;
+
+        m_Data->renderer = createUP<Renderer::Renderer>(m_Window, m_Data->dispatcherManager, rendererDesc);
+
+        // Setup default projection
+        Projection defaultProjection;
+        defaultProjection.windowWidth = static_cast<float>(m_Window->getWidth());
+        defaultProjection.windowHeight = static_cast<float>(m_Window->getHeight());
+        defaultProjection.fov = 45.0f;
+        defaultProjection.nearPlane = 0.1f;
+        defaultProjection.farPlane = 100.0f;
+        m_Data->dispatchDataUpdate<ProjectionID, Projection>(SR_DEFAULT_PROJECTION, defaultProjection);
+    }
+
+
 
 
 

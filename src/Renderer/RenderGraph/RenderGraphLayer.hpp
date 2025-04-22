@@ -31,11 +31,7 @@ namespace Syrius::Renderer {
 
         void setInstanceTransform(InstanceID instanceID, const Transform& transform, const ResourceView<Context>& ctx) override;
 
-        void createCamera(CameraID cameraID, const Camera& camera, const ResourceView<Context>& ctx) override;
-
-        void updateCamera(CameraID cameraID, const Camera& camera, const ResourceView<Context>& ctx) override;
-
-        void destroyCamera(CameraID cameraID, const ResourceView<Context>& ctx) override;
+        void setCamera(CameraID cameraID, const Camera& camera, const ResourceView<Context>& ctx) override;
 
         void createLight(LightID lightID, const Light& light, const ResourceView<Context>& ctx) override;
 
@@ -43,11 +39,7 @@ namespace Syrius::Renderer {
 
         void destroyLight(LightID lightID, const ResourceView<Context>& ctx) override;
 
-        void createProjection(ProjectionID projectionID, const Projection& projection, const ResourceView<Context>& ctx) override;
-
-        void updateProjection(ProjectionID projectionID, const Projection& projection, const ResourceView<Context>& ctx) override;
-
-        void destroyProjection(ProjectionID projectionID, const ResourceView<Context>& ctx) override;
+        void setProjection(ProjectionID projectionID, const Projection& projection, const ResourceView<Context>& ctx) override;
 
     private:
 

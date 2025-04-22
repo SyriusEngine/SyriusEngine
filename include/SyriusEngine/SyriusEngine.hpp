@@ -37,9 +37,15 @@ namespace Syrius{
 
         void setInstanceTransform(InstanceID instanceID, const Transform& transform) const;
 
+        void setProjection(ProjectionID projectionID, const Projection& projection) const;
+
         const UP<SyriusWindow>& getWindow() const { return m_Window; }
 
     private:
+
+        void setupWindow(const EngineConfiguration& config);
+
+        void setupRenderer(const EngineConfiguration& config);
 
         class EngineData; // PIMPL
 
