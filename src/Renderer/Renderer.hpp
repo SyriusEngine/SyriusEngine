@@ -51,6 +51,8 @@ namespace Syrius::Renderer {
 
         void setProjection(ProjectionID projectionID, const SP<Projection>& projection);
 
+        void setCamera(CameraID cameraID, const SP<Camera>& camera);
+
     private:
         UP<SyriusWindow>& m_Window;
         SP<DispatcherManager> m_DispatcherManager;

@@ -116,6 +116,9 @@ endif ()
 if ((CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME) AND BUILD_APP)
     add_executable(SyriusEngineApp main.cpp
         Application/ApplicationLayer.cpp
-        Application/ApplicationLayer.hpp)
+        Application/ApplicationLayer.hpp
+        Application/CameraControl.hpp
+        Application/CameraControl.cpp
+    )
     target_link_libraries(SyriusEngineApp PUBLIC SyriusEngine)
 endif ()

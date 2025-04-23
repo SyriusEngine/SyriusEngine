@@ -64,7 +64,7 @@ namespace Syrius::Renderer {
         }
     }
 
-    void RenderGraphLayer::setInstanceTransform(InstanceID instanceID, const Transform &transform, const ResourceView<Context> &ctx) {
+    void RenderGraphLayer::setInstanceTransform(const InstanceID instanceID, const Transform &transform, const ResourceView<Context> &ctx) {
         SR_PRECONDITION(m_RenderGraphData.geometryStore != nullptr, "Geometry store is not initialized");
 
         MeshID meshID = m_RenderGraphData.instanceToMeshID.at(instanceID);
@@ -72,8 +72,10 @@ namespace Syrius::Renderer {
         meshHandles[meshID].setTransformation(instanceID, transform, ctx);
     }
 
-    void RenderGraphLayer::setCamera(CameraID cameraID, const Camera &camera, const ResourceView<Context> &ctx) {
+    void RenderGraphLayer::setCamera(const CameraID cameraID, const Camera &camera, const ResourceView<Context> &ctx) {
+        SR_PRECONDITION(m_RenderGraphData.cameraHandle != nullptr, "Camera handle is not initialized");
 
+        m_RenderGraphData.cameraHandle->setCamera(cameraID, camera);
     }
 
     void RenderGraphLayer::createLight(LightID lightID, const Light &light, const ResourceView<Context> &ctx) {
@@ -120,6 +122,7 @@ namespace Syrius::Renderer {
                 graphData.cameraHandle->bind(0);
             }
         };
+        m_RenderGraph.addNode(cameraNode);
 
         RenderGraphNode geometryPass = {
             {SR_NODE_TRANSFORM_DATA, SR_NODE_CAMERA_DATA, SR_NODE_PROJECTION_DATA},

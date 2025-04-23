@@ -90,6 +90,10 @@ namespace Syrius{
         m_Data->dispatchDataUpdate<ProjectionID, Projection>(projectionID, projection);
     }
 
+    void SyriusEngine::setCamera(const CameraID cameraID, const Camera &camera) const {
+        m_Data->dispatchDataUpdate<CameraID, Camera>(cameraID, camera);
+    }
+
     void SyriusEngine::setupWindow(const EngineConfiguration &config) {
         WindowDesc windowDesc;
         windowDesc.width = config.windowWidth;

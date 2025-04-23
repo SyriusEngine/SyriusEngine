@@ -39,6 +39,8 @@ namespace Syrius{
 
         void setProjection(ProjectionID projectionID, const Projection& projection) const;
 
+        void setCamera(CameraID cameraID, const Camera& camera) const;
+
         const UP<SyriusWindow>& getWindow() const { return m_Window; }
 
     private:

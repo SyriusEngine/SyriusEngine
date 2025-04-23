@@ -104,6 +104,11 @@ namespace Syrius::Renderer {
             setProjection(projectionID, projection);
         });
 
+        const auto cameraDispatcher = m_DispatcherManager->getDispatcher<CameraID, Camera>();
+        cameraDispatcher->registerUpdate([this](const CameraID cameraID, const SP<Camera> &camera) {
+            setCamera(cameraID, camera);
+        });
+
     }
 
     void Renderer::setupContext(const RendererDesc &desc) {
@@ -165,5 +170,12 @@ namespace Syrius::Renderer {
         });
     }
 
+    void Renderer::setCamera(CameraID cameraID, const SP<Camera> &camera) {
+        m_Worker.add([this, cameraID, camera] {
+            for (const auto &layer: m_RenderLayers) {
+                layer->setCamera(cameraID, *camera, m_Context);
+            }
+        });
+    }
 
 } // namespace Syrius
