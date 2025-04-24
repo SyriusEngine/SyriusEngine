@@ -23,6 +23,7 @@ set(SR_ENGINE_HEADERS
     include/SyriusEngine/Renderer/RenderPrimitives.hpp
     include/SyriusEngine/Renderer/RenderLayer.hpp
     include/SyriusEngine/Utils/EngineLimits.hpp
+    include/SyriusEngine/Renderer/BuiltinMeshes.hpp
 )
 
 set(SR_ENGINE_RENDERER_SRC
@@ -50,6 +51,7 @@ set(SR_ENGINE_RENDERER_SRC
     src/Renderer/RenderGraph/Handles/CameraHandle.hpp
     src/Renderer/RenderGraph/Handles/ProjectionHandle.cpp
     src/Renderer/RenderGraph/Handles/ProjectionHandle.hpp
+    src/Renderer/BuiltinMeshes.cpp
 )
 
 set(SR_ENGINE_UTILS_SRC

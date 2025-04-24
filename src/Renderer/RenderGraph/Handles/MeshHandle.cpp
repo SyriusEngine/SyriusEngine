@@ -6,8 +6,7 @@ namespace Syrius::Renderer {
                            const ResourceView<ShaderModule> &vertexShader,
                            const ResourceView<VertexLayout> &vertexDesc):
     m_MeshID(meshID),
-    m_MaterialID(0),
-    m_InstanceToTransform(SR_MAX_INSTANCES){
+    m_MaterialID(0){
          VertexBufferDesc vbDesc;
          vbDesc.data = mesh.vertices.data();
          vbDesc.count = mesh.vertices.size();

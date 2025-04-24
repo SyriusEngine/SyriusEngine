@@ -20,7 +20,7 @@ struct TransformationData{
 };
 
 layout(std140, binding = 2) uniform ModelData {
-    TransformationData transform[300];
+    TransformationData transform[512];
 };
 
 void main() {

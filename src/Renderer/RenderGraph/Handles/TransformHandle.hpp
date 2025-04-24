@@ -19,9 +19,9 @@ namespace Syrius::Renderer {
         }
 
         inline void setData(const Srstl::KeyVector<InstanceID, InstanceData>& data) const {
-            SR_PRECONDITION(data.getSize() != sizeof(InstanceData) * SR_MAX_INSTANCES, "Transform data size is not equal to transform buffer size");
+            SR_PRECONDITION(data.getSize() <= sizeof(InstanceData) * SR_MAX_INSTANCES, "Transform data size is not equal to transform buffer size");
 
-            m_TransformBuffer->setData(data.getData().data(), sizeof(InstanceData) * SR_MAX_INSTANCES);
+            m_TransformBuffer->setData(data.getData().data(), data.getSize() * sizeof(InstanceData));
         }
 
     private:

@@ -8,6 +8,7 @@
 #include <SyriusEngine/Utils/ExportEngine.hpp>
 
 #include <SyriusEngine/Renderer/RenderPrimitives.hpp>
+#include <SyriusEngine/Renderer/BuiltinMeshes.hpp>
 
 namespace Syrius{
 
