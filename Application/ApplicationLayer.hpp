@@ -3,6 +3,8 @@
 #include <SyriusEngine/SyriusEngine.hpp>
 #include <deque>
 
+#include "CameraControl.hpp"
+
 namespace Syrius {
 
     class ApplicationLayer: public ILayer, public IRenderLayer { // Inherit from render layer to draw UI
@@ -31,6 +33,8 @@ namespace Syrius {
 
     private:
         SyriusEngine &m_Engine;
+        Duration m_LastFrameTime;
+        CameraControl m_CameraControl;
 
         std::deque<Duration> m_FrameTimes;
     };

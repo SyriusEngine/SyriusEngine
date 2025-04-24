@@ -1,15 +1,12 @@
 #include "ApplicationLayer.hpp"
-#define GLM_ENABLE_EXPERIMENTAL
-#include <glm/glm.hpp>
-#include <glm/ext.hpp>
-#include <glm/gtx/quaternion.hpp>
 
 #define APP_MAX_TIMES 50
 
 namespace Syrius {
 
     ApplicationLayer::ApplicationLayer(SyriusEngine &engine):
-    m_Engine(engine){
+    m_Engine(engine),
+    m_CameraControl(engine, 0.1f, 0.01f){
 
     }
 
@@ -99,6 +96,7 @@ namespace Syrius {
     }
 
     void ApplicationLayer::onUpdate(const Duration deltaTime) {
+        m_LastFrameTime = deltaTime;
         if (m_FrameTimes.size() >= APP_MAX_TIMES) {
             m_FrameTimes.pop_front();
         }
@@ -106,6 +104,7 @@ namespace Syrius {
     }
 
     bool ApplicationLayer::onEvent(const Event &event) {
+        m_CameraControl.update(event, m_LastFrameTime);
         return true;
     }
 
