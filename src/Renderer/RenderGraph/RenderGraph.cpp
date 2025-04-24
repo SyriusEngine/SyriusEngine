@@ -34,9 +34,10 @@ namespace Syrius::Renderer {
         return true;
     }
 
-    void RenderGraph::compile() {
+    bool RenderGraph::compile() {
         if (!validate()) {
             SR_LOG_WARNING("RenderGraph", "Unable to compile the render graph, it is not valid");
+            return false;
         }
         // Build some lookup maps
         std::unordered_map<NodeID, RenderGraphNode*> nodeMap;
@@ -85,10 +86,11 @@ namespace Syrius::Renderer {
         // Check if we have a cycle
         if (sorted.size() != m_Nodes.size()) {
             SR_LOG_ERROR("RenderGraph", "Graph has a cycle, cannot execute");
-            return;
+            return false;
         }
         // TODO: The executor list should not exist, we should swap the nodes in the m_Nodes list around
         m_ExecuteList = sorted;
+        return true;
     }
 
     void RenderGraph::execute(RenderGraphData &graphData, const ResourceView<Context> &ctx) const {
@@ -96,5 +98,30 @@ namespace Syrius::Renderer {
             node->executor(ctx, graphData);
         }
     }
+
+    void RenderGraph::generateDot() const {
+        std::unordered_map<SR_RENDER_NODE, NodeID> provides;
+
+        std::ofstream file("graph.dot");
+        file << "digraph G {\n";
+        file << "    rankdir=LR;\n";
+        // Create the names and add the references to the lookup table
+        for (const auto& node: m_ExecuteList) {
+            std::string providedTypes;
+            for (const SR_RENDER_NODE providedType: node->provides) {
+                provides[providedType] = node->id;
+                providedTypes += renderNodeToString(providedType) + " ";
+            }
+            file << "    " << node->id << " [label=\"" << node->id << "\\n" << providedTypes << "\"];\n";
+        }
+        // Add the connections
+        for (const auto& node: m_ExecuteList) {
+            for (const auto& dependency: node->needs) {
+                file << "    " << provides[dependency] << " -> " << node->id << ";\n";
+            }
+        }
+        file << "}\n";
+    }
+
 
 }

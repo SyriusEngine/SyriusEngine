@@ -21,10 +21,13 @@ namespace Syrius::Renderer {
 
         /**
          * @brief Topologically sorts the render graph and creates the executor list
+         * @return false if compilation failed.
          */
-        void compile();
+        bool compile();
 
         void execute(RenderGraphData& graphData, const ResourceView<Context>& ctx) const;
+
+        void generateDot() const;
 
     private:
         std::vector<RenderGraphNode> m_Nodes;

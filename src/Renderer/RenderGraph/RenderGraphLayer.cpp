@@ -16,6 +16,8 @@ namespace Syrius::Renderer {
         m_RenderGraphData.transformHandle = createUP<TransformHandle>(ctx);
         m_RenderGraphData.projectionHandle = createUP<ProjectionHandle>(ctx);
         m_RenderGraphData.cameraHandle = createUP<CameraHandle>(ctx);
+        m_RenderGraphData.samplerHandle = createUP<SamplerHandle>(ctx);
+        m_RenderGraphData.gBufferHandle = createUP<GBufferHandle>(ctx);
 
         createPNRRenderGraph();
     }
@@ -124,6 +126,14 @@ namespace Syrius::Renderer {
         };
         m_RenderGraph.addNode(cameraNode);
 
+        RenderGraphNode samplerNode = {
+            {},
+            {SR_NODE_SAMPLER_DATA},
+            [](const ResourceView<Context>& ctx, const RenderGraphData& graphData) {
+                graphData.samplerHandle->bind(0);
+            }
+        };
+
         RenderGraphNode geometryPass = {
             {SR_NODE_TRANSFORM_DATA, SR_NODE_CAMERA_DATA, SR_NODE_PROJECTION_DATA},
             {SR_NODE_DRAW_GEOMETRY},
@@ -143,5 +153,6 @@ namespace Syrius::Renderer {
             SR_LOG_THROW("RenderGraphLayer", "Render graph is invalid");
         }
         m_RenderGraph.compile();
+        m_RenderGraph.generateDot();
     }
 }

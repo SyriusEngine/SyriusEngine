@@ -145,5 +145,26 @@ TEST_F(TestRenderGraph, DuplicateDependency) {
     EXPECT_EQ(order[1], 0);
     EXPECT_EQ(order[2], 1);
     EXPECT_EQ(order[3], 2);
+}
 
+TEST_F(TestRenderGraph, CycleGraph) {
+    RenderGraph graph;
+
+    RenderGraphNode node1 = {
+        {SR_NODE_DRAW_GEOMETRY},
+        {SR_NODE_DRAW_LIGHTS},
+        [](const ResourceView<Context>& ctx, RenderGraphData& graphData) {
+
+        }
+    };
+    graph.addNode(node1);
+    RenderGraphNode node2 = {
+        {SR_NODE_DRAW_LIGHTS},
+        {SR_NODE_DRAW_GEOMETRY},
+        [](const ResourceView<Context>& ctx, RenderGraphData& graphData) {
+        }
+    };
+    graph.addNode(node2);
+
+    EXPECT_FALSE(graph.compile());
 }

@@ -52,6 +52,12 @@ set(SR_ENGINE_RENDERER_SRC
     src/Renderer/RenderGraph/Handles/ProjectionHandle.cpp
     src/Renderer/RenderGraph/Handles/ProjectionHandle.hpp
     src/Renderer/BuiltinMeshes.cpp
+    src/Renderer/RenderGraph/Handles/SamplerHandle.cpp
+    src/Renderer/RenderGraph/Handles/SamplerHandle.hpp
+    src/Renderer/RenderGraph/Handles/GBufferHandle.cpp
+    src/Renderer/RenderGraph/Handles/GBufferHandle.hpp
+    include/SyriusEngine/Renderer/Material.hpp
+    src/Renderer/Material.cpp
 )
 
 set(SR_ENGINE_UTILS_SRC
