@@ -28,6 +28,10 @@ namespace Syrius {
 
         UP<Image> loadFromFile(const fs::path& path);
 
+        UP<Image> createDefaultImage() const;
+
+        UP<Image> createMRAO(const UP<Image>& metallic, const UP<Image>& roughness, const UP<Image>& ao) const;
+
     private:
         // For easy use, enforce that every texture has the same dimensions and format
         u32 m_Width = 0;
