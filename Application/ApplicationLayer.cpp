@@ -31,6 +31,17 @@ namespace Syrius {
                 }
             }
         }
+
+        // Load the Chipped Paint Metal material
+        auto chippedPaintMetalTextures = createSP<Material>(
+            "./Resources/Materials/chipped-paint-metal/chipped-paint-metal_basecolor.png",
+            "./Resources/Materials/chipped-paint-metal/chipped-paint-metal_normal.png",
+            "./Resources/Materials/chipped-paint-metal/chipped-paint-metal_metallic.png",
+            "./Resources/Materials/chipped-paint-metal/chipped-paint-metal_roughness.png",
+            "./Resources/Materials/chipped-paint-metal/chipped-paint-metal_ao.png"
+        );
+        MaterialID chippedPaintMetal = m_Engine.createMaterial(chippedPaintMetalTextures);
+        m_Engine.meshSetMaterial(cubeID, chippedPaintMetal);
     }
 
     void ApplicationLayer::onDetach() {

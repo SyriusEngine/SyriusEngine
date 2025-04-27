@@ -12,6 +12,7 @@ namespace Syrius::Renderer {
         SR_PRECONDITION(m_RenderGraphData.shaderStore != nullptr, "Shader store is not initialized");
 
         m_RenderGraphData.geometryStore = createUP<GeometryStore>(m_RenderGraphData.shaderStore, ctx);
+        m_RenderGraphData.materialStore = createUP<MaterialStore>(ctx);
 
         m_RenderGraphData.transformHandle = createUP<TransformHandle>(ctx);
         m_RenderGraphData.projectionHandle = createUP<ProjectionHandle>(ctx);
@@ -19,7 +20,10 @@ namespace Syrius::Renderer {
         m_RenderGraphData.samplerHandle = createUP<SamplerHandle>(ctx);
         m_RenderGraphData.gBufferHandle = createUP<GBufferHandle>(ctx);
 
-        createPNRRenderGraph();
+        const ShaderProgram& lightPassProgram = m_RenderGraphData.shaderStore->getShader(s_LIGHT_PASS_SHADER, ctx);
+        m_RenderGraphData.lightPassQuad = createUP<ScreenQuad>(lightPassProgram, ctx);
+
+        createPBRRenderGraph();
     }
 
     void RenderGraphLayer::onRendererDetach(const ResourceView<Context> &ctx) {
@@ -69,7 +73,7 @@ namespace Syrius::Renderer {
     void RenderGraphLayer::setInstanceTransform(const InstanceID instanceID, const Transform &transform, const ResourceView<Context> &ctx) {
         SR_PRECONDITION(m_RenderGraphData.geometryStore != nullptr, "Geometry store is not initialized");
 
-        MeshID meshID = m_RenderGraphData.instanceToMeshID.at(instanceID);
+        const MeshID meshID = m_RenderGraphData.instanceToMeshID.at(instanceID);
         auto& meshHandles = m_RenderGraphData.geometryStore->getMeshHandles();
         meshHandles[meshID].setTransformation(instanceID, transform, ctx);
     }
@@ -78,6 +82,34 @@ namespace Syrius::Renderer {
         SR_PRECONDITION(m_RenderGraphData.cameraHandle != nullptr, "Camera handle is not initialized");
 
         m_RenderGraphData.cameraHandle->setCamera(cameraID, camera);
+    }
+
+    void RenderGraphLayer::createMaterial(const MaterialID materialID, const Material &material,
+                                          const ResourceView<Context> &ctx) {
+        SR_PRECONDITION(m_RenderGraphData.materialStore != nullptr, "Material store is not initialized");
+
+        m_RenderGraphData.materialStore->createMaterial(materialID, material, ctx);
+    }
+
+    void RenderGraphLayer::setMeshMaterial(const MeshID meshID, const MaterialID materialID, const ResourceView<Context> &ctx) {
+        SR_PRECONDITION(m_RenderGraphData.geometryStore != nullptr, "Geometry store is not initialized");
+        
+        m_RenderGraphData.geometryStore->setMeshMaterial(meshID, materialID);
+        m_RenderGraphData.materialToMesh[materialID].push_back(meshID);
+    }
+
+    void RenderGraphLayer::destroyMaterial(const MaterialID materialID, const ResourceView<Context> &ctx) {
+        SR_PRECONDITION(m_RenderGraphData.materialStore != nullptr, "Material store is not initialized");
+
+        m_RenderGraphData.materialStore->destroyMaterial(materialID, ctx);
+
+        // Some meshes may still be using this material, reset them to the default material
+        const auto& meshes = m_RenderGraphData.materialToMesh.at(materialID);
+        for (const MeshID mesh: meshes) {
+            if (m_RenderGraphData.geometryStore->getMeshHandles().has(mesh)) {
+                m_RenderGraphData.geometryStore->setMeshMaterial(mesh, SR_DEFAULT_MATERIAL);
+            }
+        }
     }
 
     void RenderGraphLayer::createLight(LightID lightID, const Light &light, const ResourceView<Context> &ctx) {
@@ -92,13 +124,13 @@ namespace Syrius::Renderer {
 
     }
 
-    void RenderGraphLayer::setProjection(ProjectionID projectionID, const Projection &projection, const ResourceView<Context> &ctx) {
+    void RenderGraphLayer::setProjection(const ProjectionID projectionID, const Projection &projection, const ResourceView<Context> &ctx) {
         SR_PRECONDITION(m_RenderGraphData.projectionHandle != nullptr, "Projection handle is not initialized");
 
         m_RenderGraphData.projectionHandle->updateProjection(projectionID, projection);
     }
 
-    void RenderGraphLayer::createPNRRenderGraph() {
+    void RenderGraphLayer::createPBRRenderGraph() {
         RenderGraphNode transformNode = {
             {},
             {SR_NODE_TRANSFORM_DATA},
@@ -133,21 +165,56 @@ namespace Syrius::Renderer {
                 graphData.samplerHandle->bind(0);
             }
         };
+        m_RenderGraph.addNode(samplerNode);
+
+        RenderGraphNode clearGBufferNode = {
+            {},
+            {SR_NODE_CLEAR_GBUFFER},
+            [](const ResourceView<Context>& ctx, const RenderGraphData& graphData) {
+                graphData.gBufferHandle->clear();
+            }
+        };
+        m_RenderGraph.addNode(clearGBufferNode);
 
         RenderGraphNode geometryPass = {
-            {SR_NODE_TRANSFORM_DATA, SR_NODE_CAMERA_DATA, SR_NODE_PROJECTION_DATA},
-            {SR_NODE_DRAW_GEOMETRY},
+            {SR_NODE_TRANSFORM_DATA, SR_NODE_CAMERA_DATA, SR_NODE_PROJECTION_DATA, SR_NODE_CLEAR_GBUFFER, SR_NODE_SAMPLER_DATA},
+            {SR_NODE_DRAW_GEOMETRY, SR_NODE_DRAW_GBUFFER},
             [](const ResourceView<Context>& ctx, const RenderGraphData & graphData) {
+                // Bind geometry pass shader
                 const ShaderProgram& shaderProgram = graphData.shaderStore->getShader(s_GEOMETRY_PASS_SHADER, ctx);
                 shaderProgram.shader->bind();
+
+                graphData.gBufferHandle->beginRenderPass(); // Instruct GBuffer we will draw to this buffer
+
+                // draw the geometry
                 const auto& meshes = graphData.geometryStore->getMeshHandles();
                 for (const auto& mesh : meshes) {
                     graphData.transformHandle->setData(mesh.getInstanceToTransform());
+                    graphData.materialStore->bindMaterial(mesh.getMaterialID(), 0);
                     mesh.drawMesh(ctx);
                 }
+                graphData.gBufferHandle->endRenderPass(); // We are done drawing to the gbuffer
             }
         };
         m_RenderGraph.addNode(geometryPass);
+
+        RenderGraphNode lightPass = {
+            {SR_NODE_DRAW_GBUFFER},
+            {SR_NODE_DRAW_LIGHTS},
+            [](const ResourceView<Context>& ctx, const RenderGraphData& graphData) {
+
+                // Bind light pass shader
+                const ShaderProgram& shaderProgram = graphData.shaderStore->getShader(s_LIGHT_PASS_SHADER, ctx);
+                shaderProgram.shader->bind();
+                graphData.gBufferHandle->bind(0);
+
+                // For now, draw to the default framebuffer
+                ctx->getDefaultFrameBuffer()->bind();
+
+                graphData.lightPassQuad->draw(ctx);
+            }
+        };
+        m_RenderGraph.addNode(lightPass);
 
         if (!m_RenderGraph.validate()) {
             SR_LOG_THROW("RenderGraphLayer", "Render graph is invalid");

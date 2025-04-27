@@ -17,9 +17,10 @@ namespace Syrius {
         auto metallic = loadFromFile(metallicPath);
         auto roughness = loadFromFile(roughnessPath);
         auto ao = loadFromFile(aoPath);
-        SR_LOG_PERFORMANCE("Metallic, roughness and ambient occlusion textures are provided as individual textures."
-                       "To improve performance, these will be combined into a single texture, but consider"
-                       "doing this beforehand to reduce material load times.", "TODO: Should not be printed");
+        SR_LOG_PERFORMANCE("Material", "Metallic, roughness and ambient occlusion textures are provided as individual textures."
+                       "To improve performance, these will be combined into a single texture, but consider "
+                       "doing this beforehand to reduce material load times.");
+        m_MRAO = createMRAO(metallic, roughness, ao);
 
     }
 
@@ -34,6 +35,21 @@ namespace Syrius {
         m_MRAO = loadFromFile(mraoPath);
     }
 
+    Material::Material(UP<Image> albedo, UP<Image> normal, UP<Image> mrao) {
+        if (albedo->getWidth() != normal->getWidth() || albedo->getHeight() != normal->getHeight()) {
+            SR_LOG_WARNING("Material", "Albedo and normal textures have different dimensions. "
+                                       "The Albedo image will be used as the base.");
+            m_Normal->resize(albedo->getWidth(), albedo->getHeight());
+        }
+        if (albedo->getWidth() != mrao->getWidth() || albedo->getHeight() != mrao->getHeight()) {
+            SR_LOG_WARNING("Material", "Albedo and MRAO textures have different dimensions. "
+                                       "The Albedo image will be used as the base.");
+            m_MRAO->resize(albedo->getWidth(), albedo->getHeight());
+        }
+        m_Albedo = std::move(albedo);
+        m_Normal = std::move(normal);
+        m_MRAO = std::move(mrao);
+    }
 
     UP<Image> Material::loadFromFile(const fs::path &path) {
         if (!fs::exists(path)) {

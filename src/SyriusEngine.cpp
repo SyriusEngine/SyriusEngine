@@ -94,6 +94,21 @@ namespace Syrius{
         m_Data->dispatchDataUpdate<CameraID, Camera>(cameraID, camera);
     }
 
+    MaterialID SyriusEngine::createMaterial(SP<Material> material) const {
+        MaterialID key = generateID();
+        const auto dispatcher = m_Data->dispatcherManager->getDispatcher<MaterialID, Material>();
+        dispatcher->dispatchCreate(key, material);
+        return key;
+    }
+
+    void SyriusEngine::meshSetMaterial(MeshID meshID, MaterialID materialID) const {
+        m_Data->dispatchDataUpdate<MeshID, MaterialID>(meshID, materialID);
+    }
+
+    void SyriusEngine::destroyMaterial(MaterialID materialID) const {
+        m_Data->dispatchDataDelete<MaterialID, Material>(materialID);
+    }
+
     void SyriusEngine::setupWindow(const EngineConfiguration &config) {
         WindowDesc windowDesc;
         windowDesc.width = config.windowWidth;
@@ -122,9 +137,4 @@ namespace Syrius{
         defaultProjection.farPlane = 100.0f;
         m_Data->dispatchDataUpdate<ProjectionID, Projection>(SR_DEFAULT_PROJECTION, defaultProjection);
     }
-
-
-
-
-
 }

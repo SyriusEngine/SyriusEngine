@@ -2,6 +2,7 @@
 
 #include <SyriusEngine/Utils/EngineInclude.hpp>
 #include <SyriusEngine/Renderer/RenderPrimitives.hpp>
+#include <SyriusEngine/Renderer/Material.hpp>
 #include <SyriusCore/SyriusCore.hpp>
 
 namespace Syrius {
@@ -34,6 +35,12 @@ namespace Syrius {
         virtual void setInstanceTransform(InstanceID instanceID, const Transform& transform, const ResourceView<Context>& ctx){}
 
         virtual void setCamera(CameraID cameraID, const Camera& camera, const ResourceView<Context>& ctx){}
+
+        virtual void createMaterial(MaterialID materialID, const Material& material, const ResourceView<Context>& ctx){}
+
+        virtual void setMeshMaterial(MeshID meshID, MaterialID materialID, const ResourceView<Context>& ctx){}
+
+        virtual void destroyMaterial(MaterialID materialID, const ResourceView<Context>& ctx){}
 
         virtual void createLight(LightID lightID, const Light& light, const ResourceView<Context>& ctx){}
 

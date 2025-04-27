@@ -25,6 +25,12 @@ namespace Syrius::Renderer {
             return m_MeshHandles;
         }
 
+        void setMeshMaterial(const MeshID meshID, const MaterialID materialID) {
+            if (m_MeshHandles.has(meshID)) {
+                m_MeshHandles.get(meshID).setMaterial(materialID);
+            }
+        }
+
     private:
         UP<ShaderStore>& m_ShaderStore;
 

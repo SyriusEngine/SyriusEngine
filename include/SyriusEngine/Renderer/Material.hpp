@@ -16,13 +16,19 @@ namespace Syrius {
                  const fs::path& normalPath,
                  const fs::path& mraoPath);
 
+        Material(UP<Image> albedo,
+                 UP<Image> normal,
+                 UP<Image> mrao);
+
         ~Material() = default;
 
         const UP<Image>& getAlbedo() const { return m_Albedo; }
-
         const UP<Image>& getNormal() const { return m_Normal; }
-
         const UP<Image>& getMRAO() const { return m_MRAO;}
+
+        u32 getWidth() const { return m_Width; }
+        u32 getHeight() const { return m_Height; }
+        SR_TEXTURE_FORMAT getFormat() const { return m_Format; }
 
     private:
 

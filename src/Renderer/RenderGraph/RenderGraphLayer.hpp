@@ -33,6 +33,12 @@ namespace Syrius::Renderer {
 
         void setCamera(CameraID cameraID, const Camera& camera, const ResourceView<Context>& ctx) override;
 
+        void createMaterial(MaterialID materialID, const Material& material, const ResourceView<Context>& ctx) override;
+
+        void setMeshMaterial(MeshID meshID, MaterialID materialID, const ResourceView<Context>& ctx) override;
+
+        void destroyMaterial(MaterialID materialID, const ResourceView<Context>& ctx) override;
+
         void createLight(LightID lightID, const Light& light, const ResourceView<Context>& ctx) override;
 
         void updateLight(LightID lightID, const Light& light, const ResourceView<Context>& ctx) override;
@@ -43,7 +49,7 @@ namespace Syrius::Renderer {
 
     private:
 
-        void createPNRRenderGraph();
+        void createPBRRenderGraph();
 
     private:
         RenderGraphData m_RenderGraphData;

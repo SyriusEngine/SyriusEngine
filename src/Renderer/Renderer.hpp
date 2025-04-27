@@ -53,6 +53,12 @@ namespace Syrius::Renderer {
 
         void setCamera(CameraID cameraID, const SP<Camera>& camera);
 
+        void createMaterial(MaterialID materialID, const SP<Material>& material);
+
+        void setMeshMaterial(MeshID meshID, const SP<MaterialID>& materialID);
+
+        void destroyMaterial(MaterialID materialID);
+
     private:
         UP<SyriusWindow>& m_Window;
         SP<DispatcherManager> m_DispatcherManager;

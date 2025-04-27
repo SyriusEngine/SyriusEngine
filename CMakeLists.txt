@@ -58,6 +58,12 @@ set(SR_ENGINE_RENDERER_SRC
     src/Renderer/RenderGraph/Handles/GBufferHandle.hpp
     include/SyriusEngine/Renderer/Material.hpp
     src/Renderer/Material.cpp
+    src/Renderer/RenderGraph/Handles/MaterialHandle.cpp
+    src/Renderer/RenderGraph/Handles/MaterialHandle.hpp
+    src/Renderer/RenderGraph/Stores/MaterialStore.cpp
+    src/Renderer/RenderGraph/Stores/MaterialStore.hpp
+    src/Renderer/RenderGraph/Other/ScreenQuad.cpp
+    src/Renderer/RenderGraph/Other/ScreenQuad.hpp
 )
 
 set(SR_ENGINE_UTILS_SRC

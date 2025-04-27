@@ -110,7 +110,7 @@ namespace Syrius::Renderer {
             std::string providedTypes;
             for (const SR_RENDER_NODE providedType: node->provides) {
                 provides[providedType] = node->id;
-                providedTypes += renderNodeToString(providedType) + " ";
+                providedTypes += renderNodeToString(providedType) + "\\n";
             }
             file << "    " << node->id << " [label=\"" << node->id << "\\n" << providedTypes << "\"];\n";
         }

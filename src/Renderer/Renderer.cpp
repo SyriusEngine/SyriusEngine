@@ -109,6 +109,19 @@ namespace Syrius::Renderer {
             setCamera(cameraID, camera);
         });
 
+        const auto materialDispatcher = m_DispatcherManager->getDispatcher<MaterialID, Material>();
+        materialDispatcher->registerCreate([this](const MaterialID materialID, const SP<Material>& material) {
+            createMaterial(materialID, material);
+        });
+        materialDispatcher->registerDelete([this](const MaterialID materialID) {
+            destroyMaterial(materialID);
+        });
+
+        const auto meshMaterialDispatcher = m_DispatcherManager->getDispatcher<MeshID, MaterialID>();
+        meshMaterialDispatcher->registerUpdate([this](const MeshID meshID, const SP<MaterialID>& material) {
+           setMeshMaterial(meshID, material);
+        });
+
     }
 
     void Renderer::setupContext(const RendererDesc &desc) {
@@ -178,4 +191,28 @@ namespace Syrius::Renderer {
         });
     }
 
+    void Renderer::createMaterial(MaterialID materialID, const SP<Material> &material) {
+        m_Worker.add([this, materialID, material] {
+            for (const auto& layer: m_RenderLayers) {
+                layer->createMaterial(materialID, *material, m_Context);
+            }
+        });
+
+    }
+
+    void Renderer::setMeshMaterial(MeshID meshID, const SP<MaterialID> &materialID) {
+        m_Worker.add([this, meshID, materialID] {
+           for (const auto& layer: m_RenderLayers) {
+               layer->setMeshMaterial(meshID, *materialID, m_Context);
+           }
+       });
+    }
+
+    void Renderer::destroyMaterial(MaterialID materialID) {
+        m_Worker.add([this, materialID] {
+           for (const auto& layer: m_RenderLayers) {
+               layer->destroyMaterial(materialID, m_Context);
+           }
+       });
+    }
 } // namespace Syrius

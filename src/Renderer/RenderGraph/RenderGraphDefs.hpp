@@ -32,4 +32,5 @@ namespace Syrius::Renderer {
     std::string renderNodeToString(SR_RENDER_NODE render_node);
 
     static std::string s_GEOMETRY_PASS_SHADER = "GeometryPass";
+    static std::string s_LIGHT_PASS_SHADER = "LightPass";
 }

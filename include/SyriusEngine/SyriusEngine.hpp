@@ -42,6 +42,12 @@ namespace Syrius{
 
         void setCamera(CameraID cameraID, const Camera& camera) const;
 
+        MaterialID createMaterial(SP<Material> material) const;
+
+        void meshSetMaterial(MeshID meshID, MaterialID materialID) const;
+
+        void destroyMaterial(MaterialID materialID) const;
+
         const UP<SyriusWindow>& getWindow() const { return m_Window; }
 
     private:
