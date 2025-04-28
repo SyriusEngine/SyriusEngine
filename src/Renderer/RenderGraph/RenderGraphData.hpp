@@ -3,6 +3,7 @@
 #include "Stores/ShaderStore.hpp"
 #include "Stores/GeometryStore.hpp"
 #include "Stores/MaterialStore.hpp"
+#include "Stores/LightStore.hpp"
 
 #include "Handles/TransformHandle.hpp"
 #include "Handles/ProjectionHandle.hpp"
@@ -22,6 +23,7 @@ namespace Syrius::Renderer {
         UP<ShaderStore> shaderStore;
         UP<GeometryStore> geometryStore;
         UP<MaterialStore> materialStore;
+        UP<LightStore> lightStore;
 
         UP<TransformHandle> transformHandle;
         UP<ProjectionHandle> projectionHandle;

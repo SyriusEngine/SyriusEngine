@@ -19,16 +19,20 @@ set(SR_ENGINE_HEADERS
     include/SyriusEngine/Layer.hpp
 
     include/SyriusEngine/Utils/EngineInclude.hpp
+    include/SyriusEngine/Utils/EngineLimits.hpp
 
     include/SyriusEngine/Renderer/RenderPrimitives.hpp
     include/SyriusEngine/Renderer/RenderLayer.hpp
-    include/SyriusEngine/Utils/EngineLimits.hpp
+    include/SyriusEngine/Renderer/Material.hpp
     include/SyriusEngine/Renderer/BuiltinMeshes.hpp
 )
 
 set(SR_ENGINE_RENDERER_SRC
     src/Renderer/Renderer.cpp
     src/Renderer/Renderer.hpp
+    src/Renderer/BuiltinMeshes.cpp
+    src/Renderer/Material.cpp
+
     src/Renderer/RenderGraph/RenderGraphLayer.cpp
     src/Renderer/RenderGraph/RenderGraphLayer.hpp
     src/Renderer/RenderGraph/RenderGraphNode.hpp
@@ -42,6 +46,10 @@ set(SR_ENGINE_RENDERER_SRC
     src/Renderer/RenderGraph/Stores/ShaderStore.hpp
     src/Renderer/RenderGraph/Stores/GeometryStore.cpp
     src/Renderer/RenderGraph/Stores/GeometryStore.hpp
+    src/Renderer/RenderGraph/Stores/MaterialStore.cpp
+    src/Renderer/RenderGraph/Stores/MaterialStore.hpp
+    src/Renderer/RenderGraph/Stores/LightStore.cpp
+    src/Renderer/RenderGraph/Stores/LightStore.hpp
 
     src/Renderer/RenderGraph/Handles/MeshHandle.cpp
     src/Renderer/RenderGraph/Handles/MeshHandle.hpp
@@ -51,17 +59,13 @@ set(SR_ENGINE_RENDERER_SRC
     src/Renderer/RenderGraph/Handles/CameraHandle.hpp
     src/Renderer/RenderGraph/Handles/ProjectionHandle.cpp
     src/Renderer/RenderGraph/Handles/ProjectionHandle.hpp
-    src/Renderer/BuiltinMeshes.cpp
     src/Renderer/RenderGraph/Handles/SamplerHandle.cpp
     src/Renderer/RenderGraph/Handles/SamplerHandle.hpp
     src/Renderer/RenderGraph/Handles/GBufferHandle.cpp
     src/Renderer/RenderGraph/Handles/GBufferHandle.hpp
-    include/SyriusEngine/Renderer/Material.hpp
-    src/Renderer/Material.cpp
     src/Renderer/RenderGraph/Handles/MaterialHandle.cpp
     src/Renderer/RenderGraph/Handles/MaterialHandle.hpp
-    src/Renderer/RenderGraph/Stores/MaterialStore.cpp
-    src/Renderer/RenderGraph/Stores/MaterialStore.hpp
+
     src/Renderer/RenderGraph/Other/ScreenQuad.cpp
     src/Renderer/RenderGraph/Other/ScreenQuad.hpp
 )

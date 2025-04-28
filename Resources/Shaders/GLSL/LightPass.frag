@@ -13,8 +13,8 @@ layout(binding = 2) uniform sampler2D gAlbedo;
 layout(binding = 3) uniform sampler2D gMetallicRoughnessAO;
 
 layout(std140, binding = 3) uniform LightData {
-    vec4 lightPos[300];
-    vec4 lightColor[300];
+    vec4 lightPos[4000];
+    vec4 lightColor[4000];
     uvec4 lightCount;
 };
 

@@ -48,6 +48,12 @@ namespace Syrius{
 
         void destroyMaterial(MaterialID materialID) const;
 
+        LightID createLight(const Light& light) const;
+
+        void setLight(LightID lightID, const Light& light) const;
+
+        void destroyLight(LightID lightID) const;
+
         const UP<SyriusWindow>& getWindow() const { return m_Window; }
 
     private:

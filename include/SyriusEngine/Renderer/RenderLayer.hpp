@@ -44,7 +44,7 @@ namespace Syrius {
 
         virtual void createLight(LightID lightID, const Light& light, const ResourceView<Context>& ctx){}
 
-        virtual void updateLight(LightID lightID, const Light& light, const ResourceView<Context>& ctx){}
+        virtual void setLight(LightID lightID, const Light& light, const ResourceView<Context>& ctx){}
 
         virtual void destroyLight(LightID lightID, const ResourceView<Context>& ctx){}
 

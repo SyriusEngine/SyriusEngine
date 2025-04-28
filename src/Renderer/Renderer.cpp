@@ -122,6 +122,16 @@ namespace Syrius::Renderer {
            setMeshMaterial(meshID, material);
         });
 
+        const auto lightDispatcher = m_DispatcherManager->getDispatcher<LightID, Light>();
+        lightDispatcher->registerCreate([this](const LightID lightID, const SP<Light>& light) {
+            createLight(lightID, light);
+        });
+        lightDispatcher->registerUpdate([this](const LightID lightID, const SP<Light>& light) {
+            setLight(lightID, light);
+        });
+        lightDispatcher->registerDelete([this](const LightID lightID) {
+            destroyLight(lightID);
+        });
     }
 
     void Renderer::setupContext(const RendererDesc &desc) {
@@ -197,7 +207,6 @@ namespace Syrius::Renderer {
                 layer->createMaterial(materialID, *material, m_Context);
             }
         });
-
     }
 
     void Renderer::setMeshMaterial(MeshID meshID, const SP<MaterialID> &materialID) {
@@ -215,4 +224,29 @@ namespace Syrius::Renderer {
            }
        });
     }
+
+    void Renderer::createLight(LightID lightID, const SP<Light> &light) {
+        m_Worker.add([this, lightID, light] {
+            for (const auto& layer: m_RenderLayers) {
+              layer->createLight(lightID, *light, m_Context);
+          }
+        });
+    }
+
+    void Renderer::setLight(LightID lightID, const SP<Light> &light) {
+        m_Worker.add([this, lightID, light] {
+           for (const auto& layer: m_RenderLayers) {
+               layer->setLight(lightID, *light, m_Context);
+           }
+        });
+    }
+
+    void Renderer::destroyLight(LightID lightID) {
+        m_Worker.add([this, lightID] {
+           for (const auto& layer: m_RenderLayers) {
+               layer->destroyLight(lightID, m_Context);
+           }
+        });
+    }
+
 } // namespace Syrius

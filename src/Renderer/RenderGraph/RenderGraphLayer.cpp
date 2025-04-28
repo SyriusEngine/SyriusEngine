@@ -13,6 +13,7 @@ namespace Syrius::Renderer {
 
         m_RenderGraphData.geometryStore = createUP<GeometryStore>(m_RenderGraphData.shaderStore, ctx);
         m_RenderGraphData.materialStore = createUP<MaterialStore>(ctx);
+        m_RenderGraphData.lightStore = createUP<LightStore>(ctx);
 
         m_RenderGraphData.transformHandle = createUP<TransformHandle>(ctx);
         m_RenderGraphData.projectionHandle = createUP<ProjectionHandle>(ctx);
@@ -112,16 +113,23 @@ namespace Syrius::Renderer {
         }
     }
 
-    void RenderGraphLayer::createLight(LightID lightID, const Light &light, const ResourceView<Context> &ctx) {
+    void RenderGraphLayer::createLight(const LightID lightID, const Light &light, const ResourceView<Context> &ctx) {
+        SR_PRECONDITION(m_RenderGraphData.lightStore != nullptr, "LightStore is not initialized")
+
+        m_RenderGraphData.lightStore->createLight(lightID, light);
 
     }
 
-    void RenderGraphLayer::updateLight(LightID lightID, const Light &light, const ResourceView<Context> &ctx) {
+    void RenderGraphLayer::setLight(const LightID lightID, const Light &light, const ResourceView<Context> &ctx) {
+        SR_PRECONDITION(m_RenderGraphData.lightStore != nullptr, "LightStore is not initialized")
 
+        m_RenderGraphData.lightStore->setLight(lightID, light);
     }
 
-    void RenderGraphLayer::destroyLight(LightID lightID, const ResourceView<Context> &ctx) {
+    void RenderGraphLayer::destroyLight(const LightID lightID, const ResourceView<Context> &ctx) {
+        SR_PRECONDITION(m_RenderGraphData.lightStore != nullptr, "LightStore is not initialized")
 
+        m_RenderGraphData.lightStore->destroyLight(lightID);
     }
 
     void RenderGraphLayer::setProjection(const ProjectionID projectionID, const Projection &projection, const ResourceView<Context> &ctx) {
@@ -198,8 +206,17 @@ namespace Syrius::Renderer {
         };
         m_RenderGraph.addNode(geometryPass);
 
+        RenderGraphNode lightDataNode = {
+            {},
+            {SR_NODE_LIGHT_DATA},
+            [](const ResourceView<Context>& ctx, const RenderGraphData& graphData) {
+                graphData.lightStore->bind(3);
+            }
+        };
+        m_RenderGraph.addNode(lightDataNode);
+
         RenderGraphNode lightPass = {
-            {SR_NODE_DRAW_GBUFFER},
+            {SR_NODE_DRAW_GBUFFER, SR_NODE_LIGHT_DATA},
             {SR_NODE_DRAW_LIGHTS},
             [](const ResourceView<Context>& ctx, const RenderGraphData& graphData) {
 

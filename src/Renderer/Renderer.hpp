@@ -59,6 +59,12 @@ namespace Syrius::Renderer {
 
         void destroyMaterial(MaterialID materialID);
 
+        void createLight(LightID lightID, const SP<Light>& light);
+
+        void setLight(LightID lightID, const SP<Light>& light);
+
+        void destroyLight(LightID lightID);
+
     private:
         UP<SyriusWindow>& m_Window;
         SP<DispatcherManager> m_DispatcherManager;

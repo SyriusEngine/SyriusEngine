@@ -19,12 +19,13 @@ namespace Syrius {
 
         // Arrange the instances in a 16 x 16 x 16 grid
         constexpr i32 border = 4;
+        constexpr float spacing = 4.0f;
         for (int x = -border; x < border; x++) {
             for (int y = -border; y < border; y++) {
                 for (int z = -border; z < border; z++) {
                     Transform transform;
                     transform.model = glm::mat4(1.0f);
-                    transform.model = glm::translate(glm::vec3(x * 2.0f, y * 2.0f, z * 2.0f));
+                    transform.model = glm::translate(glm::vec3(x * spacing, y * spacing, z * spacing));
 
                     const InstanceID instance = m_Engine.createInstance(cubeID);
                     m_Engine.setInstanceTransform(instance, transform);
@@ -42,6 +43,9 @@ namespace Syrius {
         );
         MaterialID chippedPaintMetal = m_Engine.createMaterial(chippedPaintMetalTextures);
         m_Engine.meshSetMaterial(cubeID, chippedPaintMetal);
+
+        // Create some lights
+        LightID l0 = m_Engine.createLight({{0.0f, 0.0f, 0.0f}, {255.0f, 255.0f, 255.0f}});
     }
 
     void ApplicationLayer::onDetach() {

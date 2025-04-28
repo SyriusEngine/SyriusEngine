@@ -109,6 +109,18 @@ namespace Syrius{
         m_Data->dispatchDataDelete<MaterialID, Material>(materialID);
     }
 
+    LightID SyriusEngine::createLight(const Light &light) const {
+        return m_Data->dispatchDataCreate<LightID, Light>(light);
+    }
+
+    void SyriusEngine::setLight(const LightID lightID, const Light &light) const {
+        m_Data->dispatchDataUpdate<LightID, Light>(lightID, light);
+    }
+
+    void SyriusEngine::destroyLight(const LightID lightID) const {
+        m_Data->dispatchDataDelete<LightID, Light>(lightID);
+    }
+
     void SyriusEngine::setupWindow(const EngineConfiguration &config) {
         WindowDesc windowDesc;
         windowDesc.width = config.windowWidth;

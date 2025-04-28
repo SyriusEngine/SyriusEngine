@@ -41,7 +41,7 @@ namespace Syrius::Renderer {
 
         void createLight(LightID lightID, const Light& light, const ResourceView<Context>& ctx) override;
 
-        void updateLight(LightID lightID, const Light& light, const ResourceView<Context>& ctx) override;
+        void setLight(LightID lightID, const Light& light, const ResourceView<Context>& ctx) override;
 
         void destroyLight(LightID lightID, const ResourceView<Context>& ctx) override;
 
