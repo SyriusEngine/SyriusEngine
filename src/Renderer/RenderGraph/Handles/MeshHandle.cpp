@@ -34,11 +34,11 @@ namespace Syrius::Renderer {
     MeshHandle::MeshHandle(MeshHandle &&other) noexcept:
     m_MeshID(other.m_MeshID),
     m_MaterialID(other.m_MaterialID),
-    m_InstanceCount(other.m_InstanceCount),
     m_VertexBuffer(other.m_VertexBuffer),
     m_IndexBuffer(other.m_IndexBuffer),
     m_VertexArray(other.m_VertexArray),
-    m_InstanceToTransform(other.m_InstanceToTransform){
+    m_InstanceCount(other.m_InstanceCount),
+    m_InstanceToTransform(other.m_InstanceToTransform) {
 
     }
 
