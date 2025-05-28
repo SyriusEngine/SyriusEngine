@@ -15,7 +15,7 @@ namespace Syrius::Renderer {
         ~TransformHandle() = default;
 
         inline void bind(const u32 slot) const {
-            m_TransformBuffer->bind(slot);
+            m_TransformBuffer->bindShaderResource(slot);
         }
 
         inline void setData(const Srstl::KeyVector<InstanceID, InstanceData>& data) const {

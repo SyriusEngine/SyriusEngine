@@ -26,7 +26,7 @@ namespace Syrius::Renderer {
     }
 
     void ProjectionHandle::bind(const u32 slot) const {
-        m_ProjectionBuffer->bind(slot);
+        m_ProjectionBuffer->bindShaderResource(slot);
     }
 
 }

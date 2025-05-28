@@ -69,7 +69,7 @@ namespace Syrius::Renderer {
     }
 
     void LightStore::bind(const u32 slot) const {
-        m_LightDataBuffer->bind(slot);
+        m_LightDataBuffer->bindShaderResource(slot);
     }
 
     void LightStore::setData() const {

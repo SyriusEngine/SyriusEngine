@@ -18,7 +18,7 @@ namespace Syrius::Renderer {
     }
 
     void CameraHandle::bind(u32 slot) const {
-        m_CameraBuffer->bind(slot);
+        m_CameraBuffer->bindShaderResource(slot);
     }
 
 

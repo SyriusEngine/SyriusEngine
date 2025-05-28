@@ -53,11 +53,12 @@ namespace Syrius {
     }
 
     void ApplicationLayer::onRendererAttach(const ResourceView<Context> &ctx) {
-        m_Engine.getWindow()->createImGuiContext();
+        ImGuiDesc desc;
+        ctx->initImGui(desc);
     }
 
     void ApplicationLayer::onRendererDetach(const ResourceView<Context> &ctx) {
-        m_Engine.getWindow()->destroyImGuiContext();
+        ctx->terminateImGui();
     }
 
     void ApplicationLayer::onUpdate(const Duration deltaTime) {
@@ -75,11 +76,11 @@ namespace Syrius {
 
 
     void ApplicationLayer::onRender(const ResourceView<Context> &ctx) {
-        m_Engine.getWindow()->onImGuiBegin();
+        ctx->onImGuiBegin();
 
         imGuiDebugWindow(ctx);
 
-        m_Engine.getWindow()->onImGuiEnd();
+        ctx->onImGuiEnd();
     }
 
     void ApplicationLayer::imGuiDebugWindow(const ResourceView<Context> &ctx) {
