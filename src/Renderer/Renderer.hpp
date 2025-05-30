@@ -4,7 +4,7 @@
 #include <SyriusEngine/Renderer/RenderLayer.hpp>
 
 #include "../Communication/DispatcherManager.hpp"
-#include "../Utils/Worker.hpp"
+#include "../Threading/Worker.hpp"
 
 namespace Syrius::Renderer {
 

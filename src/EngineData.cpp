@@ -2,9 +2,9 @@
 
 namespace Syrius {
 
-    SyriusEngine::EngineData::EngineData() :
-    dispatcherManager(createSP<DispatcherManager>()) {
-
+    SyriusEngine::EngineData::EngineData(){
+        workerPool = createSP<WorkerPool>();
+        dispatcherManager = createSP<DispatcherManager>(workerPool);
     }
 
 } // namespace Syrius

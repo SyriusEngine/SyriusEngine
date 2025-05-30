@@ -36,6 +36,7 @@ namespace Syrius {
 
     public:
         LayerStack layerStack;
+        SP<WorkerPool> workerPool;
         SP<DispatcherManager> dispatcherManager;
         UP<Renderer::Renderer> renderer;
     };

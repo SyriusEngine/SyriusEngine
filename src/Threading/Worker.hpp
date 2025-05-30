@@ -1,6 +1,5 @@
 #pragma once
 
-#include <atomic>
 #include <condition_variable>
 #include <functional>
 #include <list>
@@ -15,6 +14,7 @@ namespace Syrius {
         explicit Worker(const std::string& name);
 
         ~Worker();
+
 
         /**
          * @brief Waits for the worker to finish processing all tasks and then
@@ -54,6 +54,8 @@ namespace Syrius {
                 std::this_thread::sleep_for(1.0ms);
             }
         }
+
+        auto getID() const { return m_Thread.get_id(); }
 
     private:
 

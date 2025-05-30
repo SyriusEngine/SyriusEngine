@@ -3,11 +3,11 @@
 namespace Syrius {
 
     Worker::Worker(const std::string &name):
-    m_Name(name),
     m_Thread([this] {
-        m_IsRunning = true;
-        run();
-    }){
+            m_IsRunning = true;
+            run();
+        }),
+    m_Name(name) {
 
     }
 
@@ -47,7 +47,7 @@ namespace Syrius {
     }
 
     void Worker::run() {
-        auto doTasks = [this](std::list<std::function<void()>>& queue) {
+        auto doTasks = [this](const std::list<std::function<void()>>& queue) {
             for (auto& func: queue){
                 try {
                     func();

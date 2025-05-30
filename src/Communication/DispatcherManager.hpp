@@ -25,7 +25,7 @@ namespace Syrius {
 
     class DispatcherManager {
     public:
-        DispatcherManager() = default;
+        explicit DispatcherManager(const SP<WorkerPool> &workerPool): m_WorkerPool(workerPool){}
 
         ~DispatcherManager() = default;
 
@@ -34,7 +34,7 @@ namespace Syrius {
             const Index key = { std::type_index(typeid(KEY)), std::type_index(typeid(DATA)) };
             auto it = m_Dispatchers.find(key);
             if (it == m_Dispatchers.end()) {
-                m_Dispatchers[key] = std::make_shared<Dispatcher<KEY, DATA>>();
+                m_Dispatchers[key] = std::make_shared<Dispatcher<KEY, DATA>>(m_WorkerPool);
             }
             auto dispatcher = std::static_pointer_cast<Dispatcher<KEY, DATA>>(m_Dispatchers[key]);
             if (dispatcher == nullptr) {
@@ -44,6 +44,8 @@ namespace Syrius {
         }
 
     private:
+        SP<WorkerPool> m_WorkerPool = nullptr;
+
         using Index = std::pair<std::type_index, std::type_index>;
         std::unordered_map<Index, SP<IDispatcher>, IndexHash> m_Dispatchers;
     };

@@ -70,9 +70,12 @@ set(SR_ENGINE_RENDERER_SRC
     src/Renderer/RenderGraph/Other/ScreenQuad.hpp
 )
 
-set(SR_ENGINE_UTILS_SRC
-    src/Utils/Worker.cpp
-    src/Utils/Worker.hpp
+set(SR_ENGINE_THREADING_SRC
+    src/Threading/Worker.cpp
+    src/Threading/Worker.hpp
+    src/Threading/WorkerPool.cpp
+    src/Threading/WorkerPool.hpp
+    src/Threading/ThreadingDefs.hpp
 )
 
 set(SR_ENGINE_COMMUNICATION_SRC
@@ -82,7 +85,7 @@ set(SR_ENGINE_COMMUNICATION_SRC
 )
 
 set(SR_ENGINE_SRC
-    ${SR_ENGINE_UTILS_SRC}
+    ${SR_ENGINE_THREADING_SRC}
     ${SR_ENGINE_RENDERER_SRC}
     ${SR_ENGINE_COMMUNICATION_SRC}
 
@@ -111,7 +114,8 @@ set(SR_ENGINE_TEST_SRC
     Test/Communication/TestDispatcherManager.cpp
     Test/TestLayerStack.cpp
     Test/Renderer/RenderGraph/Handles/TestMeshHandle.cpp
-    Test/Renderer/RenderGraph/TestRenderGraph.cpp)
+    Test/Renderer/RenderGraph/TestRenderGraph.cpp
+    Test/Threading/TestWorker.cpp)
 
 if ((CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME) AND BUILD_TESTS)
     message(STATUS "Building tests")
