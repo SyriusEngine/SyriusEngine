@@ -28,7 +28,7 @@ namespace Syrius::Renderer {
 
         void createInstance(InstanceID instanceID);
 
-        void setTransformation(InstanceID instanceID, const Transform& transform, const ResourceView<Context>& ctx);
+        void setTransformation(InstanceID instanceID, const Transform& transform);
 
         void removeInstance(InstanceID instanceID);
 

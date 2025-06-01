@@ -116,7 +116,8 @@ set(SR_ENGINE_TEST_SRC
     Test/Renderer/RenderGraph/Handles/TestMeshHandle.cpp
     Test/Renderer/RenderGraph/TestRenderGraph.cpp
     Test/Threading/TestWorker.cpp
-    src/Renderer/RenderGraph/RenderGraphContainer.hpp)
+    src/Renderer/RenderGraph/RenderGraphContainer.hpp
+)
 
 if ((CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME) AND BUILD_TESTS)
     message(STATUS "Building tests")

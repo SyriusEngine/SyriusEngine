@@ -69,7 +69,7 @@ namespace Syrius::Renderer {
         SR_POSTCONDITION(m_InstanceToTransform.has(instanceID), "InstanceID {} does not exist for mesh {}", instanceID, m_MeshID);
     }
 
-    void MeshHandle::setTransformation(InstanceID instanceID, const Transform &transform, const ResourceView<Context> &ctx) {
+    void MeshHandle::setTransformation(InstanceID instanceID, const Transform &transform) {
         if (!m_InstanceToTransform.has(instanceID)){
             SR_LOG_WARNING("MeshHandle", "InstanceID {} does not exist for mesh {}", instanceID, m_MeshID);
             return;

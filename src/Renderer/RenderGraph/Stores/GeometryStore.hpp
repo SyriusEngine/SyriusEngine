@@ -22,6 +22,8 @@ namespace Syrius::Renderer {
 
         void createInstance(InstanceID instanceID, const SP<MeshID>& meshID);
 
+        void setInstanceTransformation(InstanceID instanceID, const SP<Transform>& transform);
+
         void destroyMesh(MeshID meshID);
 
         void destroyInstance(InstanceID instanceID);

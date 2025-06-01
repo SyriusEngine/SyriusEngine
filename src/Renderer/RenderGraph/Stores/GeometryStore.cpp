@@ -31,6 +31,11 @@ namespace Syrius::Renderer {
             destroyInstance(instanceID);
         }, SR_WORKER_RENDERER);
 
+        const auto transformDispatcher = dispatcherManager->getDispatcher<InstanceID, Transform>();
+        transformDispatcher->registerUpdate([this](const InstanceID instanceID, const SP<Transform> &transform) {
+            setInstanceTransformation(instanceID, transform);
+        }, SR_WORKER_RENDERER);
+
         SR_LOG_INFO("GeometryStore", "GeometryStore Created!");
     }
 
@@ -52,6 +57,14 @@ namespace Syrius::Renderer {
         MeshHandle& meshHandle = m_MeshHandles.get(*meshID);
         meshHandle.createInstance(instanceID);
         m_InstanceToMeshID.emplace(instanceID, *meshID);
+    }
+
+    void GeometryStore::setInstanceTransformation(InstanceID instanceID, const SP<Transform>& transform) {
+        SR_PRECONDITION(m_InstanceToMeshID.find(instanceID) != m_InstanceToMeshID.end(), "Instance {} does not exist!", instanceID);
+
+        const MeshID meshID = m_InstanceToMeshID.at(instanceID);
+        MeshHandle& meshHandle = m_MeshHandles[meshID];
+        meshHandle.setTransformation(instanceID, *transform);
     }
 
     void GeometryStore::destroyMesh(MeshID meshID) {
