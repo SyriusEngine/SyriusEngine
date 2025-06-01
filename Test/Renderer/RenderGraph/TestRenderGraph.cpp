@@ -1,25 +1,18 @@
-#include <gtest/gtest.h>
+#include "../IRenderComponentTest.hpp"
 #include "../../../src/Renderer/RenderGraph/RenderGraph.hpp"
 
 using namespace Syrius;
 using namespace Syrius::Renderer;
 
-class TestRenderGraph : public ::testing::Test {
+class TestRenderGraph : public IRenderComponentTest {
 protected:
     void SetUp() override {
-        WindowDesc wDesc;
-        m_Window = createWindow(wDesc);
-        ContextDesc cDesc;
-        m_Context = m_Window->createContext(cDesc);
-    }
-
-    void TearDown() override {
+        IRenderComponentTest::SetUp();
+        m_Container = createUP<RenderGraphContainer>();
     }
 
 protected:
-    UP<SyriusWindow> m_Window;
-    ResourceView<Context> m_Context;
-    RenderGraphData m_GraphData;
+    UP<RenderGraphContainer> m_Container;
 };
 
 TEST_F(TestRenderGraph, ValidateGraph) {
@@ -65,7 +58,7 @@ TEST_F(TestRenderGraph, SmallGraph) {
     RenderGraphNode node1 = {
         {SR_NODE_DRAW_GEOMETRY},
         {SR_NODE_DRAW_LIGHTS},
-        [&order](const ResourceView<Context>& ctx, RenderGraphData& graphData) {
+        [&order](const ResourceView<Context>& ctx, RenderGraphContainer* graphData) {
             order.push_back(2);
         }
     };
@@ -73,7 +66,7 @@ TEST_F(TestRenderGraph, SmallGraph) {
     RenderGraphNode node2 = {
         {SR_NODE_PROJECTION_DATA},
         {SR_NODE_DRAW_GEOMETRY},
-        [&order](const ResourceView<Context>& ctx, RenderGraphData& graphData) {
+        [&order](const ResourceView<Context>& ctx, RenderGraphContainer* graphData) {
             order.push_back(1);
         }
     };
@@ -81,14 +74,14 @@ TEST_F(TestRenderGraph, SmallGraph) {
     RenderGraphNode node3 = {
         {},
         {SR_NODE_PROJECTION_DATA},
-        [&order](const ResourceView<Context>& ctx, RenderGraphData& graphData) {
+        [&order](const ResourceView<Context>& ctx, RenderGraphContainer* graphData) {
             order.push_back(0);
         }
     };
     graph.addNode(node3);
 
     graph.compile();
-    graph.execute(m_GraphData, m_Context);
+    graph.execute(m_Container.get(), m_Context);
     ASSERT_EQ(order.size(), 3);
     EXPECT_EQ(order[0], 0);
     EXPECT_EQ(order[1], 1);
@@ -109,7 +102,7 @@ TEST_F(TestRenderGraph, DuplicateDependency) {
     RenderGraphNode node1 = {
         {SR_NODE_DRAW_GEOMETRY, SR_NODE_CAMERA_DATA},
         {SR_NODE_DRAW_LIGHTS},
-        [&order](const ResourceView<Context>& ctx, RenderGraphData& graphData) {
+        [&order](const ResourceView<Context>& ctx, RenderGraphContainer* graphData) {
             order.push_back(2);
         }
     };
@@ -117,7 +110,7 @@ TEST_F(TestRenderGraph, DuplicateDependency) {
     RenderGraphNode node2 = {
         {SR_NODE_PROJECTION_DATA, SR_NODE_CAMERA_DATA},
         {SR_NODE_DRAW_GEOMETRY},
-        [&order](const ResourceView<Context>& ctx, RenderGraphData& graphData) {
+        [&order](const ResourceView<Context>& ctx, RenderGraphContainer* graphData) {
             order.push_back(1);
         }
     };
@@ -125,7 +118,7 @@ TEST_F(TestRenderGraph, DuplicateDependency) {
     RenderGraphNode node3 = {
         {},
         {SR_NODE_PROJECTION_DATA},
-        [&order](const ResourceView<Context>& ctx, RenderGraphData& graphData) {
+        [&order](const ResourceView<Context>& ctx, RenderGraphContainer* graphData) {
             order.push_back(0);
         }
     };
@@ -133,13 +126,13 @@ TEST_F(TestRenderGraph, DuplicateDependency) {
     RenderGraphNode node4 = {
         {},
         {SR_NODE_CAMERA_DATA},
-        [&order](const ResourceView<Context>& ctx, RenderGraphData& graphData) {
+        [&order](const ResourceView<Context>& ctx, RenderGraphContainer* graphData) {
             order.push_back(0);
         }
     };
     graph.addNode(node4);
     graph.compile();
-    graph.execute(m_GraphData, m_Context);
+    graph.execute(m_Container.get(), m_Context);
     ASSERT_EQ(order.size(), 4);
     EXPECT_EQ(order[0], 0);
     EXPECT_EQ(order[1], 0);
@@ -153,7 +146,7 @@ TEST_F(TestRenderGraph, CycleGraph) {
     RenderGraphNode node1 = {
         {SR_NODE_DRAW_GEOMETRY},
         {SR_NODE_DRAW_LIGHTS},
-        [](const ResourceView<Context>& ctx, RenderGraphData& graphData) {
+        [](const ResourceView<Context>& ctx, RenderGraphContainer* graphData) {
 
         }
     };
@@ -161,7 +154,7 @@ TEST_F(TestRenderGraph, CycleGraph) {
     RenderGraphNode node2 = {
         {SR_NODE_DRAW_LIGHTS},
         {SR_NODE_DRAW_GEOMETRY},
-        [](const ResourceView<Context>& ctx, RenderGraphData& graphData) {
+        [](const ResourceView<Context>& ctx, RenderGraphContainer* graphData) {
         }
     };
     graph.addNode(node2);

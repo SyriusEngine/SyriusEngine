@@ -117,6 +117,8 @@ set(SR_ENGINE_TEST_SRC
     Test/Renderer/RenderGraph/TestRenderGraph.cpp
     Test/Threading/TestWorker.cpp
     src/Renderer/RenderGraph/RenderGraphContainer.hpp
+    Test/Renderer/IRenderComponentTest.hpp
+    Test/Renderer/RenderGraph/Stores/TestGeometryStore.cpp
 )
 
 if ((CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME) AND BUILD_TESTS)

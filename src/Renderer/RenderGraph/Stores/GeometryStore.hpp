@@ -33,6 +33,8 @@ namespace Syrius::Renderer {
         Srstl::KeyVector<MeshID, MeshHandle> m_MeshHandles;
         std::unordered_map<InstanceID, MeshID> m_InstanceToMeshID;
 
+        SR_GET_PRIVATE_MEMBER(GeometryStore, m_MeshHandles);
+        SR_GET_PRIVATE_MEMBER(GeometryStore, m_InstanceToMeshID);
     };
 
 
