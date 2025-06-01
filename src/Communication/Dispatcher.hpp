@@ -1,14 +1,18 @@
 #pragma once
 
 #include <SyriusEngine/Utils/EngineInclude.hpp>
-#include "AccessFunctions.hpp"
+#include <iostream>
 #include "../Threading/WorkerPool.hpp"
+#include "AccessFunctions.hpp"
+#include "SyriusEngine/Renderer/RenderPrimitives.hpp"
 
 namespace Syrius {
 
     class IDispatcher {
     public:
         virtual ~IDispatcher() = default;
+
+        virtual std::string getDebugInfo() const = 0;
     };
 
     template<typename KEY, typename DATA>
@@ -42,6 +46,23 @@ namespace Syrius {
             dispatchHelper(m_Deletes, uid);
         }
 
+        std::string getDebugInfo() const override{
+            std::string info = "======Dispatcher<" + std::string(typeid(KEY).name()) + ", " + std::string(typeid(DATA).name()) + ">======\n";
+            info += "Creates:\n";
+            for (const auto& [workerType, creates]: m_Creates) {
+                info += std::to_string(workerType) + ": Functions: " + std::to_string(creates.size()) + "\n";
+            }
+            info += "Updates:\n";
+            for (const auto& [workerType, updates]: m_Updates) {
+                info += std::to_string(workerType) + ": Functions: " + std::to_string(updates.size()) + "\n";
+            }
+            info += "Delets:\n";
+            for (const auto& [workerType, deletes]: m_Deletes) {
+                info += std::to_string(workerType) + ": Functions: " + std::to_string(deletes.size()) + "\n";
+            }
+            return info;
+        }
+
     private:
 
         template<typename FUNCTION_MAP, typename... Args>
@@ -50,14 +71,11 @@ namespace Syrius {
             auto copiedArgs = std::make_tuple(std::forward<Args>(args)...);
 
             for (const auto& [workerType, handles]: workerMap) {
-                // The vector of handles will never be that big that copying the vector will be a problem.
-                // But this will ensure that no weird concurrency issues occur when EX registering a Create while
-                // a Worker is running this function
-                m_WorkerPool->addTask(workerType, [handles, copiedArgs] {
+                m_WorkerPool->addTask(workerType, [&handles, copiedArgs] {
                     std::apply([&](auto&&... unpackedArgs) {
                         for (const auto& func: handles) {
-                        func(unpackedArgs...);
-                    }
+                            func(unpackedArgs...);
+                        }
                     }, copiedArgs);
                 });
             }

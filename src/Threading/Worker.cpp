@@ -52,6 +52,9 @@ namespace Syrius {
                 try {
                     func();
                 }
+                catch (SyriusAssert& sas) {
+                    SR_LOG_ERROR(m_Name, "Current task threw a SYRIUS ASSERT: {}", sas.what());
+                }
                 catch (std::exception& e) {
                     SR_LOG_ERROR(m_Name, "Current task threw an exception: {}", e.what());
                 }

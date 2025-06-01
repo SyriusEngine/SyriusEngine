@@ -36,7 +36,6 @@ set(SR_ENGINE_RENDERER_SRC
     src/Renderer/RenderGraph/RenderGraphLayer.cpp
     src/Renderer/RenderGraph/RenderGraphLayer.hpp
     src/Renderer/RenderGraph/RenderGraphNode.hpp
-    src/Renderer/RenderGraph/RenderGraphData.hpp
     src/Renderer/RenderGraph/RenderGraphDefs.cpp
     src/Renderer/RenderGraph/RenderGraphDefs.hpp
     src/Renderer/RenderGraph/RenderGraph.cpp
@@ -68,6 +67,7 @@ set(SR_ENGINE_RENDERER_SRC
 
     src/Renderer/RenderGraph/Other/ScreenQuad.cpp
     src/Renderer/RenderGraph/Other/ScreenQuad.hpp
+    src/Renderer/RenderGraph/IRenderGraphData.hpp
 )
 
 set(SR_ENGINE_THREADING_SRC
@@ -115,7 +115,8 @@ set(SR_ENGINE_TEST_SRC
     Test/TestLayerStack.cpp
     Test/Renderer/RenderGraph/Handles/TestMeshHandle.cpp
     Test/Renderer/RenderGraph/TestRenderGraph.cpp
-    Test/Threading/TestWorker.cpp)
+    Test/Threading/TestWorker.cpp
+    src/Renderer/RenderGraph/RenderGraphContainer.hpp)
 
 if ((CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME) AND BUILD_TESTS)
     message(STATUS "Building tests")

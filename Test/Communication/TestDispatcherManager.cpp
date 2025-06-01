@@ -49,7 +49,7 @@ TEST_F(TestDispatcherManager, dispatch_dummy_data) {
     DummyDataReceiver receiver;
 
     // Setup and register functions
-    DispatcherManager manager;
+    DispatcherManager manager(createSP<WorkerPool>());
     auto dummyDataDispatcher = manager.getDispatcher<UID, DummyData>();
     dummyDataDispatcher->registerCreate([&](const UID uid, SP<DummyData> data) {
         receiver.onCreate(uid, data);
@@ -65,6 +65,8 @@ TEST_F(TestDispatcherManager, dispatch_dummy_data) {
     dummyDataDispatcher->dispatchCreate(1, d1);
     dummyDataDispatcher->dispatchCreate(2, d2);
 
+    std::this_thread::sleep_for(1ms);
+
     // Check that the receiver received the data
     EXPECT_EQ(receiver.receivedData.size(), 2);
     EXPECT_EQ(receiver.receivedData[1]->x, 1);
@@ -77,6 +79,8 @@ TEST_F(TestDispatcherManager, dispatch_dummy_data) {
     auto d2_updated = std::make_shared<DummyData>(7, 8);
     dummyDataDispatcher->dispatchUpdate(1, d1_updated);
     dummyDataDispatcher->dispatchUpdate(2, d2_updated);
+
+    std::this_thread::sleep_for(1ms);
     EXPECT_EQ(receiver.receivedData[1]->x, 5);
     EXPECT_EQ(receiver.receivedData[1]->y, 6);
     EXPECT_EQ(receiver.receivedData[2]->x, 7);

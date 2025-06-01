@@ -3,23 +3,29 @@
 #include <SyriusEngine/Renderer/RenderPrimitives.hpp>
 #include <SyriusUtils/Srstl/KeyVector.hpp>
 
+#include "../IRenderGraphData.hpp"
 #include "../Handles/MaterialHandle.hpp"
 
 namespace Syrius::Renderer {
 
-    class MaterialStore {
+    class MaterialStore: public IRenderGraphData {
     public:
-        explicit MaterialStore(const ResourceView<Context>& ctx);
+        MaterialStore(const ResourceView<Context>& ctx, RenderGraphContainer* container, const SP<DispatcherManager>& dispatcherManager);
 
-        ~MaterialStore() = default;
+        ~MaterialStore() override = default;
 
-        void createMaterial(MaterialID materialID, const Material& material, const ResourceView<Context>& ctx);
+        void createMaterial(MaterialID materialID, const SP<Material>& material);
 
-        void destroyMaterial(MaterialID materialID, const ResourceView<Context>& ctx);
+        void destroyMaterial(MaterialID materialID);
 
-        void bindMaterial(MaterialID materialID, u32 startSlot);
+        void bindMeshMaterial(MeshID meshID, u32 startSlot);
+
+    private:
+
+        void createDefaultMaterial();
 
     private:
         Srstl::KeyVector<MaterialID, MaterialHandle> m_Materials;
+        std::unordered_map<MeshID, MaterialID> m_MeshToMaterial;
     };
 }

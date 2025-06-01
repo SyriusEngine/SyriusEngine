@@ -19,7 +19,7 @@ namespace Syrius::Renderer {
     public:
         Renderer() = delete;
 
-        Renderer(UP<SyriusWindow>& window, const SP<DispatcherManager> &dispatcherManager, const RendererDesc& desc);
+        Renderer(UP<SyriusWindow>& window, const SP<DispatcherManager> &dispatcherManager, const SP<WorkerPool>& workerPool, const RendererDesc& desc);
 
         ~Renderer();
 
@@ -33,44 +33,16 @@ namespace Syrius::Renderer {
 
     private:
 
-        void setupDispatchers();
-
         void setupContext(const RendererDesc& desc);
 
         void terminateContext();
 
-        void createMesh(MeshID meshID, const SP<Mesh>& mesh);
-
-        void createInstance(InstanceID instanceID, const SP<MeshID>& meshID);
-
-        void destroyMesh(MeshID meshID);
-
-        void destroyInstance(InstanceID instanceID);
-
-        void setInstanceTransform(InstanceID instanceID, const SP<Transform>& transform);
-
-        void setProjection(ProjectionID projectionID, const SP<Projection>& projection);
-
-        void setCamera(CameraID cameraID, const SP<Camera>& camera);
-
-        void createMaterial(MaterialID materialID, const SP<Material>& material);
-
-        void setMeshMaterial(MeshID meshID, const SP<MaterialID>& materialID);
-
-        void destroyMaterial(MaterialID materialID);
-
-        void createLight(LightID lightID, const SP<Light>& light);
-
-        void setLight(LightID lightID, const SP<Light>& light);
-
-        void destroyLight(LightID lightID);
-
     private:
         UP<SyriusWindow>& m_Window;
         SP<DispatcherManager> m_DispatcherManager;
+        SP<WorkerPool> m_WorkerPool;
         std::vector<SP<IRenderLayer>> m_RenderLayers;
         ResourceView<Context> m_Context;
-        Worker m_Worker;
 
     };
 }

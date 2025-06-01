@@ -2,6 +2,8 @@
 
 #include <SyriusEngine/Renderer/RenderPrimitives.hpp>
 
+#include "../IRenderGraphData.hpp"
+
 namespace Syrius::Renderer {
 
     struct ShaderProgram {
@@ -10,17 +12,17 @@ namespace Syrius::Renderer {
         ResourceView<Shader> shader;
     };
 
-    class ShaderStore {
+    class ShaderStore: public IRenderGraphData {
     public:
-        explicit ShaderStore(const fs::path& path);
+        ShaderStore(const ResourceView<Context>& ctx, RenderGraphContainer* container, const fs::path& path);
 
-        ~ShaderStore() = default;
+        ~ShaderStore() override = default;
 
-        const ShaderProgram& getShader(const std::string& name, const ResourceView<Context>& ctx);
+        const ShaderProgram& getShader(const std::string& name);
 
     private:
 
-        void loadShader(const std::string& name, const ResourceView<Context>& ctx);
+        void loadShader(const std::string& name);
 
     private:
         fs::path m_BasePath;

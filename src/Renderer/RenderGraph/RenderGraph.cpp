@@ -93,7 +93,7 @@ namespace Syrius::Renderer {
         return true;
     }
 
-    void RenderGraph::execute(RenderGraphData &graphData, const ResourceView<Context> &ctx) const {
+    void RenderGraph::execute(RenderGraphContainer* graphData, const ResourceView<Context> &ctx) const {
         for (const auto* node: m_ExecuteList) {
             node->executor(ctx, graphData);
         }

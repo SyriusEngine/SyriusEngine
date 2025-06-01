@@ -1,20 +1,22 @@
 #pragma once
 
+#include "../IRenderGraphData.hpp"
 #include "../RenderGraphDefs.hpp"
 
 namespace Syrius::Renderer {
 
-    class CameraHandle {
+    class CameraHandle : public IRenderGraphData {
     public:
-        explicit CameraHandle(const ResourceView<Context>& ctx);
+        CameraHandle(const ResourceView<Context>& ctx, RenderGraphContainer* container,
+                     const SP<DispatcherManager>& dispatcherManager);
 
-        ~CameraHandle() = default;
+        ~CameraHandle() override = default;
 
-        void setCamera(CameraID cameraID, const Camera& camera) const;
+        void setCamera(CameraID cameraID, const SP<Camera>& camera) const;
 
         void bind(u32 slot) const;
 
     private:
         ResourceView<ConstantBuffer> m_CameraBuffer;
     };
-}
+} // namespace Syrius::Renderer

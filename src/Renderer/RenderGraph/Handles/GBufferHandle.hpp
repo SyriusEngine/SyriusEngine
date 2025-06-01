@@ -1,14 +1,15 @@
 #pragma once
 
 #include "../RenderGraphDefs.hpp"
+#include "../IRenderGraphData.hpp"
 
 namespace Syrius::Renderer {
 
-    class GBufferHandle {
+    class GBufferHandle: public IRenderGraphData {
     public:
-        explicit GBufferHandle(const ResourceView<Context>& ctx);
+        GBufferHandle(const ResourceView<Context>& ctx, RenderGraphContainer* container);
 
-        ~GBufferHandle() = default;
+        ~GBufferHandle() override = default;
 
         void clear() const;
 

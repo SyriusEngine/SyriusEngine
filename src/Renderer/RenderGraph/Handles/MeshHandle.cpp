@@ -5,8 +5,7 @@ namespace Syrius::Renderer {
      MeshHandle::MeshHandle(MeshID meshID, const ResourceView<Context> &ctx, const Mesh &mesh,
                            const ResourceView<ShaderModule> &vertexShader,
                            const ResourceView<VertexLayout> &vertexDesc):
-    m_MeshID(meshID),
-    m_MaterialID(0){
+    m_MeshID(meshID){
          VertexBufferDesc vbDesc;
          vbDesc.data = mesh.vertices.data();
          vbDesc.count = mesh.vertices.size();
@@ -33,7 +32,6 @@ namespace Syrius::Renderer {
 
     MeshHandle::MeshHandle(MeshHandle &&other) noexcept:
     m_MeshID(other.m_MeshID),
-    m_MaterialID(other.m_MaterialID),
     m_VertexBuffer(other.m_VertexBuffer),
     m_IndexBuffer(other.m_IndexBuffer),
     m_VertexArray(other.m_VertexArray),
@@ -47,7 +45,6 @@ namespace Syrius::Renderer {
             return *this;
         }
         m_MeshID = other.m_MeshID;
-        m_MaterialID = other.m_MaterialID;
         m_VertexBuffer = other.m_VertexBuffer;
         m_IndexBuffer = other.m_IndexBuffer;
         m_VertexArray = other.m_VertexArray;

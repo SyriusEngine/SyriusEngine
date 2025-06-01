@@ -2,38 +2,31 @@
 
 #include <SyriusEngine/Renderer/RenderPrimitives.hpp>
 
+#include "../IRenderGraphData.hpp"
 #include "../Handles/MeshHandle.hpp"
-#include "ShaderStore.hpp"
 
 namespace Syrius::Renderer {
 
-    class GeometryStore {
+    class GeometryStore: public IRenderGraphData {
     public:
-        explicit GeometryStore(UP<ShaderStore>& shaderStore, const ResourceView<Context>& ctx);
+        explicit GeometryStore(const ResourceView<Context>& ctx, RenderGraphContainer* container, const SP<DispatcherManager>& dispatcherManager);
 
-        ~GeometryStore() = default;
-
-        void createMesh(MeshID meshID, const Mesh& mesh, const ResourceView<Context>& ctx);
-
-        void createInstance(InstanceID instanceID, MeshID meshID, const ResourceView<Context>& ctx);
-
-        void destroyMesh(MeshID meshID, const ResourceView<Context>& ctx);
-
-        void destroyInstance(InstanceID instanceID);
+        ~GeometryStore() override = default;
 
         inline Srstl::KeyVector<MeshID, MeshHandle>& getMeshHandles() {
             return m_MeshHandles;
         }
 
-        void setMeshMaterial(const MeshID meshID, const MaterialID materialID) {
-            if (m_MeshHandles.has(meshID)) {
-                m_MeshHandles.get(meshID).setMaterial(materialID);
-            }
-        }
+    private:
+        void createMesh(MeshID meshID, const SP<Mesh>& mesh);
+
+        void createInstance(InstanceID instanceID, const SP<MeshID>& meshID);
+
+        void destroyMesh(MeshID meshID);
+
+        void destroyInstance(InstanceID instanceID);
 
     private:
-        UP<ShaderStore>& m_ShaderStore;
-
         ResourceView<VertexLayout> m_VertexLayout;
         Srstl::KeyVector<MeshID, MeshHandle> m_MeshHandles;
         std::unordered_map<InstanceID, MeshID> m_InstanceToMeshID;

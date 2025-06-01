@@ -1,21 +1,24 @@
 #include "ShaderStore.hpp"
+#include "../RenderGraphContainer.hpp"
 
 namespace Syrius::Renderer {
 
-    ShaderStore::ShaderStore(const fs::path &path):
+    ShaderStore::ShaderStore(const ResourceView<Context>& ctx, RenderGraphContainer* container, const fs::path &path):
+    IRenderGraphData(ctx, container),
     m_BasePath(path) {
-        SR_LOG_INFO("ShaderStore", "ShaderStore will use: {} as a base dir to discover shaders",
-            m_BasePath.string());
+        SR_LOG_INFO("ShaderStore", "ShaderStore will use: {} as a base dir to discover shaders", m_BasePath.string());
+
+        SR_LOG_INFO("ShaderStore", "ShaderStore Created!");
     }
 
-    const ShaderProgram &ShaderStore::getShader(const std::string &name, const ResourceView<Context>& ctx) {
+    const ShaderProgram &ShaderStore::getShader(const std::string &name) {
         if (m_ShaderMap.find(name) == m_ShaderMap.end()) {
-            loadShader(name, ctx);
+            loadShader(name);
         }
         return m_ShaderMap.at(name);
     }
 
-    void ShaderStore::loadShader(const std::string &name, const ResourceView<Context>& ctx) {
+    void ShaderStore::loadShader(const std::string &name) {
         SR_PRECONDITION(m_ShaderMap.find(name) == m_ShaderMap.end(),
             "Shader {} already exists in the shader store", name);
 
@@ -27,7 +30,7 @@ namespace Syrius::Renderer {
         fsmDesc.shaderType = SR_SHADER_FRAGMENT;
         fsmDesc.entryPoint = "main";
 
-        switch (ctx->getType()) {
+        switch (m_Ctx->getType()) {
             case SR_API_OPENGL: {
                 const std::string vertexShaderName = name + ".vert";
                 const std::string fragmentShaderName = name + ".frag";
@@ -47,7 +50,7 @@ namespace Syrius::Renderer {
                 break;
             }
             default: {
-                SR_LOG_WARNING("ShaderStore", "ShaderStore does not support API {}", ctx->getType());
+                SR_LOG_WARNING("ShaderStore", "ShaderStore does not support API {}", m_Ctx->getType());
                 return;
             }
         }
@@ -62,13 +65,13 @@ namespace Syrius::Renderer {
         }
 
         ShaderProgram program;
-        program.vertexShader = ctx->createShaderModule(vsmDesc);
-        program.fragmentShader = ctx->createShaderModule(fsmDesc);
+        program.vertexShader = m_Ctx->createShaderModule(vsmDesc);
+        program.fragmentShader = m_Ctx->createShaderModule(fsmDesc);
 
         ShaderDesc sDesc;
         sDesc.vertexShader = program.vertexShader;
         sDesc.fragmentShader = program.fragmentShader;
-        program.shader = ctx->createShader(sDesc);
+        program.shader = m_Ctx->createShader(sDesc);
 
         m_ShaderMap.insert({name, program});
         SR_LOG_INFO("ShaderStore", "Loaded shader {} with vertex shader {} and fragment shader {}",

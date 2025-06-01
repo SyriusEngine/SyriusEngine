@@ -2,16 +2,15 @@
 
 #include <SyriusEngine/Renderer/RenderPrimitives.hpp>
 
-#include "../RenderGraphDefs.hpp"
-#include "../Stores/ShaderStore.hpp"
+#include "../IRenderGraphData.hpp"
 
 namespace Syrius::Renderer {
 
-    class ScreenQuad {
+    class ScreenQuad: public IRenderGraphData {
     public:
-        ScreenQuad(const ShaderProgram& shaderProgram, const ResourceView<Context>& ctx);
+        ScreenQuad(const ResourceView<Context>& ctx, RenderGraphContainer* container);
 
-        ~ScreenQuad() = default;
+        ~ScreenQuad() override = default;
 
         void draw(const ResourceView<Context>& ctx) const;
 

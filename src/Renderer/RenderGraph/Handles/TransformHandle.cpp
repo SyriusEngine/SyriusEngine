@@ -1,8 +1,10 @@
 #include "TransformHandle.hpp"
+#include "../RenderGraphContainer.hpp"
 
 namespace Syrius::Renderer {
 
-    TransformHandle::TransformHandle(const ResourceView<Context> &ctx) {
+    TransformHandle::TransformHandle(const ResourceView<Context>& ctx, RenderGraphContainer* container):
+    IRenderGraphData(ctx, container){
         InstanceData transformData[SR_MAX_INSTANCES];
         ConstantBufferDesc cbDesc;
         cbDesc.name = "TransformData";

@@ -1,8 +1,10 @@
 #include "LightStore.hpp"
+#include "../RenderGraphContainer.hpp"
 
 namespace Syrius::Renderer {
 
-    LightStore::LightStore(const ResourceView<Context> &ctx) {
+    LightStore::LightStore(const ResourceView<Context>& ctx, RenderGraphContainer* container, const SP<DispatcherManager>& dispatcherManager):
+    IRenderGraphData(ctx, container){
         ConstantBufferDesc cbDesc;
         cbDesc.name = "LightData";
         cbDesc.size = sizeof(LightData);
@@ -10,17 +12,30 @@ namespace Syrius::Renderer {
         cbDesc.shaderStage = SR_SHADER_FRAGMENT;
         cbDesc.usage = SR_BUFFER_USAGE_DYNAMIC;
         m_LightDataBuffer = ctx->createConstantBuffer(cbDesc);
+
+        const auto lightDispatcher = dispatcherManager->getDispatcher<LightID, Light>();
+        lightDispatcher->registerCreate([this](const LightID lightID, const SP<Light>& light) {
+            createLight(lightID, light);
+        }, SR_WORKER_RENDERER);
+        lightDispatcher->registerUpdate([this](const LightID lightID, const SP<Light>& light) {
+            setLight(lightID, light);
+        }, SR_WORKER_RENDERER);
+        lightDispatcher->registerDelete([this](const LightID lightID) {
+            destroyLight(lightID);
+        }, SR_WORKER_RENDERER);
+
+        SR_LOG_INFO("LightStore", "LightStore Created!");
     }
 
-    void LightStore::createLight(LightID lightID, const Light &light) {
+    void LightStore::createLight(LightID lightID, const SP<Light> &light) {
         if (m_KeyLightMap.find(lightID) != m_KeyLightMap.end()) {
             SR_LOG_WARNING("LightStore", "Light {} already created!", lightID);
             return;
         }
 
         const auto currentIndex = m_LightData.m_LightCount.x;
-        m_LightData.positions[currentIndex] = glm::vec4(light.position, 1.0f);
-        m_LightData.colors[currentIndex] = glm::vec4(light.color, 1.0f);
+        m_LightData.positions[currentIndex] = glm::vec4(light->position, 1.0f);
+        m_LightData.colors[currentIndex] = glm::vec4(light->color, 1.0f);
 
         m_KeyLightMap.insert({lightID, currentIndex});
         m_LightData.m_LightCount.x++;
@@ -30,14 +45,14 @@ namespace Syrius::Renderer {
         SR_POSTCONDITION(m_KeyLightMap.find(lightID) != m_KeyLightMap.end(), "Failed to create light {}", lightID);
     }
 
-    void LightStore::setLight(LightID lightID, const Light &light) {
+    void LightStore::setLight(LightID lightID, const SP<Light> &light) {
         if (m_KeyLightMap.find(lightID) == m_KeyLightMap.end()) {
             SR_LOG_WARNING("LightStore", "Light {} does not exist!", lightID);
             return;
         }
         const LightID currentIndex = m_KeyLightMap[lightID];
-        m_LightData.positions[currentIndex] = glm::vec4(light.position, 1.0f);
-        m_LightData.colors[currentIndex] = glm::vec4(light.color, 1.0f);
+        m_LightData.positions[currentIndex] = glm::vec4(light->position, 1.0f);
+        m_LightData.colors[currentIndex] = glm::vec4(light->color, 1.0f);
 
         setData();
     }

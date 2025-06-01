@@ -34,11 +34,7 @@ namespace Syrius::Renderer {
 
         void drawMesh(const ResourceView<Context>& ctx) const;
 
-        inline MeshID getMeshID() const { return m_MeshID; }
-
-        inline MaterialID getMaterialID() const { return m_MaterialID; }
-
-        inline void setMaterial(const MaterialID materialID) { m_MaterialID = materialID; }
+        MeshID getMeshID() const { return m_MeshID; }
 
         const Srstl::KeyVector<InstanceID, InstanceData>& getInstanceToTransform() const {
             return m_InstanceToTransform;
@@ -46,7 +42,6 @@ namespace Syrius::Renderer {
 
     private:
         MeshID m_MeshID = 0;
-        MaterialID m_MaterialID = 0;
 
         ResourceView<VertexBuffer> m_VertexBuffer;
         ResourceView<IndexBuffer> m_IndexBuffer;

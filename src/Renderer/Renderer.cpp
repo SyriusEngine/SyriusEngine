@@ -12,52 +12,31 @@ namespace Syrius::Renderer {
      * preventing the object from being destroyed.
      */
 
-    Renderer::Renderer(UP<SyriusWindow> &window, const SP<DispatcherManager> &dispatcherManager, const RendererDesc &desc) :
-        m_Window(window), m_DispatcherManager(dispatcherManager), m_Worker("RenderThread") {
-        bool renderThreadSetupFinished = false;
-        m_Worker.add([&] {
+    Renderer::Renderer(UP<SyriusWindow> &window, const SP<DispatcherManager> &dispatcherManager, const SP<WorkerPool>& workerPool, const RendererDesc &desc) :
+        m_Window(window), m_DispatcherManager(dispatcherManager), m_WorkerPool(workerPool) {
+        m_WorkerPool->addTaskSync(SR_WORKER_RENDERER, [&] {
             setupContext(desc);
-            renderThreadSetupFinished = true;
+            const auto renderGraphLayer = createSP<RenderGraphLayer>(desc.shaderDirectory, m_DispatcherManager);
+            m_RenderLayers.push_back(renderGraphLayer);
+            renderGraphLayer->onRendererAttach(m_Context);
         });
-        // While the render thread does its setup, the main thread can add the
-        // communication (dispatcher) logic
-        setupDispatchers();
-        while (!renderThreadSetupFinished) {
-            std::this_thread::sleep_for(1.0ms);
-        }
-
-        // Set the initial render layer
-        switch (desc.rendererSystem) {
-            case SR_RENDERER_SYSTEM_DEFAULT: {
-                auto renderGraphLayer = createSP<RenderGraphLayer>(desc.shaderDirectory);
-                pushRenderLayer(renderGraphLayer);
-                break;
-            }
-            default: break;
-        }
     }
 
     Renderer::~Renderer() {
-        bool isTerminated = false;
-        m_Worker.add([&] {
+        m_WorkerPool->addTaskSync(SR_WORKER_RENDERER, [&] {
             terminateContext();
-            isTerminated = true;
         });
-        while (!isTerminated) {
-            std::this_thread::sleep_for(1.0ms);
-        }
-        m_Worker.stop();
     }
 
     void Renderer::pushRenderLayer(SP<IRenderLayer> renderLayer) {
-        m_Worker.add([this, renderLayer] {
+        m_WorkerPool->addTask(SR_WORKER_RENDERER, [this, renderLayer] {
             m_RenderLayers.push_back(renderLayer);
             renderLayer->onRendererAttach(m_Context);
         });
     }
 
     void Renderer::popRenderLayer(RenderLayerID layerID) {
-        m_Worker.add([this, layerID] {
+        m_WorkerPool->addTask(SR_WORKER_RENDERER, [this, layerID] {
             const auto it =
             std::remove_if(m_RenderLayers.begin(), m_RenderLayers.end(), [layerID](const SP<IRenderLayer> &layer) {
                 if (layer->getID() == layerID) {
@@ -71,7 +50,7 @@ namespace Syrius::Renderer {
     }
 
     void Renderer::render() {
-        m_Worker.add([this] {
+        m_WorkerPool->addTask(SR_WORKER_RENDERER, [this] {
             m_Context->clear();
             for (const auto &layer: m_RenderLayers) {
                 layer->onRender(m_Context);
@@ -80,58 +59,7 @@ namespace Syrius::Renderer {
     }
 
     void Renderer::swapFrontAndBackBuffer() {
-        m_Worker.addSync([this] { m_Context->swapBuffers(); });
-    }
-
-    void Renderer::setupDispatchers() {
-        const auto meshDispatcher = m_DispatcherManager->getDispatcher<MeshID, Mesh>();
-        meshDispatcher->registerCreate([this](const MeshID meshID, const SP<Mesh> &mesh) { createMesh(meshID, mesh); });
-        meshDispatcher->registerDelete([&](const MeshID meshID) { destroyMesh(meshID); });
-
-        const auto instanceDispatcher = m_DispatcherManager->getDispatcher<InstanceID, MeshID>();
-        instanceDispatcher->registerCreate([this](const InstanceID instanceID, const SP<MeshID> &meshID) {
-            createInstance(instanceID, meshID);
-        });
-        instanceDispatcher->registerDelete([&](const InstanceID instanceID) { destroyInstance(instanceID); });
-
-        const auto transformDispatcher = m_DispatcherManager->getDispatcher<InstanceID, Transform>();
-        transformDispatcher->registerUpdate([this](const InstanceID instanceID, const SP<Transform> &transform) {
-            setInstanceTransform(instanceID, transform);
-        });
-
-        const auto projectionDispatcher = m_DispatcherManager->getDispatcher<ProjectionID, Projection>();
-        projectionDispatcher->registerUpdate([this](const ProjectionID projectionID, const SP<Projection> &projection) {
-            setProjection(projectionID, projection);
-        });
-
-        const auto cameraDispatcher = m_DispatcherManager->getDispatcher<CameraID, Camera>();
-        cameraDispatcher->registerUpdate([this](const CameraID cameraID, const SP<Camera> &camera) {
-            setCamera(cameraID, camera);
-        });
-
-        const auto materialDispatcher = m_DispatcherManager->getDispatcher<MaterialID, Material>();
-        materialDispatcher->registerCreate([this](const MaterialID materialID, const SP<Material>& material) {
-            createMaterial(materialID, material);
-        });
-        materialDispatcher->registerDelete([this](const MaterialID materialID) {
-            destroyMaterial(materialID);
-        });
-
-        const auto meshMaterialDispatcher = m_DispatcherManager->getDispatcher<MeshID, MaterialID>();
-        meshMaterialDispatcher->registerUpdate([this](const MeshID meshID, const SP<MaterialID>& material) {
-           setMeshMaterial(meshID, material);
-        });
-
-        const auto lightDispatcher = m_DispatcherManager->getDispatcher<LightID, Light>();
-        lightDispatcher->registerCreate([this](const LightID lightID, const SP<Light>& light) {
-            createLight(lightID, light);
-        });
-        lightDispatcher->registerUpdate([this](const LightID lightID, const SP<Light>& light) {
-            setLight(lightID, light);
-        });
-        lightDispatcher->registerDelete([this](const LightID lightID) {
-            destroyLight(lightID);
-        });
+        m_WorkerPool->addTaskSync(SR_WORKER_RENDERER, [this] { m_Context->swapBuffers(); });
     }
 
     void Renderer::setupContext(const RendererDesc &desc) {
@@ -144,109 +72,5 @@ namespace Syrius::Renderer {
     }
 
     void Renderer::terminateContext() { m_Window->destroyContext(); }
-
-    void Renderer::createMesh(const MeshID meshID, const SP<Mesh>& mesh) {
-        m_Worker.add([this, meshID, mesh] {
-            for (const auto &layer: m_RenderLayers) {
-                layer->createMesh(meshID, *mesh, m_Context);
-            }
-        });
-    }
-
-    void Renderer::createInstance(const InstanceID instanceID, const SP<MeshID>& meshID) {
-        m_Worker.add([this, instanceID, meshID] {
-            for (const auto &layer: m_RenderLayers) {
-                layer->createInstance(instanceID, *meshID, m_Context);
-            }
-        });
-    }
-
-    void Renderer::destroyMesh(const MeshID meshID) {
-        m_Worker.add([this, meshID] {
-            for (const auto &layer: m_RenderLayers) {
-                layer->destroyMesh(meshID, m_Context);
-            }
-        });
-    }
-
-    void Renderer::destroyInstance(const InstanceID instanceID) {
-        m_Worker.add([this, instanceID] {
-            for (const auto &layer: m_RenderLayers) {
-                layer->destroyInstance(instanceID, m_Context);
-            }
-        });
-    }
-
-    void Renderer::setInstanceTransform(InstanceID instanceID, const SP<Transform>& transform) {
-        m_Worker.add([this, instanceID, transform] {
-            for (const auto &layer: m_RenderLayers) {
-                layer->setInstanceTransform(instanceID, *transform, m_Context);
-            }
-        });
-    }
-
-    void Renderer::setProjection(ProjectionID projectionID, const SP<Projection> &projection) {
-        m_Worker.add([this, projectionID, projection] {
-            for (const auto &layer: m_RenderLayers) {
-                layer->setProjection(projectionID, *projection, m_Context);
-            }
-        });
-    }
-
-    void Renderer::setCamera(CameraID cameraID, const SP<Camera> &camera) {
-        m_Worker.add([this, cameraID, camera] {
-            for (const auto &layer: m_RenderLayers) {
-                layer->setCamera(cameraID, *camera, m_Context);
-            }
-        });
-    }
-
-    void Renderer::createMaterial(MaterialID materialID, const SP<Material> &material) {
-        m_Worker.add([this, materialID, material] {
-            for (const auto& layer: m_RenderLayers) {
-                layer->createMaterial(materialID, *material, m_Context);
-            }
-        });
-    }
-
-    void Renderer::setMeshMaterial(MeshID meshID, const SP<MaterialID> &materialID) {
-        m_Worker.add([this, meshID, materialID] {
-           for (const auto& layer: m_RenderLayers) {
-               layer->setMeshMaterial(meshID, *materialID, m_Context);
-           }
-       });
-    }
-
-    void Renderer::destroyMaterial(MaterialID materialID) {
-        m_Worker.add([this, materialID] {
-           for (const auto& layer: m_RenderLayers) {
-               layer->destroyMaterial(materialID, m_Context);
-           }
-       });
-    }
-
-    void Renderer::createLight(LightID lightID, const SP<Light> &light) {
-        m_Worker.add([this, lightID, light] {
-            for (const auto& layer: m_RenderLayers) {
-              layer->createLight(lightID, *light, m_Context);
-          }
-        });
-    }
-
-    void Renderer::setLight(LightID lightID, const SP<Light> &light) {
-        m_Worker.add([this, lightID, light] {
-           for (const auto& layer: m_RenderLayers) {
-               layer->setLight(lightID, *light, m_Context);
-           }
-        });
-    }
-
-    void Renderer::destroyLight(LightID lightID) {
-        m_Worker.add([this, lightID] {
-           for (const auto& layer: m_RenderLayers) {
-               layer->destroyLight(lightID, m_Context);
-           }
-        });
-    }
 
 } // namespace Syrius

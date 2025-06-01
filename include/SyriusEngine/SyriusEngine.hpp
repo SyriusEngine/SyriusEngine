@@ -42,7 +42,7 @@ namespace Syrius{
 
         void setCamera(CameraID cameraID, const Camera& camera) const;
 
-        MaterialID createMaterial(SP<Material> material) const;
+        MaterialID createMaterial(const SP<Material>& material) const;
 
         void meshSetMaterial(MeshID meshID, MaterialID materialID) const;
 

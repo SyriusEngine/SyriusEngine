@@ -43,6 +43,14 @@ namespace Syrius {
             return dispatcher;
         }
 
+        void printDebugInfo() const {
+            std::string debugInfo;
+            for (const auto& [i, dispatcher]: m_Dispatchers) {
+                debugInfo += dispatcher->getDebugInfo();
+            }
+            SR_LOG_DEBUG("DispatcherManager", debugInfo);
+        }
+
     private:
         SP<WorkerPool> m_WorkerPool = nullptr;
 

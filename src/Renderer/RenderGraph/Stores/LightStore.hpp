@@ -3,7 +3,7 @@
 #include <SyriusEngine/Renderer/RenderPrimitives.hpp>
 #include <SyriusEngine/Utils/EngineLimits.hpp>
 
-#include "../RenderGraphDefs.hpp"
+#include "../IRenderGraphData.hpp"
 
 namespace Syrius::Renderer {
 
@@ -13,15 +13,15 @@ namespace Syrius::Renderer {
         glm::uvec4 m_LightCount = {0, 0, 0, 0}; // align to 16 bytes
     };
 
-    class LightStore {
+    class LightStore: public IRenderGraphData {
     public:
-        explicit LightStore(const ResourceView<Context>& ctx);
+        LightStore(const ResourceView<Context>& ctx, RenderGraphContainer* container, const SP<DispatcherManager>& dispatcherManager);
 
-        ~LightStore() = default;
+        ~LightStore() override = default;
 
-        void createLight(LightID lightID, const Light& light);
+        void createLight(LightID lightID, const SP<Light>& light);
 
-        void setLight(LightID lightID, const Light& light);
+        void setLight(LightID lightID, const SP<Light>& light);
 
         void destroyLight(LightID lightID);
 

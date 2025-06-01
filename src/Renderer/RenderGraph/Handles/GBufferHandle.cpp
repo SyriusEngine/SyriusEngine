@@ -1,10 +1,11 @@
 #include "GBufferHandle.hpp"
+#include "../RenderGraphContainer.hpp"
 
 namespace Syrius::Renderer {
 
-    GBufferHandle::GBufferHandle(const ResourceView<Context> &ctx) {
+    GBufferHandle::GBufferHandle(const ResourceView<Context>& ctx, RenderGraphContainer* container):
+    IRenderGraphData(ctx, container){
         auto fbDesc = ctx->createFrameBufferLayout();
-
 
         /*
          * TODO: Positions stored in F16 format may cause weird artifacts with positions far from the origin

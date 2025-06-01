@@ -2,11 +2,17 @@
 #include "EngineData.hpp"
 #include <SyriusUtils/Clock/ClockMacros.hpp>
 
+static void debugMessageHandler(const Syrius::Message& msg) {
+    std::cout << "[" << msg.source << "] [" << Syrius::getMessageSeverityString(msg.severity) << "]: " << msg.message << std::endl;
+}
+
 namespace Syrius{
 
     SyriusEngine::SyriusEngine(const EngineConfiguration& config):
     m_Data(createUP<EngineData>()) {
         SR_START_TIMER("EngineStartup");
+        Logger::setDebugCallback(debugMessageHandler);
+
 
         setupWindow(config);
         setupRenderer(config);
@@ -94,14 +100,14 @@ namespace Syrius{
         m_Data->dispatchDataUpdate<CameraID, Camera>(cameraID, camera);
     }
 
-    MaterialID SyriusEngine::createMaterial(SP<Material> material) const {
+    MaterialID SyriusEngine::createMaterial(const SP<Material>& material) const {
         MaterialID key = generateID();
         const auto dispatcher = m_Data->dispatcherManager->getDispatcher<MaterialID, Material>();
         dispatcher->dispatchCreate(key, material);
         return key;
     }
 
-    void SyriusEngine::meshSetMaterial(MeshID meshID, MaterialID materialID) const {
+    void SyriusEngine::meshSetMaterial(const MeshID meshID, const MaterialID materialID) const {
         m_Data->dispatchDataUpdate<MeshID, MaterialID>(meshID, materialID);
     }
 
@@ -138,7 +144,7 @@ namespace Syrius{
         rendererDesc.rendererSystem = SR_RENDERER_SYSTEM_DEFAULT;
         rendererDesc.shaderDirectory = config.shaderDirectory;
 
-        m_Data->renderer = createUP<Renderer::Renderer>(m_Window, m_Data->dispatcherManager, rendererDesc);
+        m_Data->renderer = createUP<Renderer::Renderer>(m_Window, m_Data->dispatcherManager, m_Data->workerPool, rendererDesc);
 
         // Setup default projection
         Projection defaultProjection;

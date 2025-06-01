@@ -18,6 +18,11 @@ namespace Syrius {
             m_Pool.at(worker).add(std::forward<Args>(args)...);
         }
 
+        template<typename... Args>
+        void addTaskSync(const SR_WORKER_TYPE worker, Args&&... args) {
+            m_Pool.at(worker).addSync(std::forward<Args>(args)...);
+        }
+
     private:
         std::unordered_map<SR_WORKER_TYPE, Worker> m_Pool;
     };

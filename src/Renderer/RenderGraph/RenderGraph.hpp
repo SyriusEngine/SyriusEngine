@@ -1,6 +1,6 @@
 #pragma once
 
-#include "RenderGraphData.hpp"
+#include "RenderGraphContainer.hpp"
 #include "RenderGraphNode.hpp"
 
 namespace Syrius::Renderer {
@@ -25,7 +25,7 @@ namespace Syrius::Renderer {
          */
         bool compile();
 
-        void execute(RenderGraphData& graphData, const ResourceView<Context>& ctx) const;
+        void execute(RenderGraphContainer* graphData, const ResourceView<Context>& ctx) const;
 
         void generateDot() const;
 

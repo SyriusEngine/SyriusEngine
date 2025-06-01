@@ -1,14 +1,14 @@
 #pragma once
 
-#include "../RenderGraphDefs.hpp"
+#include "../IRenderGraphData.hpp"
 
 namespace Syrius::Renderer {
 
-    class SamplerHandle {
+    class SamplerHandle: public IRenderGraphData {
     public:
-        explicit SamplerHandle(const ResourceView<Context>& ctx);
+        SamplerHandle(const ResourceView<Context>& ctx, RenderGraphContainer* container);
 
-        ~SamplerHandle() = default;
+        ~SamplerHandle() override = default;
 
         void bind(u32 slot) const;
 
