@@ -47,7 +47,6 @@ namespace Syrius::Renderer {
         ResourceView<IndexBuffer> m_IndexBuffer;
         ResourceView<VertexArray> m_VertexArray;
 
-        Size m_InstanceCount = 0;
         Srstl::KeyVector<InstanceID, InstanceData> m_InstanceToTransform;
 
         SR_GET_PRIVATE_MEMBER(MeshHandle, m_InstanceToTransform);

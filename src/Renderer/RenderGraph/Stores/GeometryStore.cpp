@@ -47,6 +47,8 @@ namespace Syrius::Renderer {
         const auto shaderStore = m_Container->getData<ShaderStore>();
         const ShaderProgram& geometryPassShader = shaderStore->getShader(s_GEOMETRY_PASS_SHADER);
         m_MeshHandles.emplace(meshID, meshID, m_Ctx, *mesh, geometryPassShader.vertexShader, m_VertexLayout);
+
+        SR_POSTCONDITION(m_MeshHandles.has(meshID), "Mesh {} does not exist!", meshID);
     }
 
     void GeometryStore::createInstance(InstanceID instanceID, const SP<MeshID>& meshID) {
@@ -57,11 +59,11 @@ namespace Syrius::Renderer {
         MeshHandle& meshHandle = m_MeshHandles.get(*meshID);
         meshHandle.createInstance(instanceID);
         m_InstanceToMeshID.emplace(instanceID, *meshID);
+
+        SR_POSTCONDITION(m_InstanceToMeshID.find(instanceID) != m_InstanceToMeshID.end(), "Instance {} does not exist!", instanceID);
     }
 
-    void GeometryStore::setInstanceTransformation(InstanceID instanceID, const SP<Transform>& transform) {
-        SR_PRECONDITION(m_InstanceToMeshID.find(instanceID) != m_InstanceToMeshID.end(), "Instance {} does not exist!", instanceID);
-
+    void GeometryStore::setInstanceTransformation(const InstanceID instanceID, const SP<Transform>& transform) {
         const MeshID meshID = m_InstanceToMeshID.at(instanceID);
         MeshHandle& meshHandle = m_MeshHandles[meshID];
         meshHandle.setTransformation(instanceID, *transform);
@@ -81,6 +83,8 @@ namespace Syrius::Renderer {
                 ++it;
             }
         }
+
+        SR_POSTCONDITION(!m_MeshHandles.has(meshID), "Mesh {} still exists!", meshID);
     }
 
     void GeometryStore::destroyInstance(InstanceID instanceID) {
@@ -95,6 +99,9 @@ namespace Syrius::Renderer {
         }
         MeshHandle& meshHandle = m_MeshHandles.get(meshID);
         meshHandle.removeInstance(instanceID);
+        m_InstanceToMeshID.erase(instanceID);
+
+        SR_POSTCONDITION(m_InstanceToMeshID.find(instanceID) == m_InstanceToMeshID.end(), "Instance {} still exists!", instanceID);
     }
 
 }
