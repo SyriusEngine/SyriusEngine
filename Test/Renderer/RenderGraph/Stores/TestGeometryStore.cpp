@@ -57,7 +57,7 @@ protected:
     void setInstanceTransformation(const InstanceID instanceID, const Transform& transform) const {
         const auto dispatcher = m_DispatcherManager->getDispatcher<InstanceID, Transform>();
         const auto dataPtr = createSP<Transform>(transform);
-        dispatcher->dispatchCreate(instanceID, dataPtr);
+        dispatcher->dispatchUpdate(instanceID, dataPtr);
     }
 
 protected:
