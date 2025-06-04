@@ -2,7 +2,6 @@
 #include "../../../../src/Renderer/RenderGraph/Stores/GeometryStore.hpp"
 #include "../../../../src/Renderer/RenderGraph/Stores/ShaderStore.hpp"
 #include "../../IRenderComponentTest.hpp"
-#include "SyriusEngine/Renderer/BuiltinMeshes.hpp"
 
 using namespace Syrius;
 using namespace Syrius::Renderer;
@@ -14,50 +13,6 @@ protected:
         m_Container = createUP<RenderGraphContainer>();
         const fs::path shaderPath = fs::current_path() / "Resources" / "Shaders";
         m_Container->createData<ShaderStore>(m_Context, m_Container.get(), shaderPath);
-    }
-
-    MeshID createMesh() const {
-        static MeshID meshID = 0;
-        static Mesh rectangle = createRectangle();
-
-        const MeshID newID = meshID++;
-        const auto dispatcher = m_DispatcherManager->getDispatcher<MeshID, Mesh>();
-        const auto dataPtr = createSP<Mesh>(rectangle);
-        dispatcher->dispatchCreate(newID, dataPtr);
-        return newID;
-    }
-
-    void createMesh(const MeshID meshID) const {
-        static Mesh rectangle = createRectangle();
-        const auto dispatcher = m_DispatcherManager->getDispatcher<MeshID, Mesh>();
-        const auto dataPtr = createSP<Mesh>(rectangle);
-        dispatcher->dispatchCreate(meshID, dataPtr);
-    }
-
-    void destroyMesh(const MeshID meshID) const {
-        const auto dispatcher = m_DispatcherManager->getDispatcher<MeshID, Mesh>();
-        dispatcher->dispatchDelete(meshID);
-    }
-
-    InstanceID createInstance(const MeshID meshID) const {
-        static InstanceID instanceID = 0;
-
-        const InstanceID newID = instanceID++;
-        const auto dispatcher = m_DispatcherManager->getDispatcher<InstanceID, MeshID>();
-        const auto dataPtr = createSP<MeshID>(meshID);
-        dispatcher->dispatchCreate(newID, dataPtr);
-        return newID;
-    }
-
-    void destroyInstance(const InstanceID instanceID) const {
-        const auto dispatcher = m_DispatcherManager->getDispatcher<InstanceID, MeshID>();
-        dispatcher->dispatchDelete(instanceID);
-    }
-
-    void setInstanceTransformation(const InstanceID instanceID, const Transform& transform) const {
-        const auto dispatcher = m_DispatcherManager->getDispatcher<InstanceID, Transform>();
-        const auto dataPtr = createSP<Transform>(transform);
-        dispatcher->dispatchUpdate(instanceID, dataPtr);
     }
 
 protected:

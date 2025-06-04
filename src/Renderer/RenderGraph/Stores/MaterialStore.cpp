@@ -32,6 +32,13 @@ namespace Syrius::Renderer {
         SR_LOG_INFO("MaterialStore", "MaterialStore Created!");
     }
 
+    void MaterialStore::bindMeshMaterial(const MeshID meshID, const u32 startSlot) {
+        SR_PRECONDITION(m_MeshToMaterial.find(meshID) != m_MeshToMaterial.end(), "Mesh {} does not exist in the materialStore!", meshID);
+
+        const MaterialID materialID = m_MeshToMaterial.at(meshID);
+        m_Materials[materialID].bind(startSlot);
+    }
+
     void MaterialStore::createMaterial(MaterialID materialID, const SP<Material> &material) {
         if (m_Materials.has(materialID)) {
             SR_LOG_WARNING("MaterialStore", "Material {} already created", materialID);
@@ -50,15 +57,14 @@ namespace Syrius::Renderer {
         }
         m_Materials.remove(materialID);
 
+        // Remove references in the meshToMaterial relation
+        for (auto& [meshID, existing]: m_MeshToMaterial) {
+            if (existing == materialID) {
+                existing = SR_DEFAULT_MATERIAL;
+            }
+        }
+
         SR_POSTCONDITION(!m_Materials.has(materialID), "Material {} not destroyed", materialID);
-    }
-
-    void MaterialStore::bindMeshMaterial(const MeshID meshID, const u32 startSlot) {
-        SR_PRECONDITION(m_MeshToMaterial.find(meshID) != m_MeshToMaterial.end(), "Mesh {} does not exist in the materialStore!", meshID);
-
-        const MaterialID materialID = m_MeshToMaterial.at(meshID);
-        // TODO: What happens if a material does not exist anymore?
-        m_Materials[materialID].bind(startSlot);
     }
 
     void MaterialStore::createDefaultMaterial() {
