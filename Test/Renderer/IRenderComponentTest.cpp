@@ -131,5 +131,23 @@ void IRenderComponentTest::setMeshMaterial(const MeshID meshID, const MaterialID
     dispatcher->dispatchUpdate(meshID, dataPtr);
 }
 
+LightID IRenderComponentTest::createLight(const Light& light) const {
+    static LightID lightID = 0;
 
+    const LightID newID = lightID++;
+    const auto dispatcher = m_DispatcherManager->getDispatcher<LightID, Light>();
+    const auto dataPtr = createSP<Light>(light);
+    dispatcher->dispatchCreate(newID, dataPtr);
+    return newID;
+}
 
+void IRenderComponentTest::updateLight(const LightID lightID, const Light& light) const {
+    const auto dispatcher = m_DispatcherManager->getDispatcher<LightID, Light>();
+    const auto dataPtr = createSP<Light>(light);
+    dispatcher->dispatchUpdate(lightID, dataPtr);
+}
+
+void IRenderComponentTest::destroyLight(const LightID lightID) const {
+    const auto dispatcher = m_DispatcherManager->getDispatcher<LightID, Light>();
+    dispatcher->dispatchDelete(lightID);
+}

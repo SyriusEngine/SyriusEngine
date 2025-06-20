@@ -41,4 +41,10 @@ protected:
     void destroyMaterial(MaterialID materialID) const;
 
     void setMeshMaterial(MeshID meshID, MaterialID materialID) const;
+
+    LightID createLight(const Light& light) const;
+
+    void updateLight(LightID lightID, const Light& light) const;
+
+    void destroyLight(LightID lightID) const;
 };

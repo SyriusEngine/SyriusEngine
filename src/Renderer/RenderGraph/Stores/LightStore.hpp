@@ -2,6 +2,7 @@
 
 #include <SyriusEngine/Renderer/RenderPrimitives.hpp>
 #include <SyriusEngine/Utils/EngineLimits.hpp>
+#include <SyriusUtils/DevUtils/TestingMacros.hpp>
 
 #include "../IRenderGraphData.hpp"
 
@@ -36,6 +37,9 @@ namespace Syrius::Renderer {
 
         std::unordered_map<LightID, Index> m_KeyLightMap;
         LightData m_LightData;
+
+        SR_GET_PRIVATE_MEMBER(LightStore, m_KeyLightMap);
+        SR_GET_PRIVATE_MEMBER(LightStore, m_LightData);
 
     };
 }
